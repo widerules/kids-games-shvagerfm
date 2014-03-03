@@ -7,14 +7,14 @@ local data = require("..\\data");
 local scene = storyboard.newScene(); --create scene
 
 local _W = display.contentWidth;			--storing width
-local _H = display.contentWidth;			--storing height
+local _H = display.contentHeight;			--storing height
 local _CENTERX = display.contentCenterX;	--storing horizontal center
 local _CENTERY = display.contentCenterY;	--storing verticall center
 local _IMAGEWIDTH = 0.4*_W;					--storing image's width
 local _IMAGEHEIGHT = 0.4*_W;				--storing image's height
 local _BTNSIZE = 0.1*_W;					--storing buttons' size
 local _WOODENWIDTH = 0.3*_W;				--storing wooden board's width
-local _WOODENHEIGHT = 0.6*_H;				--storing wooden board's height
+local _WOODENHEIGHT = 0.9*_H;				--storing wooden board's height
 --I divided scene into two parts - for image and buttons and for "wooden board" 
 local _RIGHTCENTERX = _CENTERX + 0.35*_W;	--center for wooden board 
 local _LEFTCENTERX = _CENTERX - 0.15*_W;	--center for image
@@ -109,8 +109,8 @@ function scene:createScene(event)
 
 	homeButton = widget.newButton 
 	{
-		x = _BTNSIZE/4,
-		y = _BTNSIZE,
+		x = _BTNSIZE/2,
+		y = _BTNSIZE/2,
 		defaultFile = "images\\home.png",
 		overFile = "images\\home.png",
 		width = _BTNSIZE,
@@ -128,7 +128,8 @@ function scene:enterScene(event)
 	animalName.anchorY = 0;
 	group:insert(animalName);
 
-	animalDescription = display.newText(data.animalsDescriptions[index], _RIGHTCENTERX, 0.8*_CENTERY, 0.9*_WOODENWIDTH, 0.5*_WOODENHEIGHT, "Arial", 36);	
+	animalDescription = display.newText(data.animalsDescriptions[index], _RIGHTCENTERX, 0, 0.9*_WOODENWIDTH, 0.5*_WOODENHEIGHT, "Arial", 36);	
+	animalDescription.y = animalName.y + animalDescription.height;
 	animalDescription:setFillColor(0,0,0);
 	group:insert(animalDescription);	
 
