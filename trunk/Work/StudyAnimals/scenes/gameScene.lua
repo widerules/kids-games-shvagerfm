@@ -16,8 +16,8 @@ local _BTNSIZE = 0.1*display.contentWidth;		--storing buttons' size
 local _WOODENWIDTH = 0.3*_W;					--storing wooden board's width
 local _WOODENHEIGHT = 0.6*_H;					--storing wooden board's height
 --I divided scene into two parts - for image and buttons and for "wooden board" 
-local _RIGHTCENTERX = display.contentCenterX + 0.35*display.contentWidth;	--center for wooden board 
-local _LEFTCENTERX = display.contentCenterX - 0.15*display.contentWidth;	--center for image
+local _RIGHTCENTERX = _CENTERX + 0.35*display.contentWidth;	--center for wooden board 
+local _LEFTCENTERX = _CENTERX - 0.15*display.contentWidth;	--center for image
 
 local index = 1;	--index of current animal
 
@@ -70,7 +70,7 @@ function scene:createScene(event)
 	local group = self.view;
 
 	--setting up background (I have problems with this ...)
-	background = display.newImage( "images\\bg.png", display.contentCenterX, display.contentCenterY, true);
+	background = display.newImage( "images\\bg.png", _CENTERX, _CENTERY, true);
 	background.height = _H;
 	--!!!
 	--background.width = _W;
@@ -86,7 +86,7 @@ function scene:createScene(event)
 	nextButton = widget.newButton
 	{
 		x = _LEFTCENTERX+2*_IMAGEWIDTH/3,
-		y = display.contentCenterY,
+		y = _CENTERY,
 		defaultFile = "images\\next.png",
 		overFile = "images\\next.png", --here should be some new file ?
 		width = _BTNSIZE,
@@ -155,7 +155,7 @@ function scene:exitScene(event)
 end;
 
 function scene:destroyScene(event)
-	
+
 end;
 
 scene:addEventListener( "createScene", scene )
