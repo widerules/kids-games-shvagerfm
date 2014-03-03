@@ -6,18 +6,18 @@ local data = require("..\\data");
 
 local scene = storyboard.newScene(); --create scene
 
-local _W = display.contentWidth;				--storing width
-local _H = display.contentWidth;				--storing height
-local _CENTERX = display.contentCenterX;		--storing horizontal center
-local _CENTERY = display.contentCenterY;		--storing verticall center
-local _IMAGEWIDTH = 0.4*display.contentWidth;	--storing image's width
-local _IMAGEHEIGHT = 0.4*display.contentWidth;	--storing image's height
-local _BTNSIZE = 0.1*display.contentWidth;		--storing buttons' size
-local _WOODENWIDTH = 0.3*_W;					--storing wooden board's width
-local _WOODENHEIGHT = 0.6*_H;					--storing wooden board's height
+local _W = display.contentWidth;			--storing width
+local _H = display.contentWidth;			--storing height
+local _CENTERX = display.contentCenterX;	--storing horizontal center
+local _CENTERY = display.contentCenterY;	--storing verticall center
+local _IMAGEWIDTH = 0.4*_W;					--storing image's width
+local _IMAGEHEIGHT = 0.4*_W;				--storing image's height
+local _BTNSIZE = 0.1*_W;					--storing buttons' size
+local _WOODENWIDTH = 0.3*_W;				--storing wooden board's width
+local _WOODENHEIGHT = 0.6*_H;				--storing wooden board's height
 --I divided scene into two parts - for image and buttons and for "wooden board" 
-local _RIGHTCENTERX = _CENTERX + 0.35*display.contentWidth;	--center for wooden board 
-local _LEFTCENTERX = _CENTERX - 0.15*display.contentWidth;	--center for image
+local _RIGHTCENTERX = _CENTERX + 0.35*_W;	--center for wooden board 
+local _LEFTCENTERX = _CENTERX - 0.15*_W;	--center for image
 
 local index = 1;	--index of current animal
 
