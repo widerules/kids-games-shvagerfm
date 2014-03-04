@@ -1,13 +1,15 @@
 local storyboard = require( "storyboard");
 local widget = require( "widget");
 local data = require ("..\\shapesData");
-local constants = require("constants")
+local constants = require("constants");
+local native = require( "native");
 
 local scene = storyboard.newScene();
 
 local _IMAGESIZE = 0.2*constants.H;
-local _FONTSIZE = constants.H / 18;
-local _SPACING = 0.1*constants.H;
+local _FONTSIZE = constants.H / 15;
+local _SPACING = 0.05*constants.H;
+local _DELTA = 0.05*constants.H;
 
 local _ANIMALSPATH = "images\\animals\\";
 local _SHAPESPATH = "images\\animals\\s";
@@ -17,8 +19,10 @@ local _LEFTCENTER;
 local _RIGHTCENTER;
 
 local indexes = {};
+local positions = {};
 local animalsPictures = {};
 local shapesPictures = {};
+local labels = {};
 
 local background;
 local leftBar;
@@ -47,6 +51,54 @@ local function generateIndexes()
 	end;
 end;
 
+local function onAnimalDrag(event)
+	local t = event.target;
+	local phase = event.phase;
+	if "began" == phase then 
+		startX = t.x;
+		startY = t.y;
+
+		--bring the letter on top (just for being sure)
+		local parent = t.parent;
+		parent:insert (t);
+		display.getCurrentStage():setFocus(t);
+		
+		t.isFocus = true;
+		t.x0 = event.x - t.x;
+		t.y0 = event.y - t.y;
+
+	elseif "moved" == phase and t.isFocus then
+		t.x = event.x-t.x0;
+		t.y = event.y-t.y0;
+	elseif "ended" == phase or "cancel" == phase then 
+		local flag = false;
+		local index = 0;
+		--find which animal dragged
+		for i = 1, table.maxn(animalsPictures), 1 do
+			if animalsPictures[i]==t then
+				index = i;
+			end;
+		end;
+		if (index == 0) then
+			print ("It is very bad, man !")
+		end
+
+		if math.abs(t.x - shapesPictures[index].x)<_DELTA and math.abs (t.y-shapesPictures[index].y)<_DELTA then
+			t.x = shapesPictures[index].x;
+			t.y = shapesPictures[index].y;
+		else 
+			t.x = startX;
+			t.y = startY;
+		end;
+
+		display.getCurrentStage():setFocus(nil);
+		t.isFocus = false;
+		startX = nil;
+		startY = nil;
+
+	end;
+end;
+
 function scene:createScene(event)
 	local group = self.view;
 
@@ -70,6 +122,26 @@ function scene:createScene(event)
 	_LEFTCENTER = leftBar.x;
 	_RIGHTCENTER = plate.x;
 
+	positions = 
+	{
+		x = 
+		{
+			plate.x-plate.width/2+_IMAGESIZE/2+_SPACING,
+			plate.x+plate.width/2-_IMAGESIZE/2-_SPACING,
+			plate.x,
+			plate.x-plate.width/2+_IMAGESIZE/2+_SPACING,
+			plate.x+plate.width/2-_IMAGESIZE/2-_SPACING
+		},
+		y = 
+		{
+			plate.y-plate.height/2+_IMAGESIZE/2+_FONTSIZE+_SPACING,
+			plate.y-plate.height/2+_IMAGESIZE/2+_FONTSIZE+_SPACING,
+			plate.y,
+			plate.y+plate.height/2-_IMAGESIZE/2 - _FONTSIZE - _SPACING,
+			plate.y+plate.height/2-_IMAGESIZE/2 - _FONTSIZE - _SPACING
+		}
+	}
+
 end;
 
 function scene:enterScene(event)
@@ -81,6 +153,7 @@ function scene:enterScene(event)
 	animalsPictures[1] = display.newImage(_ANIMALSPATH..data.animals[indexes[1]].._FORMAT,_LEFTCENTER, imageY);
 	animalsPictures[1].height = _IMAGESIZE;
 	animalsPictures[1].width = _IMAGESIZE;
+	animalsPictures[1]:addEventListener( "touch", onAnimalDrag );
 	group:insert(animalsPictures[1]);
 
 	for i = 2, 5, 1 do
@@ -88,19 +161,42 @@ function scene:enterScene(event)
 		animalsPictures[i] = display.newImage (_ANIMALSPATH..data.animals[indexes[i]].._FORMAT, _LEFTCENTER, imageY);
 		animalsPictures[i].height = _IMAGESIZE;
 		animalsPictures[i].width = _IMAGESIZE;
+		animalsPictures[i]:addEventListener( "touch", onAnimalDrag );
 		group:insert(animalsPictures[i]); 
 	end;
 
-	shapesPictures[1] = display.newImage(_SHAPESPATH..data.animals[indexes[1]].._FORMAT, 0, 0);
-	shapesPictures[1].height = _IMAGESIZE;
-	shapesPictures[1].width = _IMAGESIZE;
-	shapesPictures[1].x = plate.x - plate.width/2 + _IMAGESIZE/2 + _SPACING;
-	shapesPictures[1].y = plate.y - plate.height/2 + _IMAGESIZE/2 + _FONTSIZE + _SPACING;
-	group:insert(shapesPictures[1]);
+	local tmpPos = { x = table.copy(positions.x), y = table.copy(positions.y)};
+	
+	for i = 1,5,1 do 
+		local randPos = math.random (1, table.maxn(tmpPos.x));
+		
+		shapesPictures[i] = display.newImage (_SHAPESPATH..data.animals[indexes[i]].._FORMAT,0,0);
+		shapesPictures[i].height = _IMAGESIZE;
+		shapesPictures[i].width = _IMAGESIZE;	
+		shapesPictures[i].x = tmpPos.x[randPos];
+		shapesPictures[i].y = tmpPos.y[randPos];
+		group:insert(shapesPictures[i]);
+
+		labels[i] = display.newEmbossedText( data.animals[indexes[i]], shapesPictures[i].x, shapesPictures[i].y-_IMAGESIZE/2-_FONTSIZE/2, native.systemFontBold , _FONTSIZE);
+		labels[i]:setFillColor( 0,0,0 );
+		group:insert (labels[i]);
+
+		table.remove( tmpPos.x, randPos );
+		table.remove( tmpPos.y, randPos );
+	end;
 end;
 
 
 function scene:exitScene(event)
+	for i = 1, table.maxn(animalsPictures), 1 do 
+		animalsPictures[i]:removeSelf( );
+		shapesPictures[i]:removeSelf();
+		labels[i]:removeSelf();
+	end;
+
+	while (table.maxn(labels)>0) do
+		table.remove(labels, 1);
+	end;
 end;
 
 function scene:destroyScene(event)
