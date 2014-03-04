@@ -8,7 +8,7 @@ local scene = storyboard.newScene();
 
 local _IMAGESIZE = 0.2*constants.H;
 local _FONTSIZE = constants.H / 15;
-local _SPACING = 0.05*constants.H;
+local _SPACING = 0.1*constants.H;
 local _DELTA = 0.05*constants.H;
 
 local _ANIMALSPATH = "images\\animals\\";
@@ -28,9 +28,12 @@ local background;
 local leftBar;
 local plate;
 
-local debugText;
+local popupBg;
+local popupText;
+local homeBtn;
+local nextBtn;
 
-local animals = {};
+local onPlaces = 0;
 
 local function generateIndexes()
 	for i = 1, 5, 1 do
@@ -49,6 +52,52 @@ local function generateIndexes()
 			end;
 		end;
 	end;
+end;
+
+local function onHomeButtonClicked(event)
+	--TO DO:
+	--returning to the main screen
+end;
+
+local function onNextButtonClicked (event)
+	storyboard.reloadScene( );
+end;
+
+local function showPopUp()
+	popupBg = display.newImage( "images\\popupbg.png", constants.CENTERX, constants.CENTERY );
+	popupBg.height = 0.7*constants.H;
+	popupBg.width = 0.7*constants.W;
+
+	popupText = display.newText("Well done !", popupBg.x, 0, native.systemFont, 2*_FONTSIZE);
+	popupText.y = popupBg.y-popupBg.height+2*popupText.width/3;
+
+	homeBtn = widget.newButton
+	{
+		width = 0.4*popupBg.width,
+		height = 0.4*popupBg.height,
+		x = popupBg.x - 0.4*popupBg.width/2,
+		y = popupBg.y + popupBg.height/2 - 0.4*popupBg.height/2,
+		defaultFile = "images\\button.png",
+		overFile = "images\\pbutton.png",
+		label = "Home",
+		labelColor = {default = {0,0,0}, over = {0.1,0.1,0.1}},
+		fontSize = 1.75*_FONTSIZE
+	}
+	homeBtn:addEventListener( "tap", onHomeButtonClicked );
+
+	nextBtn = widget.newButton
+	{
+		width = 0.4*popupBg.width,
+		height = 0.4*popupBg.height,
+		x = popupBg.x + 0.4*popupBg.width/2,
+		y = popupBg.y + popupBg.height/2 - 0.4*popupBg.height/2,
+		defaultFile = "images\\button.png",
+		overFile = "images\\pbutton.png",
+		label = "Next",
+		labelColor = {default = {0,0,0}, over = {0.1,0.1,0.1}},
+		fontSize = 1.75*_FONTSIZE	
+	}	
+	nextBtn:addEventListener( "tap", onNextButtonClicked );
 end;
 
 local function onAnimalDrag(event)
@@ -78,14 +127,12 @@ local function onAnimalDrag(event)
 			if animalsPictures[i]==t then
 				index = i;
 			end;
-		end;
-		if (index == 0) then
-			print ("It is very bad, man !")
-		end
+		end;		
 
 		if math.abs(t.x - shapesPictures[index].x)<_DELTA and math.abs (t.y-shapesPictures[index].y)<_DELTA then
 			t.x = shapesPictures[index].x;
 			t.y = shapesPictures[index].y;
+			onPlaces = onPlaces + 1;
 		else 
 			t.x = startX;
 			t.y = startY;
@@ -95,6 +142,10 @@ local function onAnimalDrag(event)
 		t.isFocus = false;
 		startX = nil;
 		startY = nil;
+
+		if onPlaces == 5 then
+			showPopUp();
+		end;
 
 	end;
 end;
@@ -197,6 +248,19 @@ function scene:exitScene(event)
 	while (table.maxn(labels)>0) do
 		table.remove(labels, 1);
 	end;
+	
+	while (table.maxn(indexes)>0) do
+		table.remove(indexes);
+	end;
+
+	if popupBg ~= nil then
+		popupBg:removeSelf();
+		popupText:removeSelf();
+		nextBtn:removeSelf();
+		homeBtn:removeSelf();
+	end;
+
+	onPlaces = 0;
 end;
 
 function scene:destroyScene(event)
