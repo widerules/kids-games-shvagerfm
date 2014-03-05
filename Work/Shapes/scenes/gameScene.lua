@@ -1,6 +1,6 @@
 local storyboard = require( "storyboard");
 local widget = require( "widget");
-local data = require ("..\\shapesData");
+local data = require ("shapesData");
 local constants = require("constants");
 local native = require( "native");
 
@@ -9,10 +9,10 @@ local scene = storyboard.newScene();
 local _IMAGESIZE = 0.2*constants.H;
 local _FONTSIZE = constants.H / 15;
 local _SPACING = 0.1*constants.H;
-local _DELTA = 0.05*constants.H;
+local _DELTA = 0.08*constants.H;
 
-local _ANIMALSPATH = "images\\animals\\";
-local _SHAPESPATH = "images\\animals\\s";
+local _ANIMALSPATH = "images/animals/";
+local _SHAPESPATH = "images/animals/s";
 local _FORMAT = ".png";
 
 local _LEFTCENTER;
@@ -59,12 +59,35 @@ local function onHomeButtonClicked(event)
 	--returning to the main screen
 end;
 
+--- animaton Scale to 1.5
+local function animScaleOnDrag(self)
+	self.xScale = 1.5
+	self.yScale = 1.5
+end
+local function animScaleBack(self)
+	self.xScale = 1
+	self.yScale = 1
+end
+local function animOnPutOn(self)
+	local function setToBig()
+		transition.scaleTo(self, {xScale = 1.5, yScale = 1.5, time = 500})
+	end	
+	transition.scaleTo(self, {xScale = 1.3, yScale = 1.3, time = 300, onComplete=setToBig})
+end
+
+local function animOnPutOnShape(self)
+	local function setToBig()
+		transition.scaleTo(self, {xScale = 1, yScale = 1, time = 500})
+	end	
+	transition.scaleTo(self, {xScale = 0.8, yScale = 0.8, time = 300, onComplete=setToBig})
+end
+
 local function onNextButtonClicked (event)
 	storyboard.reloadScene( );
 end;
 
 local function showPopUp()
-	popupBg = display.newImage( "images\\popupbg.png", constants.CENTERX, constants.CENTERY );
+	popupBg = display.newImage( "images/popupbg.png", constants.CENTERX, constants.CENTERY );
 	popupBg.height = 0.7*constants.H;
 	popupBg.width = 0.7*constants.W;
 
@@ -77,8 +100,8 @@ local function showPopUp()
 		height = 0.4*popupBg.height,
 		x = popupBg.x - 0.4*popupBg.width/2,
 		y = popupBg.y + popupBg.height/2 - 0.4*popupBg.height/2,
-		defaultFile = "images\\button.png",
-		overFile = "images\\pbutton.png",
+		defaultFile = "images/button.png",
+		overFile = "images/pbutton.png",
 		label = "Home",
 		labelColor = {default = {0,0,0}, over = {0.1,0.1,0.1}},
 		fontSize = 1.75*_FONTSIZE
@@ -91,8 +114,8 @@ local function showPopUp()
 		height = 0.4*popupBg.height,
 		x = popupBg.x + 0.4*popupBg.width/2,
 		y = popupBg.y + popupBg.height/2 - 0.4*popupBg.height/2,
-		defaultFile = "images\\button.png",
-		overFile = "images\\pbutton.png",
+		defaultFile = "images/button.png",
+		overFile = "images/pbutton.png",
 		label = "Next",
 		labelColor = {default = {0,0,0}, over = {0.1,0.1,0.1}},
 		fontSize = 1.75*_FONTSIZE	
@@ -101,8 +124,10 @@ local function showPopUp()
 end;
 
 local function onAnimalDrag(event)
+	
 	local t = event.target;
 	local phase = event.phase;
+	animScaleOnDrag(t)
 	if "began" == phase then 
 		startX = t.x;
 		startY = t.y;
@@ -133,9 +158,13 @@ local function onAnimalDrag(event)
 			t.x = shapesPictures[index].x;
 			t.y = shapesPictures[index].y;
 			onPlaces = onPlaces + 1;
+			animOnPutOn(t)
+			animOnPutOnShape(shapesPictures[index])
+			t:removeEventListener( "touch", onAnimalDrag )
 		else 
 			t.x = startX;
 			t.y = startY;
+			animScaleBack(t)
 		end;
 
 		display.getCurrentStage():setFocus(nil);
@@ -153,18 +182,18 @@ end;
 function scene:createScene(event)
 	local group = self.view;
 
-	background = display.newImage("images\\bg.png", constants.CENTERX, constants.CENTERY, true);
+	background = display.newImage("images/bg.png", constants.CENTERX, constants.CENTERY, true);
 	background.height = constants.H;
 	background.width = constants.W;
 	group:insert(background);
 
-	leftBar = display.newImage("images\\leftbar.png",0,constants.CENTERY);
+	leftBar = display.newImage("images/leftbar.png",0,constants.CENTERY);
 	leftBar.height = constants.H;
 	leftBar.width = 0.2*constants.W;
 	leftBar.x = leftBar.width/2;
 	group:insert(leftBar);
 
-	plate = display.newImage("images\\plate.png", 0 , constants.CENTERY);
+	plate = display.newImage("images/plate.png", 0 , constants.CENTERY);
 	plate.height = 0.9*constants.H;
 	plate.width = 0.7*constants.W;
 	plate.x = leftBar.x+leftBar.width/2+plate.width/2+0.05*constants.W;
@@ -222,8 +251,8 @@ function scene:enterScene(event)
 		local randPos = math.random (1, table.maxn(tmpPos.x));
 		
 		shapesPictures[i] = display.newImage (_SHAPESPATH..data.animals[indexes[i]].._FORMAT,0,0);
-		shapesPictures[i].height = _IMAGESIZE;
-		shapesPictures[i].width = _IMAGESIZE;	
+		shapesPictures[i].height = _IMAGESIZE*1.5;
+		shapesPictures[i].width = _IMAGESIZE*1.5;	
 		shapesPictures[i].x = tmpPos.x[randPos];
 		shapesPictures[i].y = tmpPos.y[randPos];
 		group:insert(shapesPictures[i]);
