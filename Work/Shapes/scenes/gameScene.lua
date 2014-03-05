@@ -257,7 +257,7 @@ function scene:enterScene(event)
 		shapesPictures[i].y = tmpPos.y[randPos];
 		group:insert(shapesPictures[i]);
 
-		labels[i] = display.newEmbossedText( data.animals[indexes[i]], shapesPictures[i].x, shapesPictures[i].y-_IMAGESIZE/2-_FONTSIZE/2, native.systemFontBold , _FONTSIZE);
+		labels[i] = display.newEmbossedText( data.animals[indexes[i]], shapesPictures[i].x, shapesPictures[i].y-1.5*_IMAGESIZE/2-_FONTSIZE/2, native.systemFontBold , _FONTSIZE);
 		labels[i]:setFillColor( 0,0,0 );
 		group:insert (labels[i]);
 
