@@ -173,7 +173,7 @@ local function onAnimalDrag(event)
 		startY = nil;
 
 		if onPlaces == 5 then
-			showPopUp();
+			timer.performWithDelay( 2000, showPopUp, 1);			
 		end;
 
 	end;
