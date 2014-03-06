@@ -13,7 +13,7 @@ local _FONTSIZE = constants.H / 15;
 local _IMAGESIZE = 0.4*constants.H;
 local _FOODSIZE = 0.7*_IMAGESIZE;
 local _SPACING = 0.1*constants.H;
-local _DELTA = 0.08*constants.H;
+local _DELTA = 0.1*constants.H;
 
 local _PANECENTERX
 local _BARCENTERX
