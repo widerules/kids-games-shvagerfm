@@ -10,7 +10,7 @@ local scene = storyboard.newScene()
 local widget = require("widget")
 
 local btnGame1, btnGame2, btnGame3, btnGame4
-local harp = audio.loadSound( "sounds/harp.wav")
+--local harp = audio.loadSound( "sounds/harp.wav")
 ----------------------------------------------------------------------------------
 local function goGame1()
 		storyboard.gotoScene("scenes.game1", "slideLeft", 800)
