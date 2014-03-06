@@ -10,20 +10,20 @@ data.animalsDescriptions = {
 	"Sheep Rhyme"
 };
 data.animalsImages = {
-	"images\\bunny.png",
-	"images\\cat.png", 
-	"images\\cow.png",
-	"images\\dog.png", 
-	"images\\mouse.png", 
-	"images\\sheep.png"
+	"images/bunny.png",
+	"images/cat.png", 
+	"images/cow.png",
+	"images/dog.png", 
+	"images/mouse.png", 
+	"images/sheep.png"
 };
 data.foodsImages = {
-	"images\\carrot.png",
-	"images\\milk.png",
-	"images\\seno.png",
-	"images\\bone.png",
-	"images\\cheese.png",
-	"images\\grass.png"
+	"images/carrot.png",
+	"images/milk.png",
+	"images/seno.png",
+	"images/bone.png",
+	"images/cheese.png",
+	"images/grass.png"
 };
 
 return data;
