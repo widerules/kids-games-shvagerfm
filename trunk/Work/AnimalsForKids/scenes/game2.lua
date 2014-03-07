@@ -64,7 +64,7 @@ end
 local function onHomeButtonClicked(event)
         --TODO: go to home screen
         storyboard.gotoScene("scenetemplate", "slideRight", 800)
-        storyboard.removeScene("scenes.game1")
+        storyboard.removeScene("scenes.game2")
 end
 
 local function onNextButtonClicked(event)

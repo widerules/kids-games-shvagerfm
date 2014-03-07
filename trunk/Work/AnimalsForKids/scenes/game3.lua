@@ -55,8 +55,8 @@ local function generateIndexes()
 end;
 
 local function onHomeButtonClicked(event)
-	--TO DO:
-	--returning to the main screen
+	storyboard.gotoScene("scenetemplate", "slideRight", 800)
+    storyboard.removeScene("scenes.game3")
 end;
 
 --- animaton Scale to 1.5
@@ -101,7 +101,7 @@ local function showPopUp()
 		x = popupBg.x - 0.4*popupBg.width/2,
 		y = popupBg.y + 0.4*popupBg.height/2,
 		defaultFile = "images/home.png",
-		overFile = "images/homehover.png"
+		overFile = "images/home.png"
 	}
 	homeBtn:addEventListener( "tap", onHomeButtonClicked );
 
@@ -251,7 +251,7 @@ function scene:enterScene(event)
 		shapesPictures[i].y = tmpPos.y[randPos];
 		group:insert(shapesPictures[i]);
 
-		labels[i] = display.newEmbossedText( data.animals[indexes[i]], shapesPictures[i].x, shapesPictures[i].y-_IMAGESIZE/2-_FONTSIZE/2, native.systemFontBold , _FONTSIZE);
+		labels[i] = display.newEmbossedText( data.animals[indexes[i]], shapesPictures[i].x, shapesPictures[i].y-1.5*_IMAGESIZE/2-_FONTSIZE/2, native.systemFontBold , _FONTSIZE);
 		labels[i]:setFillColor( 0,0,0 );
 		group:insert (labels[i]);
 
