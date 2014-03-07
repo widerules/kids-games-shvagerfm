@@ -10,10 +10,10 @@ local _W = display.contentWidth;			--storing width
 local _H = display.contentHeight;			--storing height
 local _CENTERX = display.contentCenterX;	--storing horizontal center
 local _CENTERY = display.contentCenterY;	--storing verticall center
-local _IMAGEWIDTH = 0.4*_W;					--storing image's width
-local _IMAGEHEIGHT = 0.4*_W;				--storing image's height
+local _IMAGEWIDTH = 0.35*_W;					--storing image's width
+local _IMAGEHEIGHT = 0.35*_W;				--storing image's height
 local _BTNSIZE = 0.1*_W;					--storing buttons' size
-local _WOODENWIDTH = 0.3*_W;				--storing wooden board's width
+local _WOODENWIDTH = 0.33*_W;				--storing wooden board's width
 local _WOODENHEIGHT = 0.9*_H;				--storing wooden board's height
 --I divided scene into two parts - for image and buttons and for "wooden board" 
 local _RIGHTCENTERX = _CENTERX + 0.35*_W;	--center for wooden board 
@@ -129,8 +129,8 @@ function scene:enterScene(event)
 	animalName.anchorY = 0;
 	group:insert(animalName);
 
-	animalDescription = display.newText(data.animalsDescriptions[index], woodenLayer.x, 0, 0.8*_WOODENWIDTH, 0.5*_WOODENHEIGHT, "Arial", _H/18);	
-	animalDescription.y = animalName.y + animalDescription.height;
+	animalDescription = display.newEmbossedText(data.animalsDescriptions[index], woodenLayer.x, 0, 0.85*_WOODENWIDTH, 0.5*_WOODENHEIGHT, "Arial", _H/24);	
+	animalDescription.y = animalName.y + 3*animalDescription.height/4;
 	animalDescription:setFillColor(0,0,0);
 	group:insert(animalDescription);	
 
@@ -140,7 +140,7 @@ function scene:enterScene(event)
 	animalImage:addEventListener( "tap", onAnimalClicked );
 	group:insert(animalImage);
 
-	foodImage = display.newImage (data.foodsImages[index], _RIGHTCENTERX, _CENTERY+_WOODENHEIGHT/2);
+	foodImage = display.newImage (data.foodsImages[index], woodenLayer.x, _CENTERY+_WOODENHEIGHT/2);
 	foodImage.anchorY = 1;
 	foodImage.height = _IMAGEHEIGHT/2;
 	foodImage.width = _IMAGEWIDTH/2;
