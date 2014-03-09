@@ -1,164 +1,78 @@
 local storyboard = require( "storyboard")
 local widget = require("widget")
+--local timer = require( "timer")
+local data = require("itemsData")
 local constants = require( "constants")
 
-local scene = storyboard.newScene()
 
-local _HOGIMAGESIZE = 0.15*constants.H
-local _MUSHIMAGESIZE = 0.15*constants.H
-local _BERRYIMAGESIZE = 0.15*constants.H
+local scene = storyboard.newScene()
 
 local _BERRYPATH = "images/berry.png"
 local _HOGPATH = "images/hog.png"
 local _MUSHPATH = "images/grib"
 local _FORMAT = ".png"
 
+local _FONTSIZE = constants.H / 15
+
+local iteration = 1
+local itemsFound = 0
+
+local score
 local layers = {}
 local groups = {}
 local hogs = {}
 local mushrooms ={}
 local berries = {}
 
---here begins block, which I will move to data.lua
-local hogsGroups = { 5, 5, 2, 4, 3, 1, 5}
-local hogsScale = { -1, -1, 1, -1, -1, 1, 1}
-local hogsSizes = { 1.5, 1, 1, 1, 1, 1, 1}
-local hogsPositions = 
-{
-	x = 
-	{
-		constants.W-_HOGIMAGESIZE/0.75,			--1
-		constants.CENTERX-constants.W/30,		--2
-		constants.CENTERX-_HOGIMAGESIZE/0.65,	--3
-		constants.W - constants.CENTERX/1.75,	--4
-		_HOGIMAGESIZE/0.85,							--5
-		constants.CENTERX-_HOGIMAGESIZE*2.6,	--6
-		hogsSizes[7]*_HOGIMAGESIZE				--7
-	},
-	y = 
-	{
-		constants.CENTERY+_HOGIMAGESIZE/0.75,   		--1
-		constants.CENTERY+2*_HOGIMAGESIZE+constants.W/70,--2
-		constants.CENTERY+_HOGIMAGESIZE/2,			--3
-		constants.CENTERY,							--4
-		constants.CENTERY+_HOGIMAGESIZE/1.25,			--5
-		constants.CENTERY-_HOGIMAGESIZE/2, 			--6
-		constants.H-1.1*hogsSizes[7]*_HOGIMAGESIZE		--7
-	}
-}
+local function onItemClicked(event)
+	local t = event.target
 
-local mushroomsGroups = {6, 5, 4, 5, 3, 2, 1}
-local mushroomsScale = {1, 1, 1, 1, -1, 1, -1}
-local mushroomsSizes = {1.2, 0.75, 1, 0.75, 1, 1, 0.75}
-local mushroomsTypes = {1, 2, 1, 2, 1, 1, 2}
-local mushroomsPositions = 
-{
-	x =
-	{
-		constants.CENTERX+_MUSHIMAGESIZE*1.6,	--1
-		constants.CENTERX- _MUSHIMAGESIZE*1.4,	--2
-		constants.CENTERX+_MUSHIMAGESIZE*2.25,	--3
-		_MUSHIMAGESIZE*1.8,						--4
-		_MUSHIMAGESIZE*1.8,						--5
-		constants.CENTERX - _MUSHIMAGESIZE*2,	--6
-		constants.CENTERX+_MUSHIMAGESIZE*1.3	--7		
-	},
-	y = 
-	{
-		constants.H- _MUSHIMAGESIZE/1.3,		--1
-		constants.H- _MUSHIMAGESIZE/1.1,		--2
-		constants.CENTERY+_MUSHIMAGESIZE,		--3
-		constants.H- _MUSHIMAGESIZE,			--4
-		constants.CENTERY+_MUSHIMAGESIZE*0.75,	--5
-		constants.CENTERY - _MUSHIMAGESIZE*0.5,	--6
-		constants.CENTERY - _MUSHIMAGESIZE/8	--7
-	}
-}
+	local function updateScore ()
+		score.text = "Score: "..itemsFound
+	end
 
-local berriesGroups = {5, 4, 3, 5, 1, 3, 2}
-local berriesSizes = {1, 1, 1, 1, 0.75, 1, 1}
-local berriesPosition = 
-{
-	x = 
-	{
-		constants.W - _BERRYIMAGESIZE*2, 		--1
-		constants.CENTERX,						--2
-		constants.CENTERX- _BERRYIMAGESIZE*2.3,	--3
-		_BERRYIMAGESIZE*1.5,					--4
-		constants.CENTERX*1.1,					--5
-		constants.CENTERX*1.45,					--6
-		constants.CENTERX*0.5 					--7
-	},
-	y = 
-	{
-		constants.CENTERY+_BERRYIMAGESIZE*1.2,	--1
-		constants.CENTERY+_BERRYIMAGESIZE/1.75,	--2
-		constants.CENTERY+1.5*_BERRYIMAGESIZE,	--3
-		constants.H - _BERRYIMAGESIZE,			--4
-		constants.CENTERY- _BERRYIMAGESIZE/2,	--5
-		constants.CENTERY- _BERRYIMAGESIZE/2.3,	--6
-		constants.CENTERY 						--7
-	}	
-}
---here it finishes
+	local function vanishAway ()	
+		transition.to(t,{time = 1000, alpha = 0, x =constants.W, y = 0, xScale = 0.1, yScale = 0.1, onComplete = updateScore})
+	end	
+	transition.scaleTo(t, {xScale = 1.5*t.xScale, yScale = 1.5*t.yScale, time = 500, onComplete = vanishAway})
+	t:removeEventListener( "touch", onItemClicked )	
+
+	itemsFound = itemsFound + 1
+	
+	if (itemsFound == 7) then
+		timer.performWithDelay( 2000, storyboard.reloadScene, 1)		
+	end
+end
 
 local function fillWithHogs(group)
-	for i = 1, 5, 1 do
-		groups[i] = display.newGroup();
-	end	
-	
-	group:insert(4, groups[1])
-	group:insert(7, groups[2])
-	group:insert(9, groups[3])
-	group:insert(12, groups[4])
-	group:insert(17, groups[5])
-
 	for i = 1, 7, 1 do
-		hogs[i]	= display.newImage (_HOGPATH, hogsPositions.x[i], hogsPositions.y[i])
-		hogs[i].width = _HOGIMAGESIZE*hogsSizes[i]
-		hogs[i].height = _HOGIMAGESIZE*hogsSizes[i]
-		hogs[i].xScale = hogsScale[i]
-		groups[hogsGroups[i]]:insert (hogs[i])
+		hogs[i]	= display.newImage (_HOGPATH, data.hogsPositions.x[i], data.hogsPositions.y[i])
+		hogs[i].width = data.HOGIMAGESIZE*data.hogsSizes[i]
+		hogs[i].height = data.HOGIMAGESIZE*data.hogsSizes[i]
+		hogs[i].xScale = data.hogsScale[i]
+		hogs[i]:addEventListener( "touch", onItemClicked )
+		groups[data.hogsGroups[i]]:insert (hogs[i])		
 	end	
 end
 
 local function fillWithMushrooms(group)
-	for i = 1, 6, 1 do
-		groups[i] = display.newGroup();
-	end
-
-	group:insert(4, groups[1])
-	group:insert(5, groups[2])
-	group:insert(9, groups[3])
-	group:insert(13, groups[4])
-	group:insert(17, groups[5])
-	group:insert(19, groups[6])
-
 	for i = 1, 7, 1 do
-		mushrooms[i] = display.newImage (_MUSHPATH..mushroomsTypes[i].._FORMAT, mushroomsPositions.x[i], mushroomsPositions.y[i])
-		mushrooms[i].width = _MUSHIMAGESIZE*mushroomsSizes[i]
-		mushrooms[i].height = _MUSHIMAGESIZE*mushroomsSizes[i]
-		mushrooms[i].xScale = mushroomsScale[i]
-		groups[mushroomsGroups[i]]:insert(mushrooms[i])
+		mushrooms[i] = display.newImage (_MUSHPATH..data.mushroomsTypes[i].._FORMAT, data.mushroomsPositions.x[i], data.mushroomsPositions.y[i])
+		mushrooms[i].width = data.MUSHIMAGESIZE*data.mushroomsSizes[i]
+		mushrooms[i].height = data.MUSHIMAGESIZE*data.mushroomsSizes[i]
+		mushrooms[i].xScale = data.mushroomsScale[i]
+		mushrooms[i]:addEventListener( "touch", onItemClicked )
+		groups[data.mushroomsGroups[i]]:insert(mushrooms[i])
 	end
 end
 
 local function fillWithBerries(group)
-	for i = 1, 5, 1 do
-		groups[i] = display.newGroup( )
-	end
-
-	group:insert(4, groups[1])
-	group:insert(7, groups[2])
-	group:insert(11, groups[3])
-	group:insert(13, groups[4])
-	group:insert(16, groups[5])
-
 	for i = 1, 7, 1 do
-		berries[i] = display.newImage(_BERRYPATH, berriesPosition.x[i], berriesPosition.y[i])
-		berries[i].width = _BERRYIMAGESIZE * berriesSizes[i]
-		berries[i].height = _BERRYIMAGESIZE * berriesSizes[i]
-		groups[berriesGroups[i]]:insert(berries[i])
+		berries[i] = display.newImage(_BERRYPATH, data.berriesPosition.x[i], data.berriesPosition.y[i])
+		berries[i].width = data.BERRYIMAGESIZE * data.berriesSizes[i]
+		berries[i].height = data.BERRYIMAGESIZE * data.berriesSizes[i]
+		berries[i]:addEventListener( "touch", onItemClicked )
+		groups[data.berriesGroups[i]]:insert(berries[i])
 	end
 end
 
@@ -169,19 +83,74 @@ function scene:createScene (event)
 		layers[i] = display.newImage("images/layer"..i..".png", constants.CENTERX, constants.CENTERY)
 		layers[i].height = constants.H
 		layers[i].width = constants.W
-		group:insert (layers[i])		
 	end	
 
-	--depend on the value of some variable one of the following funcs will be called
-	--fillWithHogs(group)
-	--fillWithMushrooms(group)
-	fillWithBerries(group)	
+	for i = 1,9,1 do
+		groups[i] = display.newGroup( )
+	end	
+
+	group:insert (1, layers[1])
+	group:insert (2, layers[2])
+	group:insert (3, layers[3])
+	group:insert (4, groups[1])
+	group:insert (5, layers[4])
+	group:insert (6, groups[2])
+	group:insert (7, layers[5])
+	group:insert (8, groups[3])
+	group:insert (9, layers[6])
+	group:insert (10, groups[4])
+	group:insert (11, layers[7])
+	group:insert (12, layers[8])
+	group:insert (13, groups[5])
+	group:insert (14, layers[9])
+	group:insert (15, groups[6])
+	group:insert (16, layers[10])
+	group:insert (17, layers[11])
+	group:insert (18, groups[7])
+	group:insert (19, layers[12])
+	group:insert (20, groups[8])
+	group:insert (21, layers[13])
+	group:insert (22, groups[9])
+	group:insert (23, layers[14])
 end
 	
 function scene:enterScene(event)
+	local group = self.view
+	
+	itemsFound = 0
+
+	score = display.newText("Score: 0", constants.W - _FONTSIZE/2, _FONTSIZE/2, native.systemFont, _FONTSIZE)
+	score.x = constants.W-score.width/2
+	if iteration == 1 then
+		fillWithHogs(group)
+		iteration = iteration + 1
+	elseif iteration == 2 then
+		fillWithMushrooms(group)
+		iteration = iteration + 1
+	else
+		fillWithBerries(group)
+		iteration = 1
+	end
 end
 
 function scene:exitScene(event)
+
+	score:removeSelf( )
+
+	while (table.maxn(hogs)>0) do
+		hogs[#hogs]:removeSelf()
+		table.remove( hogs )
+	end
+
+	while (table.maxn(mushrooms)>0) do
+		mushrooms[#mushrooms]:removeSelf()
+		table.remove(mushrooms)
+	end
+
+	while (table.maxn(berries)>0) do
+		berries[#berries]:removeSelf()
+		table.remove(berries)
+	end
 end
 
 function scene:destroyScene(event)
