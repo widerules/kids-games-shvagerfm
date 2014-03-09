@@ -171,13 +171,16 @@ function scene:enterScene(event)
 
 	score = display.newText("Score: 0", constants.W - _FONTSIZE/2, _FONTSIZE/2, native.systemFont, _FONTSIZE)
 	score.x = constants.W-score.width/2
-	if iteration == 1 then
+	if iteration == 1 then	
+		--TODO:Sun animation	
 		fillWithHogs(group)
 		iteration = iteration + 1
 	elseif iteration == 2 then
+		--TODO: rain animation
 		fillWithMushrooms(group)
 		iteration = iteration + 1
 	else
+		--TODO ???
 		fillWithBerries(group)
 		iteration = 1
 	end
