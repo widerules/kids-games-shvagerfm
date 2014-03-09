@@ -112,7 +112,7 @@ local function fillWithHogs(group)
 			groups[data.hogsGroups[i]]:insert (hogs[i])	
 			transition.fadeIn( hogs[i], {time = 500} )
 		end
-		timer.performWithDelay( 1000, addHog )
+		timer.performWithDelay( i*1000, addHog )
 	end	
 end
 
@@ -178,11 +178,11 @@ local function rainAnimation()
 	local function rainStart()
 		local rainSheetData = 
 		{
-      		width = 240,
-      		height = 157,
+      		width = constants.H/2,
+      		height = constants.H/3,
       		numFrames = 4,
-      		sheetContentWidth = 480,
-      		sheetContentHeight = 314
+      		sheetContentWidth = constants.H,
+      		sheetContentHeight = 2*constants.H/3
    		}
    		local rainSheet = graphics.newImageSheet("images/rain.png", rainSheetData)
       	local sequenceDataRain = 
@@ -198,8 +198,8 @@ local function rainAnimation()
    		local rain = display.newSprite( rainSheet, sequenceDataRain)
    		rain.x = constants.CENTERX
    		rain.y = constants.CENTERY
-   		rain.height = constants.H
-   		rain.width = constants.W
+   		--rain.height = constants.H
+   		--rain.width = constants.W
    		rain:play()
 
 
