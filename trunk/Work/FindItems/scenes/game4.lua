@@ -24,6 +24,56 @@ local hogs = {}
 local mushrooms ={}
 local berries = {}
 
+local popupBg
+local popupText
+local nextBtn
+local homeBtn
+
+local function onNextButtonClicked()
+	storyboard.reloadScene( )
+end
+
+local function onHomeButtonClicked()
+	--TODO: go to home screen
+end
+
+local function showPopUp()
+        popupBg = display.newImage( "images/popupbg.png", constants.CENTERX, constants.CENTERY );
+        popupBg.height = 0.7*constants.H;
+        popupBg.width = 0.7*constants.W;
+
+        popupText = display.newText("Well done !", popupBg.x, 0, native.systemFont, 2*_FONTSIZE);
+        popupText.y = popupBg.y-popupBg.height+2*popupText.width/3;
+
+        homeBtn = widget.newButton
+        {
+                width = 0.4*popupBg.width,
+                height = 0.4*popupBg.height,
+                x = popupBg.x - 0.4*popupBg.width/2,
+                y = popupBg.y + popupBg.height/2 - 0.4*popupBg.height/2,
+                defaultFile = "images/button.png",
+                overFile = "images/pbutton.png",
+                label = "Home",
+                labelColor = {default = {0,0,0}, over = {0.1,0.1,0.1}},
+                fontSize = 1.75*_FONTSIZE
+        }
+        homeBtn:addEventListener( "tap", onHomeButtonClicked );
+
+        nextBtn = widget.newButton
+        {
+                width = 0.4*popupBg.width,
+                height = 0.4*popupBg.height,
+                x = popupBg.x + 0.4*popupBg.width/2,
+                y = popupBg.y + popupBg.height/2 - 0.4*popupBg.height/2,
+                defaultFile = "images/button.png",
+                overFile = "images/pbutton.png",
+                label = "Next",
+                labelColor = {default = {0,0,0}, over = {0.1,0.1,0.1}},
+                fontSize = 1.75*_FONTSIZE       
+        }       
+        nextBtn:addEventListener( "tap", onNextButtonClicked );
+end
+
 local function onItemClicked(event)
 	local t = event.target
 
@@ -40,7 +90,7 @@ local function onItemClicked(event)
 	itemsFound = itemsFound + 1
 	
 	if (itemsFound == 7) then
-		timer.performWithDelay( 2000, storyboard.reloadScene, 1)		
+		timer.performWithDelay( 2000, showPopUp, 1)		
 	end
 end
 
@@ -150,6 +200,13 @@ function scene:exitScene(event)
 	while (table.maxn(berries)>0) do
 		berries[#berries]:removeSelf()
 		table.remove(berries)
+	end
+
+	if (popupBg ~= nil) then
+		popupBg:removeSelf()
+		nextBtn:removeSelf()
+		homeBtn:removeSelf()
+		popupText:removeSelf()
 	end
 end
 
