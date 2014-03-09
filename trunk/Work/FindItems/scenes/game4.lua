@@ -13,11 +13,15 @@ local _MUSHPATH = "images/grib"
 local _FORMAT = ".png"
 
 local _FONTSIZE = constants.H / 15
+local _IMAGESIZE = 0.2*constants.H
 
 local iteration = 1
 local itemsFound = 0
 
 local score
+local sun
+local cloud
+
 local layers = {}
 local groups = {}
 local hogs = {}
@@ -28,6 +32,8 @@ local popupBg
 local popupText
 local nextBtn
 local homeBtn
+
+
 
 local function onNextButtonClicked()
 	storyboard.reloadScene( )
@@ -95,13 +101,15 @@ local function onItemClicked(event)
 end
 
 local function fillWithHogs(group)
+	
 	for i = 1, 7, 1 do
 		hogs[i]	= display.newImage (_HOGPATH, data.hogsPositions.x[i], data.hogsPositions.y[i])
 		hogs[i].width = data.HOGIMAGESIZE*data.hogsSizes[i]
 		hogs[i].height = data.HOGIMAGESIZE*data.hogsSizes[i]
 		hogs[i].xScale = data.hogsScale[i]
 		hogs[i]:addEventListener( "touch", onItemClicked )
-		groups[data.hogsGroups[i]]:insert (hogs[i])		
+		groups[data.hogsGroups[i]]:insert (hogs[i])	
+		transition.fadeIn( hogs[i], {time = 500} )
 	end	
 end
 
@@ -113,6 +121,7 @@ local function fillWithMushrooms(group)
 		mushrooms[i].xScale = data.mushroomsScale[i]
 		mushrooms[i]:addEventListener( "touch", onItemClicked )
 		groups[data.mushroomsGroups[i]]:insert(mushrooms[i])
+
 	end
 end
 
@@ -124,6 +133,49 @@ local function fillWithBerries(group)
 		berries[i]:addEventListener( "touch", onItemClicked )
 		groups[data.berriesGroups[i]]:insert(berries[i])
 	end
+end
+
+local function sunAnimation ()
+	sun = display.newImage("images/sun.png", constants.W, constants.H)
+	sun.width = _IMAGESIZE 
+	sun.height = _IMAGESIZE
+	sun.anchorY = 0.4
+	groups[1]:insert(sun)
+
+	local function fill ()
+		timer.performWithDelay( 500, fillWithHogs )
+	end
+
+	local function onRotateNeg()
+		transition.to(sun, {rotation = 0, time = 1000, onComplete = fill})		
+	end
+
+	local function onRotatePos()		
+		transition.to(sun, {rotation = 360, time = 1000, onComplete = onRotateNeg})			
+	end
+
+	local function toNormal ()
+		transition.scaleTo(sun, {xScale = 1, yScale = 1, time = 500, onComplete = onRotatePos})
+	end
+
+	local function toBig()
+		
+		transition.scaleTo(sun, {xScale = 1.5, yScale = 1.5, time = 500, onComplete = toNormal})
+	end
+
+	transition.moveTo(sun, {x = constants.CENTERX, y = _IMAGESIZE*0.8, time = 2000, onComplete = toBig})
+end
+
+local function rainAnimation()
+	cloud = display.newImage("images/tucha.png", 0,0)
+	cloud.width = _IMAGESIZE
+	cloud.height = _IMAGESIZE
+	groups[1]:insert(cloud)
+
+	local function raindStart()
+		
+	end
+	transition.moveTo(cloud, {x = constants.CENTERX, y = _IMAGESIZE*0.8, time = 2000, onComplete = rainStart})
 end
 
 function scene:createScene (event)
@@ -172,8 +224,9 @@ function scene:enterScene(event)
 	score = display.newText("Score: 0", constants.W - _FONTSIZE/2, _FONTSIZE/2, native.systemFont, _FONTSIZE)
 	score.x = constants.W-score.width/2
 	if iteration == 1 then	
-		--TODO:Sun animation	
-		fillWithHogs(group)
+		--TODO:Sun animation
+		sunAnimation()	
+		--fillWithHogs(group)
 		iteration = iteration + 1
 	elseif iteration == 2 then
 		--TODO: rain animation
@@ -189,7 +242,6 @@ end
 function scene:exitScene(event)
 
 	score:removeSelf( )
-
 	while (table.maxn(hogs)>0) do
 		hogs[#hogs]:removeSelf()
 		table.remove( hogs )
@@ -210,6 +262,21 @@ function scene:exitScene(event)
 		nextBtn:removeSelf()
 		homeBtn:removeSelf()
 		popupText:removeSelf()
+	end
+
+	if (sun ~= nil) then
+
+local function fillWithHogs(group)
+	for i = 1, 7, 1 do
+		hogs[i]	= display.newImage (_HOGPATH, data.hogsPositions.x[i], data.hogsPositions.y[i])
+		hogs[i].width = data.HOGIMAGESIZE*data.hogsSizes[i]
+		hogs[i].height = data.HOGIMAGESIZE*data.hogsSizes[i]
+		hogs[i].xScale = data.hogsScale[i]
+		hogs[i]:addEventListener( "touch", onItemClicked )
+		groups[data.hogsGroups[i]]:insert (hogs[i])		
+	end	
+end
+		sun:removeSelf()
 	end
 end
 
