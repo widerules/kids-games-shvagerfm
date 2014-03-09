@@ -103,13 +103,16 @@ end
 local function fillWithHogs(group)
 	
 	for i = 1, 7, 1 do
-		hogs[i]	= display.newImage (_HOGPATH, data.hogsPositions.x[i], data.hogsPositions.y[i])
-		hogs[i].width = data.HOGIMAGESIZE*data.hogsSizes[i]
-		hogs[i].height = data.HOGIMAGESIZE*data.hogsSizes[i]
-		hogs[i].xScale = data.hogsScale[i]
-		hogs[i]:addEventListener( "touch", onItemClicked )
-		groups[data.hogsGroups[i]]:insert (hogs[i])	
-		transition.fadeIn( hogs[i], {time = 500} )
+		local function addHog()
+			hogs[i]	= display.newImage (_HOGPATH, data.hogsPositions.x[i], data.hogsPositions.y[i])
+			hogs[i].width = data.HOGIMAGESIZE*data.hogsSizes[i]
+			hogs[i].height = data.HOGIMAGESIZE*data.hogsSizes[i]
+			hogs[i].xScale = data.hogsScale[i]
+			hogs[i]:addEventListener( "touch", onItemClicked )			
+			groups[data.hogsGroups[i]]:insert (hogs[i])	
+			transition.fadeIn( hogs[i], {time = 500} )
+		end
+		timer.performWithDelay( 1000, addHog )
 	end	
 end
 
@@ -172,8 +175,34 @@ local function rainAnimation()
 	cloud.height = _IMAGESIZE
 	groups[1]:insert(cloud)
 
-	local function raindStart()
-		
+	local function rainStart()
+		local rainSheetData = 
+		{
+      		width = 240,
+      		height = 157,
+      		numFrames = 4,
+      		sheetContentWidth = 480,
+      		sheetContentHeight = 314
+   		}
+   		local rainSheet = graphics.newImageSheet("images/rain.png", rainSheetData)
+      	local sequenceDataRain = 
+      	{
+      		name = "rain",
+      		start = 1,
+      		count = 4,
+      		time = 100,
+      		loopCount=4,
+      		loopDirection = forward
+      	}
+   	
+   		local rain = display.newSprite( rainSheet, sequenceDataRain)
+   		rain.x = constants.CENTERX
+   		rain.y = constants.CENTERY
+   		rain.height = constants.H
+   		rain.width = constants.W
+   		rain:play()
+
+
 	end
 	transition.moveTo(cloud, {x = constants.CENTERX, y = _IMAGESIZE*0.8, time = 2000, onComplete = rainStart})
 end
@@ -228,6 +257,7 @@ function scene:enterScene(event)
 		sunAnimation()	
 		--fillWithHogs(group)
 		iteration = iteration + 1
+		rainAnimation()
 	elseif iteration == 2 then
 		--TODO: rain animation
 		fillWithMushrooms(group)
@@ -265,17 +295,6 @@ function scene:exitScene(event)
 	end
 
 	if (sun ~= nil) then
-
-local function fillWithHogs(group)
-	for i = 1, 7, 1 do
-		hogs[i]	= display.newImage (_HOGPATH, data.hogsPositions.x[i], data.hogsPositions.y[i])
-		hogs[i].width = data.HOGIMAGESIZE*data.hogsSizes[i]
-		hogs[i].height = data.HOGIMAGESIZE*data.hogsSizes[i]
-		hogs[i].xScale = data.hogsScale[i]
-		hogs[i]:addEventListener( "touch", onItemClicked )
-		groups[data.hogsGroups[i]]:insert (hogs[i])		
-	end	
-end
 		sun:removeSelf()
 	end
 end
