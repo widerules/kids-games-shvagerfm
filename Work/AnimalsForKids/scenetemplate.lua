@@ -25,7 +25,7 @@ local function goGame3()
 
 local function goGame4()
 	audio.play(harp)
-		--storyboard.gotoScene("scenes.game4", "slideLeft", 800)
+		storyboard.gotoScene("scenes.game4", "slideLeft", 800)
 	end
 ---------------------------------------------------------------------------------
 

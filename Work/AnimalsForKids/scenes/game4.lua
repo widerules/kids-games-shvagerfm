@@ -41,7 +41,8 @@ local function onNextButtonClicked()
 end
 
 local function onHomeButtonClicked()
-        --TODO: go to home screen
+        storyboard.gotoScene("scenetemplate", "slideRight", 800)
+        storyboard.removeScene("scenes.game3")
 end
 
 local function showPopUp()
@@ -271,11 +272,11 @@ function scene:enterScene(event)
 
         score = display.newText("Score: 0", constants.W - _FONTSIZE/2, _FONTSIZE/2, native.systemFont, _FONTSIZE)
         score.x = constants.W-score.width/2
-        if iteration == 2 then  
+        if iteration == 1 then  
                 --TODO:Sun animation
                 sunAnimation()                  
                 iteration = iteration + 1               
-        elseif iteration == 1 then
+        elseif iteration == 2 then
                 --TODO: rain animation
                 rainAnimation()
                 --fillWithMushrooms(group)
