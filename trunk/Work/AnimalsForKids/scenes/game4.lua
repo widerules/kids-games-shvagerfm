@@ -196,11 +196,11 @@ local function rainAnimation()
         local function rainStart()
                 local rainSheetData = 
                 {
-                width = constants.H/2,
-                height = constants.H/3,
+                width = constants.H,
+                height = 2*constants.H/3,
                 numFrames = 4,
-                sheetContentWidth = constants.H,
-                sheetContentHeight = 2*constants.H/3
+                sheetContentWidth = constants.H*2,
+                sheetContentHeight = 4*constants.H/3
                 }
                 local rainSheet = graphics.newImageSheet("images/rain.png", rainSheetData)
         local sequenceDataRain = 
@@ -209,17 +209,19 @@ local function rainAnimation()
                 start = 1,
                 count = 4,
                 time = 100,
-                loopCount=4,
+                loopCount=6,
                 loopDirection = forward
         }
         
                 rain = display.newSprite( rainSheet, sequenceDataRain)
-                rain.x = cloud.x-constants.H/40
-                rain.y = cloud.y+cloud.height/2+rain.height/2
+                --rain.x = cloud.x-constants.H/40
+                --rain.y = cloud.y+cloud.height/2+rain.height/2
                 --rain.height = constants.H
                 --rain.width = constants.W
+                rain.x = constants.CENTERX
+                rain.y = constants.CENTERY
                 rain:addEventListener( "sprite", onRainFinished)
-                rain.timeScale = 0.5
+                rain.timeScale = 0.4
                 rain:play()
 
 
@@ -272,11 +274,11 @@ function scene:enterScene(event)
 
         score = display.newText("Score: 0", constants.W - _FONTSIZE/2, _FONTSIZE/2, native.systemFont, _FONTSIZE)
         score.x = constants.W-score.width/2
-        if iteration == 1 then  
+        if iteration == 2 then  
                 --TODO:Sun animation
                 sunAnimation()                  
                 iteration = iteration + 1               
-        elseif iteration == 2 then
+        elseif iteration == 1 then
                 --TODO: rain animation
                 rainAnimation()
                 --fillWithMushrooms(group)
