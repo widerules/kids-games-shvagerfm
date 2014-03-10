@@ -271,11 +271,11 @@ function scene:enterScene(event)
 
 	score = display.newText("Score: 0", constants.W - _FONTSIZE/2, _FONTSIZE/2, native.systemFont, _FONTSIZE)
 	score.x = constants.W-score.width/2
-	if iteration == 2 then	
+	if iteration == 1 then	
 		--TODO:Sun animation
 		sunAnimation()			
 		iteration = iteration + 1		
-	elseif iteration == 1 then
+	elseif iteration == 2 then
 		--TODO: rain animation
 		rainAnimation()
 		--fillWithMushrooms(group)
@@ -324,7 +324,6 @@ function scene:exitScene(event)
 	if (cloud ~= nil) then
 		cloud:removeSelf( )
 		cloud = nil
-
 	end
 end
 
