@@ -26,13 +26,4 @@ data.foodsImages = {
 	"images/grass.png"
 };
 
-data.animalsSounds = {
-	"sounds/bunny.mp3",
-	"sounds/cat.mp3",
-	"sounds/cow.mp3",
-	"sounds/dog.mp3",
-	"sounds/mouse.mp3",
-	"sounds/sheep.mp3",
-}
-
 return data;
