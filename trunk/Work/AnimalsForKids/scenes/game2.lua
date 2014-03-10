@@ -81,32 +81,26 @@ local function showPopUp()
 
         homeBtn = widget.newButton
         {
-                width = 0.4*popupBg.width,
+                width = 0.4*popupBg.height,
                 height = 0.4*popupBg.height,
                 x = popupBg.x - 0.4*popupBg.width/2,
-                y = popupBg.y + popupBg.height/2 - 0.4*popupBg.height/2,
-                defaultFile = "images/button.png",
-                overFile = "images/pbutton.png",
-                label = "Home",
-                labelColor = {default = {0,0,0}, over = {0.1,0.1,0.1}},
-                fontSize = 1.75*_FONTSIZE
+                y = popupBg.y + 0.4*popupBg.height/2,
+                defaultFile = "images/home.png",
+                overFile = "images/homehover.png"
         }
         homeBtn:addEventListener( "tap", onHomeButtonClicked );
 
         nextBtn = widget.newButton
         {
-                width = 0.4*popupBg.width,
+                width = 0.4*popupBg.height,
                 height = 0.4*popupBg.height,
                 x = popupBg.x + 0.4*popupBg.width/2,
-                y = popupBg.y + popupBg.height/2 - 0.4*popupBg.height/2,
-                defaultFile = "images/button.png",
-                overFile = "images/pbutton.png",
-                label = "Next",
-                labelColor = {default = {0,0,0}, over = {0.1,0.1,0.1}},
-                fontSize = 1.75*_FONTSIZE       
+                y = popupBg.y + 0.4*popupBg.height/2,
+                defaultFile = "images/next.png",
+                overFile = "images/next.png"
         }       
         nextBtn:addEventListener( "tap", onNextButtonClicked );
-end
+end;
 
 local function onFoodDrag (event)
 local t = event.target
