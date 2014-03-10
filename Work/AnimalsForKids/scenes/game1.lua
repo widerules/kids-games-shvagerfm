@@ -20,6 +20,7 @@ local _RIGHTCENTERX = _CENTERX + 0.35*_W;	--center for wooden board
 local _LEFTCENTERX = _CENTERX - 0.15*_W;	--center for image
 
 local index = 1;	--index of current animal
+local needPlayAudio = true
 
 local background;	--for loading background picture
 local woodenLayer;	--for loading wooden texture 
@@ -64,6 +65,7 @@ local function onHomeButtonClicked( event )
 end;
 
 local function onAnimalClicked( event )	
+	needPlayAudio = true
 	audio.play(animalSound)	
 end;
 
@@ -113,7 +115,7 @@ function scene:createScene(event)
 		x = _BTNSIZE/2,
 		y = _BTNSIZE/2,
 		defaultFile = "images/home.png",
-		overFile = "images/home.png",
+		overFile = "images/homehover.png",
 		width = _BTNSIZE,
 		height = _BTNSIZE
 	}
@@ -146,7 +148,12 @@ function scene:enterScene(event)
 	foodImage.width = _IMAGEWIDTH/2;
 	group:insert (foodImage);
 
-	animalSound = audio.loadSound( data.animalsSounds[index])	
+	animalSound = audio.loadSound( data.animalsSounds[index])
+
+	if needPlayAudio == true then
+		needPlayAudio = false
+		timer.performWithDelay( 500, onAnimalClicked )	
+	end
 end;
 
 function scene:exitScene(event)

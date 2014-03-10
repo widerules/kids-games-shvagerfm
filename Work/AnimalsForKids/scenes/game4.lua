@@ -23,6 +23,10 @@ local sun
 local cloud
 local rain
 
+local birdSound
+local rainSound
+local hogSound
+
 local layers = {}
 local groups = {}
 local hogs = {}
@@ -55,32 +59,26 @@ local function showPopUp()
 
         homeBtn = widget.newButton
         {
-                width = 0.4*popupBg.width,
+                width = 0.4*popupBg.height,
                 height = 0.4*popupBg.height,
                 x = popupBg.x - 0.4*popupBg.width/2,
-                y = popupBg.y + popupBg.height/2 - 0.4*popupBg.height/2,
-                defaultFile = "images/button.png",
-                overFile = "images/pbutton.png",
-                label = "Home",
-                labelColor = {default = {0,0,0}, over = {0.1,0.1,0.1}},
-                fontSize = 1.75*_FONTSIZE
+                y = popupBg.y + 0.4*popupBg.height/2,
+                defaultFile = "images/home.png",
+                overFile = "images/homehover.png"
         }
         homeBtn:addEventListener( "tap", onHomeButtonClicked );
 
         nextBtn = widget.newButton
         {
-                width = 0.4*popupBg.width,
+                width = 0.4*popupBg.height,
                 height = 0.4*popupBg.height,
                 x = popupBg.x + 0.4*popupBg.width/2,
-                y = popupBg.y + popupBg.height/2 - 0.4*popupBg.height/2,
-                defaultFile = "images/button.png",
-                overFile = "images/pbutton.png",
-                label = "Next",
-                labelColor = {default = {0,0,0}, over = {0.1,0.1,0.1}},
-                fontSize = 1.75*_FONTSIZE       
+                y = popupBg.y + 0.4*popupBg.height/2,
+                defaultFile = "images/next.png",
+                overFile = "images/next.png"
         }       
         nextBtn:addEventListener( "tap", onNextButtonClicked );
-end
+end;
 
 local function onItemClicked(event)
         local t = event.target
@@ -103,7 +101,7 @@ local function onItemClicked(event)
 end
 
 local function fillWithHogs(group)
-        
+        audio.play(hogSound)
         for i = 1, 7, 1 do
                 local function addHog()
                         hogs[i] = display.newImage (_HOGPATH, data.hogsPositions.x[i], data.hogsPositions.y[i])
@@ -113,7 +111,7 @@ local function fillWithHogs(group)
                         hogs[i]:addEventListener( "touch", onItemClicked )                      
                         groups[data.hogsGroups[i]]:insert (hogs[i])                             
                 end
-                timer.performWithDelay( i*500, addHog )
+                timer.performWithDelay( i*300, addHog )
         end     
 end
 
@@ -127,7 +125,7 @@ local function fillWithMushrooms(group)
                         mushrooms[i]:addEventListener( "touch", onItemClicked )
                         groups[data.mushroomsGroups[i]]:insert(mushrooms[i])
                 end
-                timer.performWithDelay( i*500, addMushroom)
+                timer.performWithDelay( i*300, addMushroom)
 
         end
 end
@@ -141,11 +139,13 @@ local function fillWithBerries(group)
                         berries[i]:addEventListener( "touch", onItemClicked )
                         groups[data.berriesGroups[i]]:insert(berries[i])
                 end
-                timer.performWithDelay( i*500, addBerry )
+                timer.performWithDelay( i*300, addBerry )
         end
 end
 
 local function sunAnimation ()
+        audio.play(birdSound)
+
         sun = display.newImage("images/sun.png", constants.W, constants.H)
         sun.width = _IMAGESIZE 
         sun.height = _IMAGESIZE
@@ -153,6 +153,7 @@ local function sunAnimation ()
         groups[1]:insert(sun)
 
         local function fill ()
+                audio.stop()
                 timer.performWithDelay( 500, fillWithHogs )
         end
 
@@ -231,6 +232,10 @@ end
 
 function scene:createScene (event)
         local group = self.view
+
+        birdSound = audio.loadSound("sounds/temp_birds_sing.mp3")
+        rainSound = audio.loadSound("rain_sound.mp3")
+        hogSound = audio.loadSound("hog_sound2.mp3")
 
         for i = 1, 14, 1 do
                 layers[i] = display.newImage("images/layer"..i..".png", constants.CENTERX, constants.CENTERY)

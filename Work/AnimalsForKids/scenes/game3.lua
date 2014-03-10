@@ -101,7 +101,7 @@ local function showPopUp()
 		x = popupBg.x - 0.4*popupBg.width/2,
 		y = popupBg.y + 0.4*popupBg.height/2,
 		defaultFile = "images/home.png",
-		overFile = "images/home.png"
+		overFile = "images/homehover.png"
 	}
 	homeBtn:addEventListener( "tap", onHomeButtonClicked );
 
