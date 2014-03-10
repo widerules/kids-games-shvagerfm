@@ -34,6 +34,7 @@ local animalName;			--Text, for animal name
 local animalDescription;	--Text, for animal rhyme
 local animalImage;			--Image, for animal picture
 local foodImage;			--Image, for food picture
+local animalSound			--Sound of the animal
 
 --event listener for next button
 local function onNextButtonClicked( event )
@@ -62,9 +63,8 @@ local function onHomeButtonClicked( event )
 	storyboard.removeScene("scenes.game1")
 end;
 
-local function onAnimalClicked( event )
-	--TO DO:
-	--here should be code for playing sound of the animal
+local function onAnimalClicked( event )	
+	audio.play(animalSound)	
 end;
 
 function scene:createScene(event)
@@ -146,7 +146,7 @@ function scene:enterScene(event)
 	foodImage.width = _IMAGEWIDTH/2;
 	group:insert (foodImage);
 
-	--somewhere here should be settings for sound of the new animal
+	animalSound = audio.loadSound( data.animalsSounds[index])	
 end;
 
 function scene:exitScene(event)
