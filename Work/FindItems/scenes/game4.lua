@@ -21,6 +21,7 @@ local itemsFound = 0
 local score
 local sun
 local cloud
+local rain
 
 local layers = {}
 local groups = {}
@@ -109,32 +110,37 @@ local function fillWithHogs(group)
 			hogs[i].height = data.HOGIMAGESIZE*data.hogsSizes[i]
 			hogs[i].xScale = data.hogsScale[i]
 			hogs[i]:addEventListener( "touch", onItemClicked )			
-			groups[data.hogsGroups[i]]:insert (hogs[i])	
-			transition.fadeIn( hogs[i], {time = 500} )
+			groups[data.hogsGroups[i]]:insert (hogs[i])				
 		end
-		timer.performWithDelay( i*1000, addHog )
+		timer.performWithDelay( i*500, addHog )
 	end	
 end
 
 local function fillWithMushrooms(group)
 	for i = 1, 7, 1 do
-		mushrooms[i] = display.newImage (_MUSHPATH..data.mushroomsTypes[i].._FORMAT, data.mushroomsPositions.x[i], data.mushroomsPositions.y[i])
-		mushrooms[i].width = data.MUSHIMAGESIZE*data.mushroomsSizes[i]
-		mushrooms[i].height = data.MUSHIMAGESIZE*data.mushroomsSizes[i]
-		mushrooms[i].xScale = data.mushroomsScale[i]
-		mushrooms[i]:addEventListener( "touch", onItemClicked )
-		groups[data.mushroomsGroups[i]]:insert(mushrooms[i])
+		local function addMushroom()
+			mushrooms[i] = display.newImage (_MUSHPATH..data.mushroomsTypes[i].._FORMAT, data.mushroomsPositions.x[i], data.mushroomsPositions.y[i])
+			mushrooms[i].width = data.MUSHIMAGESIZE*data.mushroomsSizes[i]
+			mushrooms[i].height = data.MUSHIMAGESIZE*data.mushroomsSizes[i]
+			mushrooms[i].xScale = data.mushroomsScale[i]
+			mushrooms[i]:addEventListener( "touch", onItemClicked )
+			groups[data.mushroomsGroups[i]]:insert(mushrooms[i])
+		end
+		timer.performWithDelay( i*500, addMushroom)
 
 	end
 end
 
 local function fillWithBerries(group)
 	for i = 1, 7, 1 do
-		berries[i] = display.newImage(_BERRYPATH, data.berriesPosition.x[i], data.berriesPosition.y[i])
-		berries[i].width = data.BERRYIMAGESIZE * data.berriesSizes[i]
-		berries[i].height = data.BERRYIMAGESIZE * data.berriesSizes[i]
-		berries[i]:addEventListener( "touch", onItemClicked )
-		groups[data.berriesGroups[i]]:insert(berries[i])
+		local function addBerry()
+			berries[i] = display.newImage(_BERRYPATH, data.berriesPosition.x[i], data.berriesPosition.y[i])
+			berries[i].width = data.BERRYIMAGESIZE * data.berriesSizes[i]
+			berries[i].height = data.BERRYIMAGESIZE * data.berriesSizes[i]
+			berries[i]:addEventListener( "touch", onItemClicked )
+			groups[data.berriesGroups[i]]:insert(berries[i])
+		end
+		timer.performWithDelay( i*500, addBerry )
 	end
 end
 
@@ -169,6 +175,17 @@ local function sunAnimation ()
 	transition.moveTo(sun, {x = constants.CENTERX, y = _IMAGESIZE*0.8, time = 2000, onComplete = toBig})
 end
 
+local function onRainFinished(event)
+	if (event.phase == "ended") then
+		if (rain~=nil) then
+			rain:removeSelf( )
+			rain = nil
+		end
+		fillWithMushrooms()
+	end
+end
+
+
 local function rainAnimation()
 	cloud = display.newImage("images/tucha.png", 0,0)
 	cloud.width = _IMAGESIZE
@@ -195,11 +212,13 @@ local function rainAnimation()
       		loopDirection = forward
       	}
    	
-   		local rain = display.newSprite( rainSheet, sequenceDataRain)
-   		rain.x = constants.CENTERX
-   		rain.y = constants.CENTERY
+   		rain = display.newSprite( rainSheet, sequenceDataRain)
+   		rain.x = cloud.x-constants.H/40
+   		rain.y = cloud.y+cloud.height/2+rain.height/2
    		--rain.height = constants.H
    		--rain.width = constants.W
+   		rain:addEventListener( "sprite", onRainFinished)
+   		rain.timeScale = 0.5
    		rain:play()
 
 
@@ -252,15 +271,14 @@ function scene:enterScene(event)
 
 	score = display.newText("Score: 0", constants.W - _FONTSIZE/2, _FONTSIZE/2, native.systemFont, _FONTSIZE)
 	score.x = constants.W-score.width/2
-	if iteration == 1 then	
+	if iteration == 2 then	
 		--TODO:Sun animation
-		sunAnimation()	
-		--fillWithHogs(group)
-		iteration = iteration + 1
-		rainAnimation()
-	elseif iteration == 2 then
+		sunAnimation()			
+		iteration = iteration + 1		
+	elseif iteration == 1 then
 		--TODO: rain animation
-		fillWithMushrooms(group)
+		rainAnimation()
+		--fillWithMushrooms(group)
 		iteration = iteration + 1
 	else
 		--TODO ???
@@ -292,10 +310,21 @@ function scene:exitScene(event)
 		nextBtn:removeSelf()
 		homeBtn:removeSelf()
 		popupText:removeSelf()
+		popupBg = nil
+		nextBtn = nil
+		homeBtn = nil
+		popupText = nil
 	end
 
 	if (sun ~= nil) then
 		sun:removeSelf()
+		sun = nil
+	end
+
+	if (cloud ~= nil) then
+		cloud:removeSelf( )
+		cloud = nil
+
 	end
 end
 
