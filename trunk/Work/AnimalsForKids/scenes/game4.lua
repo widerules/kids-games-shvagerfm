@@ -35,9 +35,9 @@ local popupText
 local nextBtn
 local homeBtn
 
-local soundHarp = audio.loadSound( "sounds/harp.wav")
-local birdSound = audio.loadSound("sounds/temp_birds_sing.mp3")
-local rainSound = audio.loadSound("sounds/rain_sound.mp3")
+local soundHarp = audio.loadSound( "sounds/harp.ogg")
+local birdSound = audio.loadSound("sounds/birds_sing.ogg")
+local rainSound = audio.loadSound("sounds/rain_sound.ogg")
 local hogSound = audio.loadSound("sounds/hog_sound2.mp3")
 
 local function onNextButtonClicked()
@@ -231,11 +231,12 @@ local function rainAnimation()
 end
 
 function scene:createScene (event)
+	
         local group = self.view
 
         
 
-        for i = 1, 14, 1 do
+        for i = 1, 10, 1 do
                 layers[i] = display.newImage("images/layer"..i..".png", constants.CENTERX, constants.CENTERY)
                 layers[i].height = constants.H
                 layers[i].width = constants.W
@@ -245,32 +246,32 @@ function scene:createScene (event)
                 groups[i] = display.newGroup( )
         end     
 
+        
         group:insert (1, layers[1])
-        group:insert (2, layers[2])
-        group:insert (3, layers[3])
-        group:insert (4, groups[1])
-        group:insert (5, layers[4])
-        group:insert (6, groups[2])
-        group:insert (7, layers[5])
-        group:insert (8, groups[3])
-        group:insert (9, layers[6])
-        group:insert (10, groups[4])
-        group:insert (11, layers[7])
-        group:insert (12, layers[8])
-        group:insert (13, groups[5])
-        group:insert (14, layers[9])
-        group:insert (15, groups[6])
-        group:insert (16, layers[10])
-        group:insert (17, layers[11])
-        group:insert (18, groups[7])
-        group:insert (19, layers[12])
-        group:insert (20, groups[8])
-        group:insert (21, layers[13])
-        group:insert (22, groups[9])
-        group:insert (23, layers[14])
+        group:insert (2, groups[1])
+        group:insert (3, layers[2])
+        group:insert (4, groups[2])
+        group:insert (5, layers[3])
+        group:insert (6, groups[3])
+        group:insert (7, layers[4])
+        group:insert (8, groups[4])
+        group:insert (9, layers[5])
+        
+        group:insert (10, groups[5])
+        group:insert (11, layers[6])
+        group:insert (12, groups[6])
+        group:insert (13, layers[7])
+  
+        group:insert (14, groups[7])
+        group:insert (15, layers[8])
+        group:insert (16, groups[8])
+        group:insert (17, layers[9])
+        group:insert (18, groups[9])
+        group:insert (19, layers[10])
 end
         
 function scene:enterScene(event)
+	
         local group = self.view
         
         itemsFound = 0
