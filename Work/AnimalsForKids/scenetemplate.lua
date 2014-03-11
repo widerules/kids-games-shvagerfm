@@ -8,8 +8,12 @@ local storyboard = require( "storyboard" )
 local scene = storyboard.newScene()
 
 local widget = require("widget")
+local rate = require( "utils.rate" )
 
-local btnGame1, btnGame2, btnGame3, btnGame4
+local btnGame1, btnGame2, btnGame3, btnGame4, background, title
+local btnGameHeight = _H/4
+local btnGameWidth = 3*_H/4
+
 --local harp = audio.loadSound( "sounds/harp.wav")
 ----------------------------------------------------------------------------------
 local function goGame1()
@@ -26,6 +30,10 @@ local function goGame3()
 local function goGame4()
 		storyboard.gotoScene("scenes.game4", "slideLeft", 800)
 	end
+
+local function exit ()
+	rate.init()
+end
 ---------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------
@@ -38,6 +46,25 @@ function scene:createScene( event )
 
 background = display.newImage( "images/background.png", _CENTERX, _CENTERY, _W, _H)
 	group:insert(background)
+
+title = display.newEmbossedText("Animals for Kids", _CENTERX, 0, native.systemFont, _H/8)
+title.y = title.height
+title:setFillColor( 1, 0.6, 0 )
+group:insert(title)
+
+exitBtn = widget.newButton
+		{	
+		    width = _H/8,
+		    height = _H/8,
+		    defaultFile = "images/exit.png",
+		    overFile = "images/exit.png",
+		    id = "button_2",
+		    onRelease = exit,
+		    
+		}
+	exitBtn.x = _W - _W/10
+	exitBtn.y = _H/10
+	group:insert(exitBtn)
 end
 
 
@@ -47,53 +74,53 @@ function scene:enterScene( event )
 	
 	btnGame1 = widget.newButton
 	{
-		width = _H/3,
-		height = _H/3,
+		width = btnGameWidth,
+		height = btnGameHeight,
 		defaultFile = "images/btn1.png",
 		id = "button_1",
 		onRelease = goGame1,
 	}
 	btnGame1.x = _CENTERX/2
-	btnGame1.y = btnGame1.height
+	btnGame1.y = 1.5*btnGameHeight
 
 	group:insert(btnGame1)
 
 	btnGame2 = widget.newButton
 	{
-		width = _H/3,
-		height = _H/3,
+		width = btnGameWidth,
+		height = btnGameHeight,
 		defaultFile = "images/btn2.png",
 		id = "button_2",
 		onRelease = goGame2,
 	}
-	btnGame2.x = _CENTERX
-	btnGame2.y = btnGame2.height
+	btnGame2.x = 3*_CENTERX/2
+	btnGame2.y = 1.5*btnGameHeight
 
 	group:insert(btnGame2)
 
 	btnGame3 = widget.newButton
 	{
-		width = _H/3,
-		height = _H/3,
+		width = btnGameWidth,
+		height = btnGameHeight,
 		defaultFile = "images/btn3.png",
 		id = "button_3",
 		onRelease = goGame3,
 	}
-	btnGame3.x = _CENTERX + _CENTERX/2
-	btnGame3.y = btnGame3.height
+	btnGame3.x = _CENTERX/2
+	btnGame3.y = 3*btnGameHeight
 
 	group:insert(btnGame3)
 
 	btnGame4 = widget.newButton
 	{
-		width = _H/3,
-		height = _H/3,
+		width = btnGameWidth,
+		height = btnGameHeight,
 		defaultFile = "images/btn4.png",
 		id = "button_4",
 		onRelease = goGame4,
 	}
-	btnGame4.x = _CENTERX/2
-	btnGame4.y = _CENTERY +_CENTERY/2
+	btnGame4.x = 3*_CENTERX/2
+	btnGame4.y = 3*btnGameHeight
 
 	group:insert(btnGame4)
 
