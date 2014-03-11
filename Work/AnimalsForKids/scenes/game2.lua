@@ -28,6 +28,8 @@ local background;
 local rightBar;
 local pane;
 
+local soundHarp = audio.loadSound( "sounds/harp.wav")
+
 local onPlaces
 
 local function generateIndexes ()
@@ -151,7 +153,8 @@ local t = event.target
                 startY = nil
 
                 if onPlaces == 3 then
-                        timer.performWithDelay( 1500, showPopUp, 1)
+                		audio.play( soundHarp )
+                        timer.performWithDelay( 800, showPopUp, 1)
                 end
 
         end

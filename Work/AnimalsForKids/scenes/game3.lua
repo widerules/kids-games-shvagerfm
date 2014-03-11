@@ -32,6 +32,7 @@ local popupBg;
 local popupText;
 local homeBtn;
 local nextBtn;
+local soundHarp = audio.loadSound( "sounds/harp.wav")
 
 local onPlaces = 0;
 
@@ -167,7 +168,8 @@ local function onAnimalDrag(event)
 		startY = nil;
 
 		if onPlaces == 5 then
-			showPopUp();
+			audio.play( soundHarp )
+			timer.performWithDelay( 800, showPopUp, 1)
 		end;
 
 	end;
