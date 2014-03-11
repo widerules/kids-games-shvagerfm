@@ -28,7 +28,7 @@ local background;
 local rightBar;
 local pane;
 
-local soundHarp = audio.loadSound( "sounds/harp.wav")
+local soundHarp = audio.loadSound( "sounds/harp.ogg")
 
 local onPlaces
 

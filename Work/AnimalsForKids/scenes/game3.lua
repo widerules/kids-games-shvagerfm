@@ -32,7 +32,7 @@ local popupBg;
 local popupText;
 local homeBtn;
 local nextBtn;
-local soundHarp = audio.loadSound( "sounds/harp.wav")
+local soundHarp = audio.loadSound( "sounds/harp.ogg")
 
 local onPlaces = 0;
 
