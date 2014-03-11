@@ -23,9 +23,6 @@ local sun
 local cloud
 local rain
 
-local birdSound
-local rainSound
-local hogSound
 
 local layers = {}
 local groups = {}
@@ -38,7 +35,10 @@ local popupText
 local nextBtn
 local homeBtn
 
-
+local soundHarp = audio.loadSound( "sounds/harp.wav")
+local birdSound = audio.loadSound("sounds/temp_birds_sing.mp3")
+local rainSound = audio.loadSound("sounds/rain_sound.mp3")
+local hogSound = audio.loadSound("sounds/hog_sound2.mp3")
 
 local function onNextButtonClicked()
         storyboard.reloadScene( )
@@ -96,7 +96,8 @@ local function onItemClicked(event)
         itemsFound = itemsFound + 1
         
         if (itemsFound == 7) then
-                timer.performWithDelay( 2000, showPopUp, 1)             
+        	audio.play( soundHarp )
+                timer.performWithDelay( 800, showPopUp, 1)             
         end
 end
 
@@ -183,18 +184,21 @@ local function onRainFinished(event)
                         rain:removeSelf( )
                         rain = nil
                 end
+                audio.pause( rainSound )
                 fillWithMushrooms()
         end
 end
 
 
 local function rainAnimation()
+		audio.play( rainSound )
         cloud = display.newImage("images/tucha.png", 0,0)
         cloud.width = _IMAGESIZE
         cloud.height = _IMAGESIZE
         groups[1]:insert(cloud)
 
         local function rainStart()
+
                 local rainSheetData = 
                 {
                 width = constants.H,
@@ -215,10 +219,6 @@ local function rainAnimation()
         }
         
                 rain = display.newSprite( rainSheet, sequenceDataRain)
-                --rain.x = cloud.x-constants.H/40
-                --rain.y = cloud.y+cloud.height/2+rain.height/2
-                --rain.height = constants.H
-                --rain.width = constants.W
                 rain.x = constants.CENTERX
                 rain.y = constants.CENTERY
                 rain:addEventListener( "sprite", onRainFinished)
@@ -233,9 +233,7 @@ end
 function scene:createScene (event)
         local group = self.view
 
-        birdSound = audio.loadSound("sounds/temp_birds_sing.mp3")
-        rainSound = audio.loadSound("rain_sound.mp3")
-        hogSound = audio.loadSound("hog_sound2.mp3")
+        
 
         for i = 1, 14, 1 do
                 layers[i] = display.newImage("images/layer"..i..".png", constants.CENTERX, constants.CENTERY)
