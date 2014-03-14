@@ -4,7 +4,7 @@ admob.provider = "admob"
 local ads = require ( "ads" )
 -- Your application ID in admob
 
-admob.appID = "ca-app-pub-8763317495638154/5269265221"
+admob.appID = "ca-app-pub-8763317495638154/6195451628"
 
 admob.init = function ()
 	if admob.appID then
