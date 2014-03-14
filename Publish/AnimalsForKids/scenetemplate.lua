@@ -9,6 +9,7 @@ local scene = storyboard.newScene()
 
 local widget = require("widget")
 local rate = require( "utils.rate" )
+local admob = require( "utils.admob" )
 
 local btnGame1, btnGame2, btnGame3, btnGame4, background, title
 local btnGameHeight = _H/4
@@ -65,13 +66,14 @@ exitBtn = widget.newButton
 	exitBtn.x = _W - _W/10
 	exitBtn.y = _H/10
 	group:insert(exitBtn)
+	admob.init()
 end
 
 
 -- Called immediately after scene has moved onscreen:
 function scene:enterScene( event )
 	local group = self.view
-	
+	admob.showAd( "interstitial" )
 	btnGame1 = widget.newButton
 	{
 		width = btnGameWidth,
