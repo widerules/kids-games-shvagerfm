@@ -280,11 +280,11 @@ function scene:enterScene(event)
 	score.x = constants.W-score.width/2
 	group:insert(score)
 
-	if iteration == 2 then  
+	if iteration == 1 then  
 		--TODO:Sun animation
 		sunAnimation()                  
 		iteration = iteration + 1               
-	elseif iteration == 1 then
+	elseif iteration == 2 then
 		--TODO: rain animation
 		rainAnimation()
 		--fillWithMushrooms(group)
