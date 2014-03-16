@@ -6,6 +6,10 @@
 
 local storyboard = require "storyboard"
 local rate = require( "utils.rate" )
+local admob = require( "admob" )
+
+storyboard.disableAutoPurge = true
+
 --global center & heigh-width
 _CENTERX = display.contentCenterX
 _CENTERY = display.contentCenterY
@@ -21,18 +25,17 @@ local function onKeyEvent( event )
    local keyName = event.keyName
    print( event.phase, event.keyName )
 
-   if ( "back" == keyName and phase == "up" ) then
-    local currentScene = storyboard.getCurrentSceneName()
-     local lastScene = storyboard.getPrevious()
-            print( "previous scene", lastScene )
-            
-            if ( currentScene == "scenetemplate") then
-               exit()
-          
-            else
-               storyboard.gotoScene( "scenetemplate" )
-            end
-   
+   if ( ("back" == keyName or "deleteBack" == keyName) and phase == "up" ) then
+      local currentScene = storyboard.getCurrentSceneName()
+      local lastScene = storyboard.getPrevious()
+         print( "previous scene", lastScene )
+         
+         if ( currentScene == "scenetemplate") then
+            exit()
+       
+         else
+            storyboard.gotoScene( "scenetemplate" )
+         end
    end
    if ( keyName == "volumeUp" and phase == "down" ) then
       local masterVolume = audio.getVolume()
@@ -55,6 +58,7 @@ local function onKeyEvent( event )
 end
 Runtime:addEventListener( "key", onKeyEvent )
 
+admob.init()
 storyboard.gotoScene( "scenetemplate" )
 
 -- Add any objects that should appear on all scenes below (e.g. tab bar, hud, etc.):
