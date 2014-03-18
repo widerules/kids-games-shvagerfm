@@ -18,11 +18,11 @@ admob.init = function ()
 end
 
 admob.showAd = function( adType )
-	if admob.countBeforeShowAds == 0 then
+	if admob.countBeforeShowAds == 3 then
+		admob.countBeforeShowAds = 0
     	ads.show( adType, { x=0, y=0 } )
-    	admob.countBeforeShowAds = 3
     else
-    	admob.countBeforeShowAds = admob.countBeforeShowAds - 1
+    	admob.countBeforeShowAds = admob.countBeforeShowAds + 1
 	end
 end
 
