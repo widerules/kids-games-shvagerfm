@@ -28,6 +28,56 @@ local background;
 local rightBar;
 local pane;
 
+explosionTable        = {}                    -- Define a Table to hold the Spawns
+i                    = 0                        -- Explosion counter in table
+explosionTime        = 416.6667                    -- Time defined from EXP Gen 3 tool
+_w                     = display.contentWidth    -- Get the devices Width
+_h                     = display.contentHeight    -- Get the devices Height
+resources            = "_resources"            -- Path to external resource files
+
+local explosionSheetInfo    = require(resources..".".."Explosion")
+local explosionSheet        = graphics.newImageSheet( resources.."/".."Explosion.png", explosionSheetInfo:getSheet() )
+
+--------------------------------------------------
+-- Define the animation sequence for the Explosion
+-- from the Sprite sheet data
+-- Change the sequence below to create IMPLOSIONS 
+-- and EXPLOSIONS etc...
+--------------------------------------------------
+local animationSequenceData = {
+  { name = "dbiExplosion",
+      frames={
+          1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25
+      },
+      time=explosionTime, loopCount=1
+  },
+}
+
+local function spawnExplosionToTable(spawnX, spawnY)
+    i = i + 1                                        -- Increment the spawn counter
+    
+    explosionTable[i] = display.newSprite( explosionSheet, animationSequenceData )
+    explosionTable[i]:setSequence( "dbiExplosion" )    -- assign the Animation to play
+    explosionTable[i].x=spawnX                        -- Set the X position (touch X)
+    explosionTable[i].y=spawnY                        -- Set the Y position (touch Y)
+    explosionTable[i]:play()                        -- Start the Animation playing
+    explosionTable[i].xScale = 1                    -- X Scale the Explosion if required
+    explosionTable[i].yScale = 1                    -- Y Scale the Explosion if required
+    
+    --Create a function to remove the Explosion - triggered from the DelatedTimer..
+    local function removeExplosionSpawn( object )
+        return function()
+            object:removeSelf()    -- remove the explosion from table
+            object = nil
+        end
+    end
+    
+    --Add a timer to the Spawned Explosion.
+    --Explosion are destroyed after all the frames have been played after a determined
+    --amount of time as setup by the Explosion Generator Tool.
+    local destroySpawneExplosion = timer.performWithDelay (explosionTime, removeExplosionSpawn(explosionTable[i]))
+end
+
 local soundHarp = audio.loadSound( "sounds/harp.ogg")
 
 local onPlaces
@@ -140,6 +190,7 @@ local t = event.target
                         t.y = animalsPictures[index].y
                         onPlaces = onPlaces + 1;
                         animOnPutOn(t)
+                        spawnExplosionToTable(t.x, t.y)
                         t:removeEventListener( "touch", onFoodDrag )
                 else 
                         t.x = startX
@@ -218,19 +269,20 @@ function scene:enterScene(event)
         local randFood
 
         for i = 1, 3, 1 do
-                animalsPictures[i] = display.newImage( _ANIMALSPATH..data.animals[indexes[i]].._FORMAT, positions.x[i],positions.y[i])
+                animalsPictures[i] = display.newImage( _ANIMALSPATH..data.animals[indexes[i]].._FORMAT, 0, 0)
                 animalsPictures[i].height = _IMAGESIZE
                 animalsPictures[i].width = _IMAGESIZE
                 group:insert(animalsPictures[i])
+                transition.to(animalsPictures[i], {x=positions.x[i], y=positions.y[i], transition=easing.outBounce, time = 400})
 
                 randFood = math.random( 1, table.maxn(positions.foodY))
 
-                foodPictures[i] = display.newImage (_FOODPATH..data.food[indexes[i]].._FORMAT, _BARCENTERX, positions.foodY[randFood])
+                foodPictures[i] = display.newImage (_FOODPATH..data.food[indexes[i]].._FORMAT, constants.W, positions.foodY[randFood])
                 foodPictures[i].height = _FOODSIZE
                 foodPictures[i].width = _FOODSIZE
                 foodPictures[i]:addEventListener( "touch", onFoodDrag )
                 group:insert(foodPictures[i])   
-
+                transition.to(foodPictures[i], {x=_BARCENTERX, transition=easing.outBounce, time = 400})
                 table.remove(positions.foodY, randFood)
         end
 end
@@ -255,6 +307,7 @@ function scene:exitScene(event)
                 popupText:removeSelf();
                 nextBtn:removeSelf();
                 homeBtn:removeSelf();
+                popupBg = nil
         end;
 end
 

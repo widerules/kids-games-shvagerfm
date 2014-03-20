@@ -42,6 +42,57 @@ local rainSound = audio.loadSound("sounds/rain_sound.ogg")
 local hogSound = audio.loadSound("sounds/hog_sound2.mp3")
 
 local timers = {}
+--------------------------
+explosionTable        = {}                    -- Define a Table to hold the Spawns
+i                    = 0                        -- Explosion counter in table
+explosionTime        = 416.6667                    -- Time defined from EXP Gen 3 tool
+_w                     = display.contentWidth    -- Get the devices Width
+_h                     = display.contentHeight    -- Get the devices Height
+resources            = "_resources"            -- Path to external resource files
+
+local explosionSheetInfo    = require(resources..".".."Explosion")
+local explosionSheet        = graphics.newImageSheet( resources.."/".."Explosion.png", explosionSheetInfo:getSheet() )
+
+--------------------------------------------------
+-- Define the animation sequence for the Explosion
+-- from the Sprite sheet data
+-- Change the sequence below to create IMPLOSIONS 
+-- and EXPLOSIONS etc...
+--------------------------------------------------
+local animationSequenceData = {
+  { name = "dbiExplosion",
+      frames={
+          1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25
+      },
+      time=explosionTime, loopCount=1
+  },
+}
+
+local function spawnExplosionToTable(spawnX, spawnY)
+    i = i + 1                                        -- Increment the spawn counter
+    
+    explosionTable[i] = display.newSprite( explosionSheet, animationSequenceData )
+    explosionTable[i]:setSequence( "dbiExplosion" )    -- assign the Animation to play
+    explosionTable[i].x=spawnX                        -- Set the X position (touch X)
+    explosionTable[i].y=spawnY                        -- Set the Y position (touch Y)
+    explosionTable[i]:play()                        -- Start the Animation playing
+    explosionTable[i].xScale = 1                    -- X Scale the Explosion if required
+    explosionTable[i].yScale = 1                    -- Y Scale the Explosion if required
+    
+    --Create a function to remove the Explosion - triggered from the DelatedTimer..
+    local function removeExplosionSpawn( object )
+        return function()
+            object:removeSelf()    -- remove the explosion from table
+            object = nil
+        end
+    end
+    
+    --Add a timer to the Spawned Explosion.
+    --Explosion are destroyed after all the frames have been played after a determined
+    --amount of time as setup by the Explosion Generator Tool.
+    local destroySpawneExplosion = timer.performWithDelay (explosionTime, removeExplosionSpawn(explosionTable[i]))
+end
+-----------------------------
 
 local function onNextButtonClicked()
 	storyboard.reloadScene( )
@@ -94,6 +145,7 @@ local function onItemClicked(event)
 		transition.to(t,{time = 1000, alpha = 0, x =constants.W, y = 0, xScale = 0.1, yScale = 0.1, onComplete = updateScore})
 	end
 	transition.scaleTo(t, {xScale = 1.5*t.xScale, yScale = 1.5*t.yScale, time = 500, onComplete = vanishAway})
+	spawnExplosionToTable(t.x, t.y)
 	t:removeEventListener( "touch", onItemClicked ) 
 
 	itemsFound = itemsFound + 1
@@ -114,8 +166,9 @@ local function fillWithHogs(group)
 			hogs[i] = display.newImage (_HOGPATH, data.hogsPositions.x[i], data.hogsPositions.y[i])
 			hogs[i].width = data.HOGIMAGESIZE*data.hogsSizes[i]
 			hogs[i].height = data.HOGIMAGESIZE*data.hogsSizes[i]
-			hogs[i].xScale = data.hogsScale[i]
-			hogs[i]:addEventListener( "touch", onItemClicked )                      
+			hogs[i].xScale = 0.3
+			hogs[i]:addEventListener( "touch", onItemClicked )  
+			transition.to(hogs[i], {xScale = data.hogsScale[i], alpha =1, transition=easing.outBack, time = 300})                    
 			groups[data.hogsGroups[i]]:insert (hogs[i])                             
 		end
 		timers[#timers + 1] = timer.performWithDelay( i*300, addHog )
@@ -129,8 +182,9 @@ local function fillWithMushrooms(group)
 			mushrooms[i] = display.newImage (_MUSHPATH..data.mushroomsTypes[i].._FORMAT, data.mushroomsPositions.x[i], data.mushroomsPositions.y[i])
 			mushrooms[i].width = data.MUSHIMAGESIZE*data.mushroomsSizes[i]
 			mushrooms[i].height = data.MUSHIMAGESIZE*data.mushroomsSizes[i]
-			mushrooms[i].xScale = data.mushroomsScale[i]
+			mushrooms[i].xScale = 0.3
 			mushrooms[i]:addEventListener( "touch", onItemClicked )
+			transition.to(mushrooms[i], {xScale = data.mushroomsScale[i], alpha =1, transition=easing.outBack, time = 300})
 			groups[data.mushroomsGroups[i]]:insert(mushrooms[i])
 		end
 		timers[#timers + 1] = timer.performWithDelay( i*300, addMushroom)
@@ -144,6 +198,7 @@ local function fillWithBerries(group)
 				berries[i] = display.newImage(_BERRYPATH, data.berriesPosition.x[i], data.berriesPosition.y[i])
 				berries[i].width = data.BERRYIMAGESIZE * data.berriesSizes[i]
 				berries[i].height = data.BERRYIMAGESIZE * data.berriesSizes[i]
+				transition.to(mushrooms[i], {xScale = 1, alpha =1, transition=easing.outBack, time = 300})
 				berries[i]:addEventListener( "touch", onItemClicked )
 				groups[data.berriesGroups[i]]:insert(berries[i])
 		end
@@ -181,7 +236,7 @@ local function sunAnimation ()
 		transition.scaleTo(sun, {xScale = 1.5, yScale = 1.5, time = 500, onComplete = toNormal})
 	end
 
-	transition.moveTo(sun, {x = constants.CENTERX, y = _IMAGESIZE*0.8, time = 2000, onComplete = toBig})
+	transition.moveTo(sun, {x = constants.CENTERX, y = _IMAGESIZE*0.8, time = 2000, transition=easing.outBack, onComplete = toBig})
 end
 
 local function onRainFinished(event)
