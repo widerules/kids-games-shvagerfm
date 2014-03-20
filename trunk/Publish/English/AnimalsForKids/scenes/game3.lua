@@ -24,6 +24,8 @@ local animalsPictures = {};
 local shapesPictures = {};
 local labels = {};
 
+local animalSound;
+
 local background;
 local leftBar;
 local plate;
@@ -171,6 +173,8 @@ end;
 local function onAnimalDrag(event)
 	
 	local t = event.target;
+	local name = tostring(t.name)
+	animalSound = audio.loadSound("sounds/"..name..".mp3")
 	local phase = event.phase;
 	animScaleOnDrag(t)
 	if "began" == phase then 
@@ -205,6 +209,7 @@ local function onAnimalDrag(event)
 			onPlaces = onPlaces + 1;
 			animOnPutOn(t)
 			animOnPutOnShape(shapesPictures[index])
+			audio.play( animalSound )
 			spawnExplosionToTable(t.x, t.y)
 			t:removeEventListener( "touch", onAnimalDrag )
 		else 
@@ -280,6 +285,7 @@ function scene:enterScene(event)
 	animalsPictures[1] = display.newImage(_ANIMALSPATH..data.animals[indexes[1]].._FORMAT, 0, imageY);
 	animalsPictures[1].height = _IMAGESIZE;
 	animalsPictures[1].width = _IMAGESIZE;
+	animalsPictures[1].name = data.animals[indexes[1]]
 	animalsPictures[1]:addEventListener( "touch", onAnimalDrag );
 	group:insert(animalsPictures[1]);
 
@@ -288,6 +294,7 @@ function scene:enterScene(event)
 		animalsPictures[i] = display.newImage (_ANIMALSPATH..data.animals[indexes[i]].._FORMAT, 0, imageY);
 		animalsPictures[i].height = _IMAGESIZE;
 		animalsPictures[i].width = _IMAGESIZE;
+		animalsPictures[i].name = data.animals[indexes[i]]
 		animalsPictures[i]:addEventListener( "touch", onAnimalDrag );
 		group:insert(animalsPictures[i]); 
 	end;
