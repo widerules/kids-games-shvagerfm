@@ -24,6 +24,8 @@ local foodPositions = {}
 local animalsPictures = {}
 local foodPictures = {}
 
+local animalSound;
+
 local background;
 local rightBar;
 local pane;
@@ -158,6 +160,7 @@ local function onFoodDrag (event)
 local t = event.target
         local phase = event.phase
         animScaleOnDrag(t)
+
         if "began" == phase then 
                 startX = t.x
                 startY = t.y
@@ -188,8 +191,11 @@ local t = event.target
                 if math.abs(t.x - animalsPictures[index].x)<_DELTA and math.abs (t.y-animalsPictures[index].y)<_DELTA then
                         t.x = animalsPictures[index].x
                         t.y = animalsPictures[index].y
+                        local name = tostring(animalsPictures[index].name)
+                        animalSound = audio.loadSound("sounds/"..name..".mp3")
                         onPlaces = onPlaces + 1;
                         animOnPutOn(t)
+                        audio.play(animalSound)
                         spawnExplosionToTable(t.x, t.y)
                         t:removeEventListener( "touch", onFoodDrag )
                 else 
@@ -272,6 +278,7 @@ function scene:enterScene(event)
                 animalsPictures[i] = display.newImage( _ANIMALSPATH..data.animals[indexes[i]].._FORMAT, 0, 0)
                 animalsPictures[i].height = _IMAGESIZE
                 animalsPictures[i].width = _IMAGESIZE
+                animalsPictures[i].name = data.animals[indexes[i]]
                 group:insert(animalsPictures[i])
                 transition.to(animalsPictures[i], {x=positions.x[i], y=positions.y[i], transition=easing.outBounce, time = 400})
 
