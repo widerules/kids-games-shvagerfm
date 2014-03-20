@@ -16,7 +16,7 @@ local btnGame1, btnGame2, btnGame3, btnGame4, background, title
 local btnGameHeight = _H/4
 local btnGameWidth = 3*_H/4
 
-local bgsound = audio.loadSound( "sounds/bgsound.mp3" )
+--local bgsound = audio.loadSound( "sounds/bgsound.mp3" )
 
 --local harp = audio.loadSound( "sounds/harp.wav")
 ----------------------------------------------------------------------------------
@@ -129,7 +129,7 @@ function scene:enterScene( event )
 
 	group:insert(btnGame4)
 
-	audio.play( bgsound )
+	--audio.play( bgsound )
 	admob.showAd( "interstitial" )
 end
 
@@ -137,7 +137,7 @@ end
 -- Called when scene is about to move offscreen:
 function scene:exitScene( event )
 	local group = self.view
-	
+	--audio.stop()
 	-----------------------------------------------------------------------------
 	
 	--	INSERT code here (e.g. stop timers, remove listeners, unload sounds, etc.)
