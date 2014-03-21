@@ -41,9 +41,6 @@ local _W = display.contentWidth
 local _H = display.contentHeight
 local _FONTSIZE = constants.H / 15;
 
-local explosionTime        = 2000                    -- Time defined from EXP Gen 3 tool
-local resources            = "_resources"   
-local explosionSheetInfo    = require(resources..".".."Explosion")
 ---------------------------------------------------------------------------------
 -- BEGINNING OF YOUR IMPLEMENTATION
 ---------------------------------------------------------------------------------
@@ -105,12 +102,7 @@ local function onHomeButtonClicked(event)
 
 end;
 local function nextBtnOnClck()
-	if popupBg ~= nil then
-		popupBg:removeSelf();
-		popupText:removeSelf();
-		nextBtn:removeSelf();
-		homeBtn:removeSelf();
-	end;
+	
 		storyboard.reloadScene()
 	end
 local function showPopUp()
