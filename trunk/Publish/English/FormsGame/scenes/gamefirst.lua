@@ -25,7 +25,7 @@ local _H = display.contentHeight
 local left, center, right, square
 local sSquare = audio.loadSound("sounds/square.wav")
 local sRectangle = audio.loadSound("sounds/rectangle.wav")
-local sRound = audio.loadSound("sounds/round.wav")
+local sRound = audio.loadSound("sounds/round.mp3")
 local sOval = audio.loadSound("sounds/oval.wav")
 local sTriangle = audio.loadSound("sounds/triangle.wav")
 local sStar = audio.loadSound("sounds/star.wav")
@@ -72,12 +72,12 @@ local function triangle()
 	name = "triangle"
 end
 
-local function round()
+local function circle()
 
 	audio.play(sRound)
-	shape:setSequence("round")
+	shape:setSequence("circle")
 	scaling()
-	name = "round"
+	name = "circle"
 end
 
 local function oval()
@@ -121,8 +121,8 @@ local function selfTouch(self)
 	elseif name == "rectangle" then
 		rectangle()
 
-	elseif name == "round" then
-		round()
+	elseif name == "circle" then
+		circle()
 
 	elseif name == "oval" then
 		oval()
@@ -145,9 +145,9 @@ local function nextShape()
 		rectangle()
 
 	elseif name == "rectangle" then
-		round()
+		circle()
 
-	elseif name == "round" then
+	elseif name == "circle" then
 		oval()
 
 	elseif name == "oval" then
@@ -174,11 +174,11 @@ local function prevShape()
 	elseif name == "rectangle" then
 		triangle()
 
-	elseif name == "round" then
+	elseif name == "circle" then
 		rectangle()
 
 	elseif name == "oval" then
-		round()
+		circle()
 
 	elseif name == "rhombus" then
 		oval()
@@ -269,7 +269,7 @@ function scene:enterScene( event )
 		count = 1,
 		},
 		{
-		name = "round",
+		name = "circle",
 		start = 6,
 		count = 1,
 		},
