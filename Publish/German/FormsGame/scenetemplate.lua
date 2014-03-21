@@ -35,18 +35,6 @@ local bgsound = audio.loadSound( "sounds/bgsound.wav" )
 -- functions
 -----------------------------
 
-local function soundOffOn()
-	if _SOUNDON == true then
-	_SOUNDON = false
-	print(_SOUNDON)
-	audio.pause( bgsound )
-
-else
-	_SOUNDON = true
-	print(_SOUNDON)
-	audio.resume( bgsound )
-	end
-end
 -------------------------------
 local function getAnimalsForKids()
 	print("lin to app")
@@ -117,7 +105,7 @@ function scene:createScene( event )
 		    defaultFile = "images/button.png",
 		    overFile = "images/pbutton.png",
 		    id = "button_1",
-		    label = "Erfahren Shapes",
+		    label = "Erfahren Figuren",
 		    labelColor = { default={ 0, 0, 0 }, over={ 0, 0, 0, 0.9 } },
 		    fontSize = _H/12,
 		    emboss = true,
@@ -134,7 +122,7 @@ function scene:createScene( event )
 		    defaultFile = "images/button.png",
 		    overFile = "images/pbutton.png",
 		    id = "button_2",
-		    label = "Suchen Sie Shapes",
+		    label = "Suchen Sie Figuren",
 		    labelColor = { default={ 0,0,0 }, over={ 0, 0, 0, 0.9 } },
 		    fontSize = _H/12,
 		    emboss = true,
@@ -169,7 +157,7 @@ function scene:createScene( event )
 		    defaultFile = "images/button.png",
 		    overFile = "images/pbutton.png",
 		    id = "button_3",
-		    label = "Bewegen Shapes ",
+		    label = "Bewegen Figuren ",
 		    labelColor = { default={ 0, 0, 0 }, over={ 0, 0, 0, 0.9 } },
 		    fontSize = _H/12,
 		    emboss = true,
