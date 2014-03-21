@@ -105,7 +105,7 @@ function scene:createScene( event )
 		    defaultFile = "images/button.png",
 		    overFile = "images/pbutton.png",
 		    id = "button_1",
-		    label = "Aprenda formas ",
+		    label = "Imparare forma",
 		    labelColor = { default={ 0, 0, 0 }, over={ 0, 0, 0, 0.9 } },
 		    fontSize = _H/12,
 		    emboss = true,
@@ -122,7 +122,7 @@ function scene:createScene( event )
 		    defaultFile = "images/button.png",
 		    overFile = "images/pbutton.png",
 		    id = "button_2",
-		    label = "Encontrar formas ",
+		    label = "Trova figura",
 		    labelColor = { default={ 0,0,0 }, over={ 0, 0, 0, 0.9 } },
 		    fontSize = _H/12,
 		    emboss = true,
@@ -140,7 +140,7 @@ function scene:createScene( event )
 		    defaultFile = "images/button.png",
 		    overFile = "images/pbutton.png",
 		    id = "button_3",
-		    label = "Encontrar los pares ",
+		    label = "Trovare un paio",
 		    labelColor = { default={ 0, 0, 0 }, over={ 0, 0, 0, 0.9 } },
 		    fontSize = _H/12,
 		    emboss = true,
@@ -157,7 +157,7 @@ function scene:createScene( event )
 		    defaultFile = "images/button.png",
 		    overFile = "images/pbutton.png",
 		    id = "button_3",
-		    label = "Coloque las formas ",
+		    label = "Spostare il form",
 		    labelColor = { default={ 0, 0, 0 }, over={ 0, 0, 0, 0.9 } },
 		    fontSize = _H/12,
 		    emboss = true,
@@ -198,7 +198,7 @@ function scene:enterScene( event )
 	group:insert( kidsAnimals )
 	kidsAnimals:addEventListener("tap", getAnimalsForKids )
 
-	moreGames = display.newEmbossedText( "Más juegos", 0, 0, native.systemFont, _H/20 )
+	moreGames = display.newEmbossedText( "Altri giochi", 0, 0, native.systemFont, _H/20 )
 	moreGames.y = _H/16
 	moreGames.x = kidsAnimals.x
 	moreGames:setFillColor( 1, 0.6, 0 )

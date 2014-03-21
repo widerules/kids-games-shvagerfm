@@ -100,8 +100,8 @@ local function showPopUp()
 	popupBg.height = 0.7*constants.H;
 	popupBg.width = 0.7*constants.W;
 
-	popupText = display.newText("¡Bien hecho", popupBg.x, 0, native.systemFont, 2*_FONTSIZE);
-	popupText.y = popupBg.y-popupBg.height+2*popupText.width/3;
+	popupText = display.newText("Ben fatto!", popupBg.x, 0, native.systemFont, 2*_FONTSIZE);
+	popupText.y = popupBg.y - popupText.height;
 
 	homeBtn = widget.newButton
 	{

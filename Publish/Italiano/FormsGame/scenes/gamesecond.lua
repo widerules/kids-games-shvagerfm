@@ -24,7 +24,7 @@ local _H = display.contentHeight
 local rightIndex
 local anIndex1, anIndex2
 local shapes = {"square", "triangle", "rhombus", "oval", "rectangle",  "round", "heart", "star"}
-local shapesDe = {"cuadrato", "triángulo", "rombo", "oval", "rectángulo",  "círculo", "corazón", "estrella"} 
+local shapesDe = {"quadrato", "triangolo", "rombo", "ovale", "rettangolo ",  "cerchio", "cuore", "stella"} 
 
 local rightChoise
 local square = audio.loadSound("sounds/fsquare.mp3")
@@ -36,7 +36,7 @@ local star = audio.loadSound("sounds/fstar.mp3")
 local heart = audio.loadSound("sounds/fheart.mp3")
 local rhombus = audio.loadSound("sounds/frhombus.mp3")
 local good = audio.loadSound("sounds/good.mp3")
-local well = audio.loadSound("sounds/welldone.mp3")
+local well = audio.loadSound("sounds/goodjob.mp3")
 local try = audio.loadSound("sounds/tryagain.mp3")
 local sounds = {square, triangle, rhombus, oval, rectangle, round, heart, star}
 ---------------------------------------------------------------------------------
@@ -203,7 +203,7 @@ function scene:enterScene( event )
 		anIndex2 = math.random(1, 8)
 	end
 
-	titleText = display.newText( "Encuentra " .. shapesDe[rightIndex], 0, 0, native.systemFont, 46 )
+	titleText = display.newText( "Trova " .. shapesDe[rightIndex], 0, 0, native.systemFont, 46 )
 	--titleText:setReferencePoint( display.CenterReferencePoint )
 	titleText.x = display.contentWidth * 0.5
 	titleText.y = display.contentHeight - (display.contentHeight*0.1)
