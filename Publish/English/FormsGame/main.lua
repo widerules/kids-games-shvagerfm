@@ -8,6 +8,8 @@ local storyboard = require "storyboard"
 local rate = require( "rate" )
 _CENTERX = display.contentCenterX
 _CENTERY = display.contentCenterY
+_SOUNDON = true
+storyboard.disableAutoPurge = true
 
 local function exit ()
   rate.init()
@@ -18,7 +20,7 @@ local function onKeyEvent( event )
    local keyName = event.keyName
    print( event.phase, event.keyName )
 
-   if ( ("back" == keyName or "deleteBack" )and phase == "up" ) then
+   if ( "back" == keyName and phase == "up" ) then
     local currentScene = storyboard.getCurrentSceneName()
      local lastScene = storyboard.getPrevious()
             print( "previous scene", lastScene )

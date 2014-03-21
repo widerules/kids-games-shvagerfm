@@ -6,7 +6,6 @@
 
 local storyboard = require( "storyboard" )
 local scene = storyboard.newScene()
-local admob = require( "admob" )
 
 local widget = require("widget")
 local rate = require( "utils.rate" )

@@ -2,7 +2,7 @@ admob = {}
 
 admob.provider = "admob"
 
-admob.countBeforeShowAds = 0
+admob.countBeforeShowAds = 3
 
 
 local ads = require ( "ads" )
@@ -18,7 +18,7 @@ admob.init = function ()
 end
 
 admob.showAd = function( adType )
-	if admob.countBeforeShowAds == 3 then
+	if admob.countBeforeShowAds == 4 then
 		admob.countBeforeShowAds = 0
     	ads.show( adType, { x=0, y=0 } )
     else

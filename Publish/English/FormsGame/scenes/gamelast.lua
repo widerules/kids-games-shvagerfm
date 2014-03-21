@@ -26,6 +26,7 @@ local shapes = {"square", "triangle", "rhombus", "oval", "rectangle",  "round", 
 local items, backBtn
 local find = audio.loadSound("sounds/fpairs.wav")
 local magicSound = audio.loadSound("sounds/magic.mp3")
+local shapeSound
 local selected
 local toLeftTransition, toRightTransition
 local rLeft, rRight, stopR, cancelAll
@@ -47,23 +48,64 @@ local explosionSheetInfo    = require(resources..".".."Explosion")
 -- BEGINNING OF YOUR IMPLEMENTATION
 ---------------------------------------------------------------------------------
 -- functions
+--------------------------
+explosionTable        = {}                    -- Define a Table to hold the Spawns
+i                    = 0                        -- Explosion counter in table
+explosionTime        = 466.6667                    -- Time defined from EXP Gen 3 tool
+resources            = "_resources1"  
+--------------------------------------------------
+-- Create and assign a new Image Sheet using the
+-- Coordinates file and packed texture.
+--------------------------------------------------
+local explosionSheetInfo    = require(resources..".".."Explosion")
+local explosionSheet        = graphics.newImageSheet( resources.."/".."Explosion.png", explosionSheetInfo:getSheet() )
+
+local animationSequenceData = {
+  { name = "dbiExplosion",
+      frames={
+          1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28
+      },
+      time=explosionTime, loopCount=1
+  },
+}
+
+function spawnExplosionToTable(spawnX, spawnY)
+    i = i + 1                                        -- Increment the spawn counter
+    
+    explosionTable[i] = display.newSprite( explosionSheet, animationSequenceData )
+    explosionTable[i]:setSequence( "dbiExplosion" )    -- assign the Animation to play
+    explosionTable[i].x=spawnX                        -- Set the X position (touch X)
+    explosionTable[i].y=spawnY                        -- Set the Y position (touch Y)
+    explosionTable[i]:play()                        -- Start the Animation playing
+    explosionTable[i].xScale = 1                    -- X Scale the Explosion if required
+    explosionTable[i].yScale = 1                    -- Y Scale the Explosion if required
+    
+    --Create a function to remove the Explosion - triggered from the DelatedTimer..
+    local function removeExplosionSpawn( object )
+        return function()
+            object:removeSelf()    -- remove the explosion from table
+            object = nil
+        end
+    end
+    
+    --Add a timer to the Spawned Explosion.
+    --Explosion are destroyed after all the frames have been played after a determined
+    --amount of time as setup by the Explosion Generator Tool.
+    local destroySpawneExplosion = timer.performWithDelay (explosionTime, removeExplosionSpawn(explosionTable[i]))
+end
+-----------------------------------------------------------
 local function backHome()
 	storyboard.gotoScene( "scenetemplate", "slideRight", 800 )
-	storyboard.removeScene("scenes.gamelast")
+	--storyboard.removeScene("scenes.gamelast")
 end
 
 local function onHomeButtonClicked(event)
-		storyboard.removeScene("scenes.game3")
+		
 		storyboard.gotoScene( "scenetemplate", "slideRight", 800 )
 
 end;
 local function nextBtnOnClck()
-	if popupBg ~= nil then
-		popupBg:removeSelf();
-		popupText:removeSelf();
-		nextBtn:removeSelf();
-		homeBtn:removeSelf();
-	end;
+	
 		storyboard.reloadScene()
 	end
 local function showPopUp()
@@ -122,6 +164,7 @@ cancelAll = function (self)
 end
 local function disApp(self)
 	transition.to(self, {time = 800, rotation = 360, xScale = .2, yScale = .2, alpha = 0, onComplete = stopR})
+	spawnExplosionToTable(self.x, self.y)
 end
 local function enLarge(self)
 	transition.to(self, {time = 500, xScale = 1.1, yScale = 1.1, onComplete = disApp})
@@ -135,12 +178,15 @@ local function onItemTap( event )
 			cancelAll(selected)
 			selected = nil
 		elseif selected.shapeType == event.target.shapeType then
+			print(selected.shapeType)
+			shapeSound = audio.loadSound( "sounds/"..selected.shapeType..".wav")
+			audio.play( shapeSound )
 			print ("right choise")
 			-- hide pair
 			cancelAll(selected)
 			enLarge(selected)
 			enLarge(event.target)
-
+			
 			selected = nil
 			totalItems = totalItems - 2
 
@@ -148,11 +194,6 @@ local function onItemTap( event )
 			if totalItems == 0 then
 
 				audio.play(magicSound)
-				explosion.isVisible = true
-				explosion.xScale = 1.5
-				explosion.yScale = 1.5
-				explosion:setSequence( "dbiExplosion" ) 
-				explosion:play()
 				showPopUp()
 			end
 		else
@@ -169,15 +210,13 @@ local function onItemTap( event )
 end
 
 
-
-
-
 -- Called when the scene's view does not exist:
 function scene:createScene( event )
 	local group = self.view
 	print('createScene')
 	audio.play(find)
-	
+	background = display.newImage( "images/background3.png", centerX, centerY, _W, _H)
+	group:insert( background )
 end
 
 -- Called immediately after scene has moved onscreen:
@@ -189,26 +228,7 @@ function scene:enterScene( event )
 	--	INSERT code here (e.g. start timers, load audio, start listeners, etc.)
 	
 	-----------------------------------------------------------------------------
-	
-	background = display.newImage( "images/background3.png", centerX, centerY, _W, _H)
-	group:insert( background )
-	
-	local explosionSheet = graphics.newImageSheet( resources.."/".."Explosion.png", explosionSheetInfo:getSheet() )
 
-	local animationSequenceData = {
- 	 { name = "dbiExplosion",
-      frames={
-          1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48
-      },
-      time=explosionTime, loopCount=1
- 	 },
-	}
-
-	explosion = display.newSprite(explosionSheet, animationSequenceData )
-	explosion.x = centerX
-	explosion.y = centerY
-	explosion.isVisible = false
-	group:insert(explosion)
 
 	local sheetData = {
 		width = 330,
@@ -336,6 +356,12 @@ function scene:exitScene( event )
 	local group = self.view
 	storyboard.purgeAll()
 	print ("exitScene")
+	
+	for i=1, #items do
+		if items[i] then
+			items[i]:removeSelf()
+		end
+	end
 
 	if popupBg ~= nil then
 		popupBg:removeSelf()

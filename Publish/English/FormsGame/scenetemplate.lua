@@ -8,7 +8,9 @@ local storyboard = require( "storyboard" )
 local scene = storyboard.newScene()
 local widget = require("widget")
 local admob = require( "admob" )
-----------------------------------------------------------------------------------
+------------------------------------------
+
+----------------------------------------
 -- 
 --	NOTE:
 --	
@@ -31,16 +33,31 @@ local bgsound = audio.loadSound( "sounds/bgsound.wav" )
 -- BEGINNING OF YOUR IMPLEMENTATION
 ---------------------------------------------------------------------------------
 -- functions
+-----------------------------
+
+local function soundOffOn()
+	if _SOUNDON == true then
+	_SOUNDON = false
+	print(_SOUNDON)
+	audio.pause( bgsound )
+
+else
+	_SOUNDON = true
+	print(_SOUNDON)
+	audio.resume( bgsound )
+	end
+end
+-------------------------------
 local function getAnimalsForKids()
 	print("lin to app")
 	system.openURL( "market://details?id=com.shvagerfm.AnimalsForKids" )
 end
 local function gameFirst()
-	storyboard.gotoScene( "scenes.gamefirst", "slideLeft", 800 )
+	storyboard.gotoScene( "scenes.gamefirst", "slideLeft", 500 )
 	storyboard.removeScene("scenetemplate")
 end 
 local function gameSecond()
-	storyboard.gotoScene( "scenes.gamesecond", "slideLeft", 800 )
+	storyboard.gotoScene( "scenes.gamesecond", "slideLeft", 500 )
 	storyboard.removeScene("scenetemplate")
 
 end 
@@ -49,7 +66,7 @@ local function gameThree()
 	storyboard.removeScene("scenetemplate")
 end 
 local function gameFour()
-	storyboard.gotoScene( "scenes.game3", "slideLeft", 800 )
+	storyboard.gotoScene( "scenes.game3", "slideLeft", 500 )
 	storyboard.removeScene("scenetemplate")
 end 
 
@@ -61,14 +78,19 @@ transition.to( sun, {rotation = 20, time = 3000, transition = easing.inOutCubic,
 end
 local function sunMoving(self, event)
 	if event.phase == "ended" or event.phase == "cancelled" then
-		if sun.isPlaying then
+		
+		if _SOUNDON == true then
+			_SOUNDON = false
+			print(_SOUNDON)
+			audio.stop()
 			sun:pause()
-			audio.pause( bgsound )
 			print("pause")
-			else 	
+		else
+			_SOUNDON = true
+			print(_SOUNDON)
+			audio.play( bgsound )
 			print("play")
 			sun:play()
-			audio.resume( bgsound )
 		end
 		return true	-- indicates successful touch
 	end
@@ -76,7 +98,7 @@ end
 -- Called when the scene's view does not exist:
 function scene:createScene( event )
 	local group = self.view
-
+	
 	background = display.newImage( "images/background.png", centerX, centerY, _W, _H)
 	group:insert( background )
 	
@@ -168,9 +190,11 @@ end
 -- Called immediately after scene has moved onscreen:
 function scene:enterScene( event )
 	local group = self.view
+	
 	admob.showAd( "interstitial" )
-
+	if _SOUNDON == true then
 	audio.play( bgsound )
+	end
 
 	-----------------------------------------------------------------------------
 		
@@ -216,7 +240,9 @@ function scene:enterScene( event )
 	sun.x = sun.width/2
 	sun.y = sun.height/2
 	sun:setSequence("sunny")
+	if _SOUNDON == true then
 	sun:play()
+	end
 	group:insert(sun)
 	moveForward()
 	sun.touch = sunMoving

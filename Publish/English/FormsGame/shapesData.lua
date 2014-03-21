@@ -6,7 +6,7 @@ data.animals =
 	"rectangle",
 	"round",
 	"oval",
-	"romb",
+	"rhombus",
 	"triangle",
 	"star",
 	"heart"

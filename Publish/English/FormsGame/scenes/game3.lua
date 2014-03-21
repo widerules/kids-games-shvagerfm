@@ -4,12 +4,9 @@ local data = require ("shapesData");
 local constants = require("constants");
 local native = require( "native");
 
-local explosion
-local explosionTime        = 2000                    -- Time defined from EXP Gen 3 tool
-local resources            = "_resources"   
-local explosionSheetInfo    = require(resources..".".."Explosion")
 
 local harp = audio.loadSound("sounds/harp.wav")
+local formSound
 
 local scene = storyboard.newScene();
 
@@ -35,12 +32,14 @@ local background;
 local leftBar;
 local plate;
 
-local popupBg;
-local popupText;
-local homeBtn;
-local nextBtn;
+local popupBg = nil;
+local popupText = nil;
+local homeBtn = nil;
+local nextBtn = nil;
 
 local onPlaces = 0;
+
+
 
 local function generateIndexes()
 	for i = 1, 5, 1 do
@@ -61,38 +60,9 @@ local function generateIndexes()
 	end;
 end;
 
-local function removeAllObjects()
-	for i = 1, table.maxn(animalsPictures), 1 do 
-		animalsPictures[i]:removeSelf( );
-		shapesPictures[i]:removeSelf();
-
-	end;
-
-	while (table.maxn(indexes)>0) do
-		table.remove(indexes);
-	end;
-
-	if popupBg ~= nil then
-		popupBg:removeSelf();
-		popupText:removeSelf();
-		nextBtn:removeSelf();
-		homeBtn:removeSelf();
-	end;
-	onPlaces = 0;
-end
-
-local function explosionOnWin()
-				audio.play( harp )
-				explosion.isVisible = true
-				explosion.xScale = 1.5
-				explosion.yScale = 1.5
-				explosion:setSequence( "dbiExplosion" ) 
-				explosion:play()
-end
 
 local function onHomeButtonClicked(event)
-		removeAllObjects()
-		storyboard.removeScene("scenes.game3")
+		--removeAllObjects()
 		storyboard.gotoScene( "scenetemplate", "slideRight", 800 )
 
 end;
@@ -155,11 +125,14 @@ local function showPopUp()
 		overFile = "images/next.png"
 	}	
 	nextBtn:addEventListener( "tap", onNextButtonClicked );
+
 end;
 
 local function onAnimalDrag(event)
 	
 	local t = event.target;
+	local name = tostring(t.name)
+	formSound = audio.loadSound("sounds/"..name..".wav")
 	local phase = event.phase;
 	animScaleOnDrag(t)
 	if "began" == phase then 
@@ -194,6 +167,7 @@ local function onAnimalDrag(event)
 			onPlaces = onPlaces + 1;
 			animOnPutOn(t)
 			animOnPutOnShape(shapesPictures[index])
+			audio.play(formSound)
 			t:removeEventListener( "touch", onAnimalDrag )
 		else 
 			t.x = startX;
@@ -207,7 +181,7 @@ local function onAnimalDrag(event)
 		startY = nil;
 
 		if onPlaces == 5 then
-			explosionOnWin()
+			
 			showPopUp();
 		end;
 
@@ -265,21 +239,27 @@ function scene:enterScene(event)
 	generateIndexes();
 
 	local imageY = _IMAGESIZE/2;--+0.05*constants.H;
-	animalsPictures[1] = display.newImage(_ANIMALSPATH..data.animals[indexes[1]].._FORMAT,_LEFTCENTER, imageY);
+	animalsPictures[1] = display.newImage(_ANIMALSPATH..data.animals[indexes[1]].._FORMAT,0, imageY);
 	animalsPictures[1].height = _IMAGESIZE;
 	animalsPictures[1].width = _IMAGESIZE;
+	animalsPictures[1].name = data.animals[indexes[1]]
 	animalsPictures[1]:addEventListener( "touch", onAnimalDrag );
 	group:insert(animalsPictures[1]);
 
 	for i = 2, 5, 1 do
 		imageY = animalsPictures[i-1].y + _IMAGESIZE;-- + 0.05*constants.H;
-		animalsPictures[i] = display.newImage (_ANIMALSPATH..data.animals[indexes[i]].._FORMAT, _LEFTCENTER, imageY);
+		animalsPictures[i] = display.newImage (_ANIMALSPATH..data.animals[indexes[i]].._FORMAT, 0, imageY);
 		animalsPictures[i].height = _IMAGESIZE;
 		animalsPictures[i].width = _IMAGESIZE;
+		animalsPictures[i].name = data.animals[indexes[i]]
 		animalsPictures[i]:addEventListener( "touch", onAnimalDrag );
 		group:insert(animalsPictures[i]); 
 	end;
 
+	for i = 1, 5 do
+		transition.to(animalsPictures[i], {x=_LEFTCENTER, transition=easing.outBounce, time = 500})
+	end
+	
 	local tmpPos = { x = table.copy(positions.x), y = table.copy(positions.y)};
 	
 	for i = 1,5,1 do 
@@ -298,29 +278,18 @@ function scene:enterScene(event)
 		table.remove( tmpPos.y, randPos );
 	end;
 
-	local explosionSheet = graphics.newImageSheet( resources.."/".."Explosion.png", explosionSheetInfo:getSheet() )
-
-	local animationSequenceData = {
- 	 { name = "dbiExplosion",
-      frames={
-          1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48
-      },
-      time=explosionTime, loopCount=1
- 	 },
-	}
-
-	explosion = display.newSprite(explosionSheet, animationSequenceData )
-	explosion.x = constants.CENTERX
-	explosion.y = constants.CENTERY
-	explosion.isVisible = false
-	group:insert(explosion)
+	print(popupBg)
 end
 
 
 function scene:exitScene(event)
 	for i = 1, table.maxn(animalsPictures), 1 do 
+		if animalsPictures[i] then
 		animalsPictures[i]:removeSelf( );
+	end
+	if shapesPictures[i] then
 		shapesPictures[i]:removeSelf();
+	end
 
 	end;
 
@@ -330,13 +299,16 @@ function scene:exitScene(event)
 		table.remove(indexes);
 	end;
 
-	if popupBg ~= nil then
+	if popupBg == nil then
+		print(popupBg)
+	else
 		popupBg:removeSelf();
 		popupText:removeSelf();
 		nextBtn:removeSelf();
 		homeBtn:removeSelf();
+		popupBg = nil
 	end;
-	explosion:removeSelf( )
+	
 	onPlaces = 0;
 end;
 
