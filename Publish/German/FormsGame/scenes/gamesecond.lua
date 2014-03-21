@@ -24,7 +24,7 @@ local _H = display.contentHeight
 local rightIndex
 local anIndex1, anIndex2
 local shapes = {"square", "triangle", "rhombus", "oval", "rectangle",  "round", "heart", "star"}
-local shapesDe = {"platz", "dreieck", "romb", "oval", "rechteck",  "kreis", "herz", "stern"} 
+local shapesDe = {"quadrat", "dreieck", "romb", "oval", "rechteck",  "kreis", "herz", "stern"} 
 
 local rightChoise
 local square = audio.loadSound("sounds/fsquare.mp3")
