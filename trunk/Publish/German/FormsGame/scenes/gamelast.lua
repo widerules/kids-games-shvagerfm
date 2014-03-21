@@ -24,7 +24,7 @@ local centerY = display.contentCenterY
 local amount = 12
 local shapes = {"square", "triangle", "rhombus", "oval", "rectangle",  "round", "heart", "star"}
 local items, backBtn
-local find = audio.loadSound("sounds/fpairs.wav")
+local find = audio.loadSound("sounds/fpairs.mp3")
 local magicSound = audio.loadSound("sounds/magic.mp3")
 local shapeSound
 local selected
