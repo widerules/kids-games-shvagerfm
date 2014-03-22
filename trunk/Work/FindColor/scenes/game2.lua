@@ -135,10 +135,10 @@ local function onButterflyClicked(event)
 
 	if butterflyIndex == colorIndex then
 		local function toNormal()
-			transition.scaleTo( event.target, {xScale = 1, yScale = 1, time = 500} )
-		end
-		transition.scaleTo( event.target, {xScale = 1.2, yScale = 1.2, time = 500, onComplete = toNormal} )
-		timer.performWithDelay( 1500, showPopUp )
+			transition.fadeOut( event.target, {xScale = 1.5, yScale = 1.5, time = 1000, onComplete = showPopUp} )
+		end		
+		event.target:toFront()
+		transition.to( event.target, {xScale = 1.2, yScale = 1.2, x = constants.CENTERX, y = constants.CENTERY, rotation = 0, time = 1000, onComplete = toNormal} )		
 		event.target:removeEventListener( "tap", onButterflyClicked )
 		--play music
 	else
