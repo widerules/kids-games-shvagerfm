@@ -5,11 +5,59 @@ local data = require ("pairData")
 
 local scene = storyboard.newScene()
 
+local _FONTSIZE = constants.H / 13
+
 local background
-local butterflies = {"red", "orange", "yellow","green","cyan","blue","purple","white"}
+local butterflies
 local folds = {}
 
 local previous
+local totalCards
+
+local popupBg
+local popupText
+local homeBtn
+local nextBtn
+
+local function onHomeButtonClicked(event)
+	--goto main screen	
+end
+
+local function onNextButtonClicked(event)
+	storyboard.reloadScene( )
+end
+
+local function showPopUp()
+	popupBg = display.newImage( "images/popupbg.png", constants.CENTERX, constants.CENTERY );
+	popupBg.height = 0.7*constants.H;
+	popupBg.width = 0.7*constants.W;
+
+	popupText = display.newText("Well done !", popupBg.x, 0, native.systemFont, 2*_FONTSIZE);
+	popupText.y = popupBg.y-popupBg.height+2*popupText.width/3;
+
+	homeBtn = widget.newButton
+	{
+		width = 0.4*popupBg.height,
+		height = 0.4*popupBg.height,
+		x = popupBg.x - 0.4*popupBg.width/2,
+		y = popupBg.y + 0.4*popupBg.height/2,
+		defaultFile = "images/home.png",
+		overFile = "images/homehover.png",
+		
+	}
+	homeBtn:addEventListener( "tap", onHomeButtonClicked );
+
+	nextBtn = widget.newButton
+	{
+		width = 0.4*popupBg.height,
+		height = 0.4*popupBg.height,
+		x = popupBg.x + 0.4*popupBg.width/2,
+		y = popupBg.y + 0.4*popupBg.height/2,
+		defaultFile = "images/next.png",
+		overFile = "images/next.png"
+	}	
+	nextBtn:addEventListener( "tap", onNextButtonClicked);
+end
 
 local function onFoldClicked (event)
 	local function compare ()
@@ -17,7 +65,11 @@ local function onFoldClicked (event)
 			if previous.butterflyType == event.target.butterflyType then
 				print ("pair!")
 				event.target:removeEventListener( "tap", onFoldClicked )
-				previous:removeEventListener( "tap", onFoldClicked )				
+				previous:removeEventListener( "tap", onFoldClicked )
+				totalCards = totalCards - 2
+				if totalCards == 0	then
+					showPopUp()
+				end
 			else
 				print("not pair!")
 				transition.fadeIn( event.target, {time = 500} )
@@ -41,10 +93,17 @@ function scene:createScene(event)
 
 end
 
+function scene:willEnterScene(event)
+	butterflies = table.copy (data.butterflies)
+	totalCards = data.amount
+end
+
 function scene:enterScene (event)
 	local group = self.view
 
-		local sheetData = {
+	previous = nil
+
+	local sheetData = {
 		width = 512,
 		height = 512,
 		numFrames = 8,
@@ -183,6 +242,7 @@ function scene:destroyScene(event)
 end
 
 scene:addEventListener( "createScene", scene )
+scene:addEventListener( "willEnterScene", scene )
 scene:addEventListener( "enterScene", scene )
 scene:addEventListener( "exitScene", scene )
 scene:addEventListener( "destroyScene", scene )
