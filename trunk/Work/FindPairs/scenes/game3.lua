@@ -59,17 +59,37 @@ local function showPopUp()
 	nextBtn:addEventListener( "tap", onNextButtonClicked);
 end
 
+local function findIndex(object)
+	local index = 1
+	for i = 1, #folds do
+		if folds[i]==object then
+			index = i
+			break
+		end
+	end
+	return index
+end
+
 local function onFoldClicked (event)
 	local function compare ()
 		if previous ~= nil then
 			if previous.butterflyType == event.target.butterflyType then
 				print ("pair!")
+
 				event.target:removeEventListener( "tap", onFoldClicked )
 				previous:removeEventListener( "tap", onFoldClicked )
+
+				local function removeSecond()
+					print("hey, I am here !")
+					transition.to(items[findIndex(event.target)], {time = 1000, x = constants.W, y = 0, alpha = 0})
+				end
+				transition.to(items[findIndex(previous)], {time = 1000, x = constants.W, y = 0, alpha = 0, onComplete = removeSecond})
+
+
 				totalCards = totalCards - 2
 				if totalCards == 0	then
 					showPopUp()
-				end
+				end				
 			else
 				print("not pair!")
 				transition.fadeIn( event.target, {time = 500} )
