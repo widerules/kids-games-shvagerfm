@@ -79,17 +79,18 @@ local function onFoldClicked (event)
 				event.target:removeEventListener( "tap", onFoldClicked )
 				previous:removeEventListener( "tap", onFoldClicked )
 
+				local function checkAmount()
+					totalCards = totalCards - 2
+					if totalCards == 0	then
+						showPopUp()
+					end				
+				end
+
 				local function removeSecond()
 					print("hey, I am here !")
-					transition.to(items[findIndex(event.target)], {time = 1000, x = constants.W, y = 0, alpha = 0})
+					transition.to(items[findIndex(event.target)], {time = 1000, x = constants.W, y = 0, alpha = 0, onComplete = checkAmount})
 				end
-				transition.to(items[findIndex(previous)], {time = 1000, x = constants.W, y = 0, alpha = 0, onComplete = removeSecond})
-
-
-				totalCards = totalCards - 2
-				if totalCards == 0	then
-					showPopUp()
-				end				
+				transition.to(items[findIndex(previous)], {time = 1000, x = constants.W, y = 0, alpha = 0, onComplete = removeSecond})				
 			else
 				print("not pair!")
 				transition.fadeIn( event.target, {time = 500} )
