@@ -6,7 +6,7 @@ data.format = ".png"
 data.colors =
 {
 	"blue",
-	"cyan",
+	"indigo",
 	"green",
 	"orange",
 	"purple",

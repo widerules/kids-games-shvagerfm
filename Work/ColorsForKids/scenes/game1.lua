@@ -45,11 +45,22 @@ function scene:createScene(event)
 	canvas.height = constants.H*0.8
 	group:insert(canvas)
 
+	
+
+	currentColor = 1
+end
+
+function scene:enterScene(event)
+	--TODO :
+	local group = self.view
+	colorSound = audio.loadSound( "sounds/"..data.colors[currentColor]..".mp3" )
+	audio.play( colorSound )
 	for i = 1,7,1 do
 		circles[i] = display.newImage (data.circlesPath..data.colors[i]..data.format, 0, 0)
 		circles[i]:addEventListener( "tap", onCircleClicked )
 		circles[i].height = _CIRCLESSIZE
 		circles[i].width = _CIRCLESSIZE
+		circles[i].xScale, circles[i].yScale = 0.1, 0.1
 		group:insert(circles[i])
 	end
 
@@ -73,20 +84,16 @@ function scene:createScene(event)
 	
 	circles[7].x = pallete.x - constants.H/20	
 	circles[7].y = pallete.y - pallete.height/2 + _CIRCLESSIZE/2 + constants.H/3.25
-
-	currentColor = 1
-end
-
-function scene:enterScene(event)
-	--TODO :
-	local group = self.view
-	colorSound = audio.loadSound( "sounds/"..data.colors[currentColor]..".mp3" )
-	audio.play( colorSound )
+	for i = 1, 7 do
+		transition.to( circles[i],{time = 500, xScale = 1, yScale=1, transition=easing.outBack} )
+	end
 	butterfly = display.newImage (data.butterfliesPath..data.colors[currentColor]..data.format, 0, 0)
 	butterfly.x = canvas.x
 	butterfly.y = canvas.y
 	butterfly.width = canvas.width*0.8
 	butterfly.height = canvas.height*0.8
+	butterfly.xScale, butterfly.yScale = 0.3, 0.3
+	transition.to( butterfly, {time = 500, xScale = 1, yScale=1, transition=easing.outBack} )
 	group:insert(butterfly)
 
 	colorName = display.newEmbossedText( data.colors[currentColor], pallete.x, _FONTSIZE/2 , native.systemFont, _FONTSIZE)
@@ -96,6 +103,9 @@ end
 
 function scene:exitScene(event)
 	--TODO :
+	for i=1,7 do
+		circles[i]:removeSelf()
+	end
 	butterfly:removeSelf()
 	colorName:removeSelf()	
 end
