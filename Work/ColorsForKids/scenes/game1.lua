@@ -1,0 +1,135 @@
+local storyboard = require("storyboard")
+local widget = require("widget")
+local constants = require ("constants")
+local data = require ("studyData")
+
+local scene = storyboard.newScene()
+
+local _CIRCLESSIZE = constants.H/6
+local _FONTSIZE = constants.H / 5;
+
+
+local currentColor
+
+local circles = {}
+local butterfly
+local colorName
+
+local background
+local pallete
+local canvas
+
+local function onCircleClicked (event)
+	for i = 1, 7, 1 do
+		if circles[i] == event.target then
+			currentColor = i
+		end
+	end
+	storyboard.reloadScene()
+end
+
+function scene:createScene(event)
+	local group = self.view
+
+	background = display.newImage("images/background1.png", constants.CENTERX, constants.CENTERY)
+	background.width = constants.W
+	background.height = constants.H
+	group:insert(background)
+
+	pallete = display.newImage("images/pallete.png", 0.75*constants.W, constants.H*0.6)
+	pallete.width = constants.W*0.5
+	pallete.height = constants.H*0.8 
+	group:insert(pallete)
+
+	canvas = display.newImage("images/canvas.png", 0.25*constants.W, constants.CENTERY)
+	canvas.width = constants.W*0.35
+	canvas.height = constants.H*0.8
+	group:insert(canvas)
+
+	circles[1] = display.newImage (data.circlesPath..data.colors[1]..data.format, 0, 0)
+	circles[1].x = pallete.x + _CIRCLESSIZE/2
+	circles[1].y = pallete.y - pallete.height/2 + _CIRCLESSIZE/2 + constants.H/20
+	circles[1].height = _CIRCLESSIZE
+	circles[1].width = _CIRCLESSIZE
+	group:insert(circles[1])
+
+	circles[2] = display.newImage (data.circlesPath..data.colors[2]..data.format, 0, 0)
+	circles[2].x = pallete.x - _CIRCLESSIZE/2 - constants.H/30	
+	circles[2].y = pallete.y - pallete.height/2 + _CIRCLESSIZE/2 + constants.H/15
+	circles[2].height = _CIRCLESSIZE
+	circles[2].width = _CIRCLESSIZE
+	group:insert(circles[2])
+
+	circles[3] = display.newImage (data.circlesPath..data.colors[3]..data.format, 0, 0)
+	circles[3].x = pallete.x - 4*_CIRCLESSIZE/2.75 - constants.H/30	
+	circles[3].y = pallete.y - pallete.height/2 + _CIRCLESSIZE/2 + constants.H/5.5
+	circles[3].height = _CIRCLESSIZE
+	circles[3].width = _CIRCLESSIZE
+	group:insert(circles[3])
+
+	circles[4] = display.newImage (data.circlesPath..data.colors[4]..data.format, 0, 0)
+	circles[4].x = pallete.x - 4*_CIRCLESSIZE/2.5 - constants.H/30	
+	circles[4].y = pallete.y - pallete.height/2 + _CIRCLESSIZE/2 + constants.H/2.75
+	circles[4].height = _CIRCLESSIZE
+	circles[4].width = _CIRCLESSIZE
+	group:insert(circles[4])
+
+	circles[5] = display.newImage (data.circlesPath..data.colors[5]..data.format, 0, 0)
+	circles[5].x = pallete.x - _CIRCLESSIZE - constants.H/50	
+	circles[5].y = pallete.y - pallete.height/2 + _CIRCLESSIZE/2 + constants.H/1.95
+	circles[5].height = _CIRCLESSIZE
+	circles[5].width = _CIRCLESSIZE
+	group:insert(circles[5])
+
+	circles[6] = display.newImage (data.circlesPath..data.colors[6]..data.format, 0, 0)
+	circles[6].x = pallete.x - constants.H/60	
+	circles[6].y = pallete.y - pallete.height/2 + _CIRCLESSIZE/2 + constants.H/1.7
+	circles[6].height = _CIRCLESSIZE
+	circles[6].width = _CIRCLESSIZE
+	group:insert(circles[6])
+
+	circles[7] = display.newImage (data.circlesPath..data.colors[7]..data.format, 0, 0)
+	circles[7].x = pallete.x - constants.H/20	
+	circles[7].y = pallete.y - pallete.height/2 + _CIRCLESSIZE/2 + constants.H/3.25
+	circles[7].height = _CIRCLESSIZE
+	circles[7].width = _CIRCLESSIZE
+	group:insert(circles[7])
+
+	for i = 1,7,1 do
+		circles[i]:addEventListener( "tap", onCircleClicked )
+	end
+
+	currentColor = 1
+end
+
+function scene:enterScene(event)
+	--TODO :
+	local group = self.view
+
+	butterfly = display.newImage (data.butterfliesPath..data.colors[currentColor]..data.format, 0, 0)
+	butterfly.x = canvas.x
+	butterfly.y = canvas.y
+	butterfly.width = canvas.width*0.8
+	butterfly.height = canvas.height*0.8
+	group:insert(butterfly)
+
+	colorName = display.newEmbossedText( data.colors[currentColor], pallete.x, _FONTSIZE/2 , native.systemFont, _FONTSIZE)
+	colorName:setFillColor(data.textColors[currentColor][1], data.textColors[currentColor][2],data.textColors[currentColor][3])
+	group:insert(colorName)
+end
+
+function scene:exitScene(event)
+	--TODO :
+	butterfly:removeSelf()
+	colorName:removeSelf()	
+end
+
+function scene:destroyScene(event)
+end
+
+scene:addEventListener( "createScene" , scene )
+scene:addEventListener( "enterScene", scene )
+scene:addEventListener( "exitScene", scene)
+scene:addEventListener( "destroyScene", scene)
+
+return scene
