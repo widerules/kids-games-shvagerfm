@@ -14,10 +14,9 @@ local currentColor
 local circles = {}
 local butterfly
 local colorName
+local colorSound
 
-local background
-local pallete
-local canvas
+local background, pallete, canvas
 
 local function onCircleClicked (event)
 	for i = 1, 7, 1 do
@@ -46,58 +45,34 @@ function scene:createScene(event)
 	canvas.height = constants.H*0.8
 	group:insert(canvas)
 
-	circles[1] = display.newImage (data.circlesPath..data.colors[1]..data.format, 0, 0)
+	for i = 1,7,1 do
+		circles[i] = display.newImage (data.circlesPath..data.colors[i]..data.format, 0, 0)
+		circles[i]:addEventListener( "tap", onCircleClicked )
+		circles[i].height = _CIRCLESSIZE
+		circles[i].width = _CIRCLESSIZE
+		group:insert(circles[i])
+	end
+
 	circles[1].x = pallete.x + _CIRCLESSIZE/2
 	circles[1].y = pallete.y - pallete.height/2 + _CIRCLESSIZE/2 + constants.H/20
-	circles[1].height = _CIRCLESSIZE
-	circles[1].width = _CIRCLESSIZE
-	group:insert(circles[1])
 
-	circles[2] = display.newImage (data.circlesPath..data.colors[2]..data.format, 0, 0)
 	circles[2].x = pallete.x - _CIRCLESSIZE/2 - constants.H/30	
 	circles[2].y = pallete.y - pallete.height/2 + _CIRCLESSIZE/2 + constants.H/15
-	circles[2].height = _CIRCLESSIZE
-	circles[2].width = _CIRCLESSIZE
-	group:insert(circles[2])
 
-	circles[3] = display.newImage (data.circlesPath..data.colors[3]..data.format, 0, 0)
 	circles[3].x = pallete.x - 4*_CIRCLESSIZE/2.75 - constants.H/30	
 	circles[3].y = pallete.y - pallete.height/2 + _CIRCLESSIZE/2 + constants.H/5.5
-	circles[3].height = _CIRCLESSIZE
-	circles[3].width = _CIRCLESSIZE
-	group:insert(circles[3])
 
-	circles[4] = display.newImage (data.circlesPath..data.colors[4]..data.format, 0, 0)
 	circles[4].x = pallete.x - 4*_CIRCLESSIZE/2.5 - constants.H/30	
 	circles[4].y = pallete.y - pallete.height/2 + _CIRCLESSIZE/2 + constants.H/2.75
-	circles[4].height = _CIRCLESSIZE
-	circles[4].width = _CIRCLESSIZE
-	group:insert(circles[4])
 
-	circles[5] = display.newImage (data.circlesPath..data.colors[5]..data.format, 0, 0)
 	circles[5].x = pallete.x - _CIRCLESSIZE - constants.H/50	
 	circles[5].y = pallete.y - pallete.height/2 + _CIRCLESSIZE/2 + constants.H/1.95
-	circles[5].height = _CIRCLESSIZE
-	circles[5].width = _CIRCLESSIZE
-	group:insert(circles[5])
-
-	circles[6] = display.newImage (data.circlesPath..data.colors[6]..data.format, 0, 0)
+	
 	circles[6].x = pallete.x - constants.H/60	
 	circles[6].y = pallete.y - pallete.height/2 + _CIRCLESSIZE/2 + constants.H/1.7
-	circles[6].height = _CIRCLESSIZE
-	circles[6].width = _CIRCLESSIZE
-	group:insert(circles[6])
-
-	circles[7] = display.newImage (data.circlesPath..data.colors[7]..data.format, 0, 0)
+	
 	circles[7].x = pallete.x - constants.H/20	
 	circles[7].y = pallete.y - pallete.height/2 + _CIRCLESSIZE/2 + constants.H/3.25
-	circles[7].height = _CIRCLESSIZE
-	circles[7].width = _CIRCLESSIZE
-	group:insert(circles[7])
-
-	for i = 1,7,1 do
-		circles[i]:addEventListener( "tap", onCircleClicked )
-	end
 
 	currentColor = 1
 end
@@ -105,7 +80,8 @@ end
 function scene:enterScene(event)
 	--TODO :
 	local group = self.view
-
+	colorSound = audio.loadSound( "sounds/"..data.colors[currentColor]..".mp3" )
+	audio.play( colorSound )
 	butterfly = display.newImage (data.butterfliesPath..data.colors[currentColor]..data.format, 0, 0)
 	butterfly.x = canvas.x
 	butterfly.y = canvas.y
