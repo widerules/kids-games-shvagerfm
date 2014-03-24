@@ -12,7 +12,7 @@ data.colors =
 	"orange",
 	"yellow",
 	"green",
-	"cyan",
+	"indigo",
 	"blue",
 	"purple"	
 }

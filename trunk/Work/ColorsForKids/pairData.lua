@@ -8,7 +8,7 @@ data.butterflies =
 	"orange", 
 	"yellow",
 	"green",
-	"cyan",
+	"indigo",
 	"blue",
 	"purple",
 	"white"

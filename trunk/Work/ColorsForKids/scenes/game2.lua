@@ -45,7 +45,7 @@ local colorIndex
 
 local butterflies = {}
 local colorText
-
+local colorSound
 local background
 
 local popupText
@@ -135,10 +135,10 @@ local function onButterflyClicked(event)
 
 	if butterflyIndex == colorIndex then
 		local function toNormal()
-			transition.fadeOut( event.target, {xScale = 1.5, yScale = 1.5, time = 1000, onComplete = showPopUp} )
+			transition.fadeOut( event.target, {xScale = 1.5, yScale = 1.5, time = 800, onComplete = showPopUp} )
 		end		
 		event.target:toFront()
-		transition.to( event.target, {xScale = 1.2, yScale = 1.2, x = constants.CENTERX, y = constants.CENTERY, rotation = 0, time = 1000, onComplete = toNormal} )		
+		transition.to( event.target, {xScale = 2, yScale = 2, x = constants.CENTERX, y = constants.CENTERY, rotation = 0, time = 800, transition = easing.outBack, onComplete = toNormal} )		
 		event.target:removeEventListener( "tap", onButterflyClicked )
 		--play music
 	else
@@ -160,13 +160,16 @@ function scene:enterScene(event)
 	local group = self.view
 
 	generateIndexes()
-
+	colorSound = audio.loadSound("sounds/find_"..data.colors[colorIndex].."_butterfly.mp3")
+	audio.play( colorSound )
 	for i = 1, 6, 1 do
 		butterflies[i] = display.newImage(data.butterfliesPath..data.colors[indexes[i]]..data.format, positions.x[i], positions.y[i])
 		butterflies[i].width = _IMAGESIZE
 		butterflies[i].height = _IMAGESIZE
+		butterflies[i].xScale, butterflies[i].yScale = 0.3, 0.3
 		butterflies[i].rotation = positions.rot[i]
 		butterflies[i]:addEventListener( "tap", onButterflyClicked )
+		transition.to( butterflies[i],{time = 500, xScale = 1, yScale=1, transition=easing.outBack} )
 		group:insert(butterflies[i])		
 	end
 
