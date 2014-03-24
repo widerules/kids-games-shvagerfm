@@ -6,36 +6,46 @@ local data = require ("starFallData")
 
 local scene = storyboard.newScene()
 
+-------------------------------------constants
 local _STARSIZE = constants.H/8
 local _FRICTION = 0.7
-local _FONTSIZE = constants.H / 15;
+local _FONTSIZE = constants.H / 15
+local _STARSPEED = 5
 
+-------------------------------------texts
 local scoreText = "Score: "
 
-local timerID, index, loopNumber
-local starType, starTypeImage
-local score, record
+local timerID, index, loopNumber 	--index for randomly choosing one type of stars, loopNumber to dedicate end of the star generating
+local starType, starTypeImage 		--storing type of the star, showing this type 
+local score, record					--score variables
 
-local starGroup, informationGroup
-local scoreLabel
-local background, informationBackground
+local starGroup, informationGroup 	--group for falling stars and for information such as type of the star and score
+local scoreLabel 					--for showing score during the game
+local background, informationBackground  --for showing main background, and panel with information
 
+--this function called each time when user touch star
 local function onStarTouched(event)
-	if event.target.starType == starType then
-		event.target:removeEventListener("touch", onStarTouched)
+	--if user touched star of correct type
+	if event.target.starType == starType then		
+		--remove event listener from this star
+		event.target:removeEventListener("touch", onStarTouched) 
 		
+		--make it a little bit bigger
 		event.target.xScale = 1.5
 		event.target.yScale = 1.5
 
-		transition.to (event.target, {time = 300, x = constants.W, y = 0, alpha = 0, onComplete = function () display.remove(event.target) end})
+		--move it to the left corner
+		transition.to (event.target, {time = 300, x = constants.W, y = 0, alpha = 0, onComplete = function () display.remove(event.target) end}) 
 		
+		--encrease score, and show new score
 		score = score + 1
 		scoreLabel.text = scoreText..score
 	end
 end
 
+--this function called at the end of the game
 local function showPopUp ()
-	print(score)
+	--TODO: show pop up with score and records
 end
 
 function scene:createScene(event)
@@ -50,8 +60,8 @@ end
 
 function scene:willEnterScene(event)
 	physics.start(true)
-	physics.getGravity(0, 5 )
-	index = math.random(1, #data.colors)	
+	physics.getGravity(0, _STARSPEED) 
+	index = math.random(1, #data.colors)
 	starType = data.colors[index]
 	score = 0
 	loopNumber = 0
@@ -84,7 +94,6 @@ function scene:enterScene (event)
 				index = math.random (1, #data.colors)
 				local star = display.newImage(data.starPath..data.colors[index]..data.format, 0, 0)
 				star.x = constants.W * math.random()
-				--star.y = _STARSIZE*2
 				star.width = _STARSIZE
 				star.height = _STARSIZE
 				star.starType = data.colors[index]
@@ -92,9 +101,10 @@ function scene:enterScene (event)
 				starGroup:insert(star)
 				physics.addBody( star, {density=1, friction=_FRICTION, bounce=0} )
 			end
+			--I didn't find any better way to catch the end of generating ...
 			loopNumber = loopNumber + 1
 			if loopNumber == data.totalGameLoops then
-				timer.performWithDelay( 2500, function() showPopUp() end)
+				timer.performWithDelay( 2500, function() showPopUp() end) --lets all stars fall down and shows pop-up
 			end
 		end, data.totalGameLoops )
 end
