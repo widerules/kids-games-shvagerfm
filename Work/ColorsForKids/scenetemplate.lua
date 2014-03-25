@@ -50,10 +50,6 @@ function scene:createScene( event )
 background = display.newImage( "images/background.png", _CENTERX, _CENTERY, _W, _H)
 	group:insert(background)
 
-title = display.newEmbossedText("Animals for Kids", _CENTERX, 0, native.systemFont, _H/8)
-title.y = title.height
-title:setFillColor( 1, 0.6, 0 )
-group:insert(title)
 
 exitBtn = widget.newButton
 		{	
@@ -65,7 +61,7 @@ exitBtn = widget.newButton
 		    onRelease = exit,
 		    
 		}
-	exitBtn.x = _W - _W/10
+	exitBtn.x =  _H/8 
 	exitBtn.y = _H/10
 	group:insert(exitBtn)
 	admob.init()
@@ -84,8 +80,8 @@ function scene:enterScene( event )
 		id = "button_1",
 		onRelease = goGame1,
 	}
-	btnGame1.x = _CENTERX/2
-	btnGame1.y = 1.5*btnGameHeight
+	btnGame1.x = 3*_CENTERX/2
+	btnGame1.y = 0.5*btnGameHeight
 
 	group:insert(btnGame1)
 
@@ -98,7 +94,7 @@ function scene:enterScene( event )
 		onRelease = goGame2,
 	}
 	btnGame2.x = 3*_CENTERX/2
-	btnGame2.y = 1.5*btnGameHeight
+	btnGame2.y = btnGame1.y+ btnGameHeight
 
 	group:insert(btnGame2)
 
@@ -110,8 +106,8 @@ function scene:enterScene( event )
 		id = "button_3",
 		onRelease = goGame3,
 	}
-	btnGame3.x = _CENTERX/2
-	btnGame3.y = 3*btnGameHeight
+	btnGame3.x = 3*_CENTERX/2
+	btnGame3.y = btnGame2.y+btnGameHeight
 
 	group:insert(btnGame3)
 
@@ -124,7 +120,7 @@ function scene:enterScene( event )
 		onRelease = goGame4,
 	}
 	btnGame4.x = 3*_CENTERX/2
-	btnGame4.y = 3*btnGameHeight
+	btnGame4.y = btnGame3.y+ btnGameHeight
 
 	group:insert(btnGame4)
 
