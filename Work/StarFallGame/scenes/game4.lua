@@ -70,43 +70,54 @@ end
 function scene:enterScene (event)
 
 	local group = self.view
+	local function startFalling()
+		local function listener()
+		timerID = timer.performWithDelay( data.delay, 
+			function()
+				for i = 1, 5 do
+					index = math.random (1, #data.colors)
+					local star = display.newImage(data.starPath..data.colors[index]..data.format, 0, 0)
+					star.x = constants.W * math.random()
+					star.width = _STARSIZE
+					star.height = _STARSIZE
+					star.starType = data.colors[index]
+					star:addEventListener( "touch", onStarTouched )
+					starGroup:insert(star)
+					physics.addBody( star, {density=1, friction=_FRICTION, bounce=0} )
+				end
+				--I didn't find any better way to catch the end of generating ...
+				loopNumber = loopNumber + 1
+				if loopNumber == data.totalGameLoops then
+					timer.performWithDelay( 2500, function() showPopUp() end) --lets all stars fall down and shows pop-up
+				end
+			end, data.totalGameLoops )
+		end
+	transition.to(starTypeImage, {time=500, xScale = 2, yScale=2, x = informationBackground.x - starTypeImage.width, y = informationBackground.y, onComplete= listener})
+	end
 
 	informationBackground = display.newImage("images/popupbg.png", constants.CENTERX, _STARSIZE)
-	informationBackground.width = constants.W
+	informationBackground.width = constants.W/3
 	informationBackground.height = 2*_STARSIZE
+	informationBackground.x = constants.W - informationBackground.width/2
 	informationGroup:insert(informationBackground)
 
 	starTypeImage = display.newImage( data.starPath..data.colors[index]..data.format, _STARSIZE, _STARSIZE )
-	starTypeImage.width = _STARSIZE*1.5
-	starTypeImage.height = _STARSIZE*1.5
+	starTypeImage.width = _STARSIZE
+	starTypeImage.height = _STARSIZE
+	starTypeImage.x = constants.CENTERX
+	starTypeImage.y = constants.CENTERY
 	informationGroup:insert(starTypeImage)
+	transition.to( starTypeImage, {time = 1000, rotation = 360, alpha = 1, xScale = 3, yScale = 3, transition= easing.outBack, onComplete = startFalling} )
 
-	scoreLabel = display.newEmbossedText( scoreText..0, informationBackground.x, informationBackground.y, native.systemFont, _FONTSIZE )
+	scoreLabel = display.newEmbossedText( scoreText..0, 0, informationBackground.y, native.systemFont, _FONTSIZE )
+	scoreLabel.x = constants.W - 2*scoreLabel.width/3
+	group:insert(scoreLabel)
 
 	background = display.newImage ("images/background4.png", constants.CENTERX, constants.CENTERY)
 	background.width = constants.W
 	background.height = constants.H
 	starGroup:insert(background)
 
-	timerID = timer.performWithDelay( data.delay, 
-		function()
-			for i = 1, 5 do
-				index = math.random (1, #data.colors)
-				local star = display.newImage(data.starPath..data.colors[index]..data.format, 0, 0)
-				star.x = constants.W * math.random()
-				star.width = _STARSIZE
-				star.height = _STARSIZE
-				star.starType = data.colors[index]
-				star:addEventListener( "touch", onStarTouched )
-				starGroup:insert(star)
-				physics.addBody( star, {density=1, friction=_FRICTION, bounce=0} )
-			end
-			--I didn't find any better way to catch the end of generating ...
-			loopNumber = loopNumber + 1
-			if loopNumber == data.totalGameLoops then
-				timer.performWithDelay( 2500, function() showPopUp() end) --lets all stars fall down and shows pop-up
-			end
-		end, data.totalGameLoops )
 end
 
 function scene:exitScene(event)
