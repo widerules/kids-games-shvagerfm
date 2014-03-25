@@ -3,6 +3,10 @@
 -- scenetemplate.lua
 --
 ----------------------------------------------------------------------------------
+require "sqlite3"
+
+local path = system.pathForFile( "colorskids.sqlite", system.DocumentsDirectory )
+local db = sqlite3.open( path )
 
 local storyboard = require( "storyboard" )
 local scene = storyboard.newScene()
@@ -15,6 +19,7 @@ local btnGame1, btnGame2, btnGame3, btnGame4, background, title
 local btnGameHeight = _H/4
 local btnGameWidth = 3*_H/4
 
+local total, totalScore
 --local bgsound = audio.loadSound( "sounds/bgsound.mp3" )
 
 --local harp = audio.loadSound( "sounds/harp.wav")
@@ -37,6 +42,23 @@ local function goGame4()
 local function exit ()
 	rate.init()
 end
+local function checkTotal()
+   local function dbCheck()
+      local sql = [[SELECT value FROM statistic WHERE name='total';]]
+      for row in db:nrows(sql) do
+         return row.value
+      end
+   end
+   total = dbCheck()
+   if total == nil then
+      local insertTotal = [[INSERT INTO statistic VALUES (NULL, 'total', '0'); ]]
+      db:exec( insertTotal )
+      print("total inserted to 0")
+      total = 0
+   else
+      print("Total is "..total)
+   end
+end
 ---------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------
@@ -46,24 +68,10 @@ end
 -- Called when the scene's view does not exist:
 function scene:createScene( event )
 	local group = self.view
-
-background = display.newImage( "images/background.png", _CENTERX, _CENTERY, _W, _H)
+	checkTotal()
+	background = display.newImage( "images/background.png", _CENTERX, _CENTERY, _W, _H)
 	group:insert(background)
 
-
-exitBtn = widget.newButton
-		{	
-		    width = _H/8,
-		    height = _H/8,
-		    defaultFile = "images/exit.png",
-		    overFile = "images/exit.png",
-		    id = "button_2",
-		    onRelease = exit,
-		    
-		}
-	exitBtn.x =  _H/8 
-	exitBtn.y = _H/10
-	group:insert(exitBtn)
 	admob.init()
 end
 
@@ -124,7 +132,10 @@ function scene:enterScene( event )
 
 	group:insert(btnGame4)
 
-	--audio.play( bgsound )
+	totalScore = display.newText("Score: "..total, 0,0, native.systemFont, _H/12)
+	totalScore.x = totalScore.width
+	totalScore.y = totalScore.height
+	group:insert(totalScore)
 	admob.showAd( "interstitial" )
 end
 
