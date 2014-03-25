@@ -1,3 +1,8 @@
+require "sqlite3"
+
+local path = system.pathForFile( "colorskids.sqlite", system.DocumentsDirectory )
+local db = sqlite3.open( path )
+
 local storyboard = require("storyboard")
 local widget = require("widget")
 local constants = require("constants")
@@ -48,26 +53,31 @@ local colorText
 local colorSound
 local background
 
-local popupText
-local popupBg
-local nextBtn
-local homeBtn
+local popupText, popupBg, nextBtn, homeBtn
+local total, totalScore
 
---[[
-local function moveAnim(object)
-	local bigger
-	local smaller
-	bigger = function()
-		transition.scaleTo( object, {xScale = 1.1, yScale = 1.1, time = 500, onComplete = smaller} )
-	end
-
-	smaller = function()
-		transition.scaleTo(object, {xScale = 0.9, yScale = 0.9, time = 500, onComplete = bigger})
-	end
-
+local function checkTotal()
+   local function dbCheck()
+      local sql = [[SELECT value FROM statistic WHERE name='total';]]
+      for row in db:nrows(sql) do
+         return row.value
+      end
+   end
+   total = dbCheck()
+   if total == nil then
+      local insertTotal = [[INSERT INTO statistic VALUES (NULL, 'total', '0'); ]]
+      db:exec( insertTotal )
+      print("total inserted to 0")
+      total = 0
+   else
+      print("Total is "..total)
+   end
 end
-]]
-
+local function updateScore()
+	total = total + 5
+	local tablesetup = [[UPDATE statistic SET value = ']]..total..[[' WHERE name = 'total']]
+	db:exec(tablesetup)
+end
 local function generateIndexes ()
         local tmp = {}
         for i = 1,table.maxn(data.colors),1 do
@@ -94,6 +104,8 @@ local function onHomeButtonClicked()
 end
 
 local function showPopUp()
+		updateScore()
+		totalScore.text = "Score: "..total
         popupBg = display.newImage( "images/popupbg.png", constants.CENTERX, constants.CENTERY );
         popupBg.height = 0.7*constants.H;
         popupBg.width = 0.7*constants.W;
@@ -158,7 +170,7 @@ end
 
 function scene:enterScene(event)
 	local group = self.view
-
+	checkTotal()
 	generateIndexes()
 	colorSound = audio.loadSound("sounds/find_"..data.colors[colorIndex].."_butterfly.mp3")
 	audio.play( colorSound )
@@ -177,6 +189,10 @@ function scene:enterScene(event)
 	colorText:setFillColor (data.textColors[colorIndex][1], data.textColors[colorIndex][2], data.textColors[colorIndex][3])	
 	group:insert(colorText)
 
+	totalScore = display.newText("Score: "..total, 0,0, native.systemFont, _H/12)
+	totalScore.x = totalScore.width
+	totalScore.y = totalScore.height
+	group:insert(totalScore)
 end
 
 function scene:exitScene(event)

@@ -1,3 +1,7 @@
+require "sqlite3"
+local path = system.pathForFile( "colorskids.sqlite", system.DocumentsDirectory )
+local db = sqlite3.open( path )
+
 local storyboard = require("storyboard")
 local widget = require("widget")
 local constants = require ("constants")
@@ -18,18 +22,46 @@ local colorSound
 
 local background, pallete, canvas
 
+local total, totalScore
+local counter = 0
+
+local function checkTotal()
+   local function dbCheck()
+      local sql = [[SELECT value FROM statistic WHERE name='total';]]
+      for row in db:nrows(sql) do
+         return row.value
+      end
+   end
+   total = dbCheck()
+   if total == nil then
+      local insertTotal = [[INSERT INTO statistic VALUES (NULL, 'total', '0'); ]]
+      db:exec( insertTotal )
+      print("total inserted to 0")
+      total = 0
+   else
+      print("Total is "..total)
+   end
+end
+local function updateScore()
+	total = total + 5
+	local tablesetup = [[UPDATE statistic SET value = ']]..total..[[' WHERE name = 'total']]
+	db:exec(tablesetup)
+	totalScore.text = "Score: "..total
+end
+
 local function onCircleClicked (event)
 	for i = 1, 7, 1 do
 		if circles[i] == event.target then
 			currentColor = i
 		end
 	end
+	counter = counter + 1
 	storyboard.reloadScene()
 end
 
 function scene:createScene(event)
 	local group = self.view
-
+	checkTotal()
 	background = display.newImage("images/background1.png", constants.CENTERX, constants.CENTERY)
 	background.width = constants.W
 	background.height = constants.H
@@ -45,6 +77,10 @@ function scene:createScene(event)
 	canvas.height = constants.H*0.8
 	group:insert(canvas)
 
+	totalScore = display.newText("Score: "..total, 0,0, native.systemFont, _H/12)
+	totalScore.x = totalScore.width
+	totalScore.y = totalScore.height
+	group:insert(totalScore)
 	
 
 	currentColor = 1
@@ -52,6 +88,11 @@ end
 
 function scene:enterScene(event)
 	--TODO :
+	if counter == 5 then
+		updateScore()
+		counter = 0
+	end
+	--checkTotal()
 	local group = self.view
 	colorSound = audio.loadSound( "sounds/"..data.colors[currentColor]..".mp3" )
 	audio.play( colorSound )
@@ -99,6 +140,8 @@ function scene:enterScene(event)
 	colorName = display.newEmbossedText( data.colors[currentColor], pallete.x, _FONTSIZE/2 , native.systemFont, _FONTSIZE)
 	colorName:setFillColor(data.textColors[currentColor][1], data.textColors[currentColor][2],data.textColors[currentColor][3])
 	group:insert(colorName)
+
+	
 end
 
 function scene:exitScene(event)
