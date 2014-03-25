@@ -42,6 +42,7 @@ local function updateScore()
 	total = total + 5
 	local tablesetup = [[UPDATE statistic SET value = ']]..total..[[' WHERE name = 'total']]
 	db:exec(tablesetup)
+	totalScore.text = "Score: "..total
 end
 
 local function onHomeButtonClicked(event)
@@ -53,6 +54,7 @@ local function onNextButtonClicked(event)
 end
 
 local function showPopUp()
+	updateScore()
 	popupBg = display.newImage( "images/popupbg.png", constants.CENTERX, constants.CENTERY );
 	popupBg.height = 0.7*constants.H;
 	popupBg.width = 0.7*constants.W;
@@ -131,12 +133,16 @@ end
 
 function scene:createScene(event)
 	local group = self.view
-
+	checkTotal()
 	background = display.newImage ("images/background3.png", constants.CENTERX, constants.CENTERY)
 	background.width = constants.W
 	background.height = constants.H
 	group:insert(background)
 
+	totalScore = display.newText("Score: "..total, 0,0, native.systemFont, _H/12)
+	totalScore.x = totalScore.width
+	totalScore.y = totalScore.height
+	group:insert(totalScore)
 end
 
 function scene:willEnterScene(event)
