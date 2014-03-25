@@ -7,7 +7,7 @@ local data = require ("starFallData")
 local scene = storyboard.newScene()
 
 -------------------------------------constants
-local _STARSIZE = constants.H/8
+local _STARSIZE = constants.H/6
 local _FRICTION = 0.7
 local _FONTSIZE = constants.H / 15
 local _STARSPEED = 5
@@ -92,12 +92,12 @@ function scene:enterScene (event)
 				end
 			end, data.totalGameLoops )
 		end
-	transition.to(starTypeImage, {time=500, xScale = 2, yScale=2, x = informationBackground.x - starTypeImage.width, y = informationBackground.y, onComplete= listener})
+	transition.to(starTypeImage, {time=500, xScale = 1.2, yScale=1.2, x = informationBackground.x - starTypeImage.width, y = informationBackground.y, onComplete= listener})
 	end
 
-	informationBackground = display.newImage("images/popupbg.png", constants.CENTERX, _STARSIZE)
+	informationBackground = display.newImage("images/popupbg.png", constants.CENTERX, _STARSIZE/2)
 	informationBackground.width = constants.W/3
-	informationBackground.height = 2*_STARSIZE
+	informationBackground.height = 1.5*_STARSIZE
 	informationBackground.x = constants.W - informationBackground.width/2
 	informationGroup:insert(informationBackground)
 
@@ -107,7 +107,7 @@ function scene:enterScene (event)
 	starTypeImage.x = constants.CENTERX
 	starTypeImage.y = constants.CENTERY
 	informationGroup:insert(starTypeImage)
-	transition.to( starTypeImage, {time = 1000, rotation = 360, alpha = 1, xScale = 3, yScale = 3, transition= easing.outBack, onComplete = startFalling} )
+	transition.to( starTypeImage, {time = 1000, rotation = 370, alpha = 1, xScale = 3, yScale = 3, transition= easing.outBack, onComplete = startFalling} )
 
 	scoreLabel = display.newEmbossedText( scoreText..0, 0, informationBackground.y, native.systemFont, _FONTSIZE )
 	scoreLabel.x = constants.W - 2*scoreLabel.width/3
