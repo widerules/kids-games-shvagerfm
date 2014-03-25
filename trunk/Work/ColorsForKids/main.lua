@@ -3,11 +3,16 @@
 -- main.lua
 --
 -----------------------------------------------------------------------------------------
+require "sqlite3"
+
+local path = system.pathForFile( "colorskids.sqlite", system.DocumentsDirectory )
+local db = sqlite3.open( path )
 
 local storyboard = require "storyboard"
 local rate = require( "utils.rate" )
 local admob = require( "utils.admob" )
 
+local total
 storyboard.disableAutoPurge = true
 
 --global center & heigh-width
@@ -16,6 +21,14 @@ _CENTERY = display.contentCenterY
 _W = display.contentWidth
 _H = display.contentHeight
 -- load scenetemplate.lua
+
+---запись в бд таблицы статистики если не существует
+local tablesetup = [[CREATE TABLE IF NOT EXISTS statistic (id INTEGER PRIMARY KEY autoincrement, name, value);]]
+db:exec( tablesetup )
+
+--проверка total счета
+
+
 local function exit ()
 	rate.init()
 end

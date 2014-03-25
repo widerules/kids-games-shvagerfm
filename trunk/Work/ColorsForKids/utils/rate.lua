@@ -1,6 +1,6 @@
 require "sqlite3"
 
-local path = system.pathForFile( "animalskids.sqlite", system.DocumentsDirectory )
+local path = system.pathForFile( "colorskids.sqlite", system.DocumentsDirectory )
 local db = sqlite3.open( path )
 
 local M = {}
