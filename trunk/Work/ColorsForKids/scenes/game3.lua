@@ -1,3 +1,7 @@
+require "sqlite3"
+local path = system.pathForFile( "colorskids.sqlite", system.DocumentsDirectory )
+local db = sqlite3.open( path )
+
 local storyboard = require ("storyboard")
 local widget = require ("widget")
 local constants = require ("constants")
@@ -14,10 +18,31 @@ local folds = {}
 local previous
 local totalCards
 
-local popupBg
-local popupText
-local homeBtn
-local nextBtn
+local popupBg, popupText, homeBtn, nextBtn
+
+
+local function checkTotal()
+   local function dbCheck()
+      local sql = [[SELECT value FROM statistic WHERE name='total';]]
+      for row in db:nrows(sql) do
+         return row.value
+      end
+   end
+   total = dbCheck()
+   if total == nil then
+      local insertTotal = [[INSERT INTO statistic VALUES (NULL, 'total', '0'); ]]
+      db:exec( insertTotal )
+      print("total inserted to 0")
+      total = 0
+   else
+      print("Total is "..total)
+   end
+end
+local function updateScore()
+	total = total + 5
+	local tablesetup = [[UPDATE statistic SET value = ']]..total..[[' WHERE name = 'total']]
+	db:exec(tablesetup)
+end
 
 local function onHomeButtonClicked(event)
 	--goto main screen	
