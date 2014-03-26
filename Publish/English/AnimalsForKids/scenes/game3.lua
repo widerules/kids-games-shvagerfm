@@ -37,7 +37,9 @@ local nextBtn;
 local soundHarp = audio.loadSound( "sounds/harp.ogg")
 
 local onPlaces = 0;
-
+---------------------------------------------
+--explosion
+--------------------------------------------------
 explosionTable        = {}                    -- Define a Table to hold the Spawns
 i                    = 0                        -- Explosion counter in table
 explosionTime        = 416.6667                    -- Time defined from EXP Gen 3 tool
