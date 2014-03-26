@@ -32,13 +32,16 @@ local function goGame1()
 -- переход на игру 2
 local function goGame2()
 		storyboard.gotoScene("scenes.game2", "slideLeft", 800)
+		storyboard.removeAll( )
 	end
 local function goGame3()
 		storyboard.gotoScene("scenes.game3", "slideLeft", 800)
+		storyboard.removeAll( )
 	end
 
 local function goGame4()
 		storyboard.gotoScene("scenes.game4", "slideLeft", 800)
+		storyboard.removeAll( )
 	end
 
 local function exit ()
@@ -185,6 +188,7 @@ end
 function scene:exitScene( event )
 	local group = self.view
 	--audio.stop()
+
 	-----------------------------------------------------------------------------
 	
 	--	INSERT code here (e.g. stop timers, remove listeners, unload sounds, etc.)

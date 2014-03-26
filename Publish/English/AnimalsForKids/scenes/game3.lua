@@ -1,3 +1,6 @@
+require "sqlite3"
+local path = system.pathForFile( "animalskids.sqlite", system.DocumentsDirectory )
+local db = sqlite3.open( path )
 local storyboard = require( "storyboard");
 local widget = require( "widget");
 local data = require ("shapesData");
@@ -37,6 +40,9 @@ local nextBtn;
 local soundHarp = audio.loadSound( "sounds/harp.ogg")
 
 local onPlaces = 0;
+
+local total, totalScore, bgscore, coins
+local coinsToScore
 ---------------------------------------------
 --explosion
 --------------------------------------------------
@@ -89,6 +95,52 @@ local function spawnExplosionToTable(spawnX, spawnY)
     --amount of time as setup by the Explosion Generator Tool.
     local destroySpawneExplosion = timer.performWithDelay (explosionTime, removeExplosionSpawn(explosionTable[i]))
 end
+---------------------------------------
+-----check totals & update 
+---------------------------------------
+local function checkTotal()
+   local function dbCheck()
+      local sql = [[SELECT value FROM statistic WHERE name='total';]]
+      for row in db:nrows(sql) do
+         return row.value
+      end
+   end
+   total = dbCheck()
+   if total == nil then
+      local insertTotal = [[INSERT INTO statistic VALUES (NULL, 'total', '0'); ]]
+      db:exec( insertTotal )
+      print("total inserted to 0")
+      total = 0
+   else
+      print("Total is "..total)
+   end
+end
+local function updateScore()
+	total = total + 5
+	local tablesetup = [[UPDATE statistic SET value = ']]..total..[[' WHERE name = 'total']]
+	db:exec(tablesetup)
+
+	totalScore.text = "Score: "..total
+end
+
+
+----animation update score
+local function animScore()
+	local function listener()
+		updateScore()
+		coinsToScore:removeSelf( )
+	end
+	coinsToScore = display.newImage( "images/coins.png", _CENTERX, _CENTERY, _H/8, _H/8)
+	coinsToScore.xScale, coinsToScore.yScale = 0.1, 0.1
+	local function trans1()
+	 	transition.to(coinsToScore, {time = 200, xScale = 1, yScale = 1, x = coins.x, y= coins.y, onComplete = listener})
+	end
+	spawnExplosionToTable(_CENTERX, _CENTERY)
+	transition.to(coinsToScore, {time = 300, xScale = 2, yScale = 2, transition = easing.outBack, onComplete = trans1})
+end
+----------------------------------------
+-- end totals f-ns
+-----------------------------------------
 
 local function generateIndexes()
 	for i = 1, 5, 1 do
@@ -170,6 +222,7 @@ local function showPopUp()
 		overFile = "images/next.png"
 	}	
 	nextBtn:addEventListener( "tap", onNextButtonClicked );
+	animScore()
 end;
 
 local function onAnimalDrag(event)
@@ -234,6 +287,7 @@ local function onAnimalDrag(event)
 end;
 
 function scene:createScene(event)
+	checkTotal()
 	local group = self.view;
 
 	background = display.newImage("images/bg.png", constants.CENTERX, constants.CENTERY, true);
@@ -275,6 +329,29 @@ function scene:createScene(event)
 			plate.y+plate.height/2-_IMAGESIZE/2 - _FONTSIZE - _SPACING
 		}
 	}
+
+---------------------------------------------------------------
+----Score views
+---------------------------------------------------------------
+	bgscore = display.newImage("images/bgscore.png", 0, 0, _W/4, _W/12)
+	bgscore.width, bgscore.height = _W/3, _W/12
+	bgscore.x = bgscore.width/2
+	bgscore.y = bgscore.height/2
+	group:insert(bgscore)
+	
+	totalScore = display.newText("Score: "..total, 0,0, native.systemFont, _H/12)
+	totalScore.x = 2*totalScore.width/3
+	totalScore.y = bgscore.y
+	group:insert(totalScore)
+
+	coins = display.newImage("images/coins.png", 0, 0, bgscore.height/2, bgscore.height/2)
+	coins.width, coins.height = 2*bgscore.height/3, 2*bgscore.height/3
+	coins.x = bgscore.width - 3*coins.width/4
+	coins.y = bgscore.y
+	group:insert(coins)
+------------------------------------------------------------------------------
+--End score views
+------------------------------------------------------------------------------
 
 end;
 
