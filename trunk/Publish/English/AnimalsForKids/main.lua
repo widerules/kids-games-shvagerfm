@@ -3,6 +3,9 @@
 -- main.lua
 --
 -----------------------------------------------------------------------------------------
+require "sqlite3"
+local path = system.pathForFile( "animalskids.sqlite", system.DocumentsDirectory )
+local db = sqlite3.open( path )
 
 local storyboard = require "storyboard"
 local rate = require( "utils.rate" )
@@ -16,6 +19,11 @@ _CENTERY = display.contentCenterY
 _W = display.contentWidth
 _H = display.contentHeight
 -- load scenetemplate.lua
+
+---запись в бд таблицы статистики если не существует
+local tablesetup = [[CREATE TABLE IF NOT EXISTS statistic (id INTEGER PRIMARY KEY autoincrement, name, value);]]
+db:exec( tablesetup )
+
 local function exit ()
 	rate.init()
 end
