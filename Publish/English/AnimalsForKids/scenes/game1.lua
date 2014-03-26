@@ -1,4 +1,7 @@
 --"including libs"
+require "sqlite3"
+local path = system.pathForFile( "animalskids.sqlite", system.DocumentsDirectory )
+local db = sqlite3.open( path )
 local storyboard = require("storyboard");
 local widget = require("widget");
 local native = require ("native");
@@ -37,6 +40,54 @@ local animalImage;			--Image, for animal picture
 local foodImage;			--Image, for food picture
 local animalSound			--Sound of the animal
 
+local total, totalScore, bgscore, coins
+local coinsToScore
+local counter = 0
+---------------------------------------
+-----check totals & update 
+---------------------------------------
+local function checkTotal()
+   local function dbCheck()
+      local sql = [[SELECT value FROM statistic WHERE name='total';]]
+      for row in db:nrows(sql) do
+         return row.value
+      end
+   end
+   total = dbCheck()
+   if total == nil then
+      local insertTotal = [[INSERT INTO statistic VALUES (NULL, 'total', '0'); ]]
+      db:exec( insertTotal )
+      print("total inserted to 0")
+      total = 0
+   else
+      print("Total is "..total)
+   end
+end
+local function updateScore()
+	total = total + 5
+	local tablesetup = [[UPDATE statistic SET value = ']]..total..[[' WHERE name = 'total']]
+	db:exec(tablesetup)
+
+	totalScore.text = "Score: "..total
+end
+----------------------------------------
+-- end totals f-ns
+-----------------------------------------
+
+----animation update score
+local function animScore()
+	local function listener()
+		updateScore()
+		coinsToScore:removeSelf( )
+	end
+	coinsToScore = display.newImage( "images/coins.png", _CENTERX, _CENTERY, _H/8, _H/8)
+	coinsToScore.xScale, coinsToScore.yScale = 0.1, 0.1
+	local function trans1()
+	 	transition.to(coinsToScore, {time = 200, xScale = 1, yScale = 1, x = coins.x, y= coins.y, onComplete = listener})
+	end
+	transition.to(coinsToScore, {time = 300, xScale = 2, yScale = 2, transition = easing.outBack, onComplete = trans1})
+end
+
 --event listener for next button
 local function onNextButtonClicked( event )
 	index = index + 1;	--move to the next animal
@@ -44,7 +95,7 @@ local function onNextButtonClicked( event )
 	if index > table.maxn(data.animalsNames) then
 		index = 1;
 	end;
-
+	counter = counter + 1
 	storyboard.reloadScene(); 
 end;
 
@@ -71,6 +122,7 @@ end;
 
 function scene:createScene(event)
 	local group = self.view;
+	checkTotal()
 
 	--setting up background (I have problems with this ...)
 	background = display.newImage( "images/background2.png", _CENTERX, _CENTERY, true);
@@ -121,10 +173,38 @@ function scene:createScene(event)
 	}
 	homeButton:addEventListener("tap", onHomeButtonClicked);
 	group:insert (homeButton);	
+---------------------------------------------------------------
+----Score views
+---------------------------------------------------------------
+	bgscore = display.newImage("images/bgscore.png", 0, 0, _W/4, _W/12)
+	bgscore.width, bgscore.height = _W/3, _W/12
+	bgscore.x = bgscore.width/2
+	bgscore.y = bgscore.height/2
+	group:insert(bgscore)
+	
+	totalScore = display.newText("Score: "..total, 0,0, native.systemFont, _H/12)
+	totalScore.x = 2*totalScore.width/3
+	totalScore.y = bgscore.y
+	group:insert(totalScore)
+
+	coins = display.newImage("images/coins.png", 0, 0, bgscore.height/2, bgscore.height/2)
+	coins.width, coins.height = 2*bgscore.height/3, 2*bgscore.height/3
+	coins.x = bgscore.width - 3*coins.width/4
+	coins.y = bgscore.y
+	group:insert(coins)
+------------------------------------------------------------------------------
+--End score views
+------------------------------------------------------------------------------
 end;
 
 function scene:enterScene(event)
 	local group = self.view;	
+
+	if counter == #data.animalsNames then
+		animScore()
+		
+		counter = 0
+	end
 
 	animalName = display.newEmbossedText( data.animalsNames[index], woodenLayer.x, _CENTERY-_WOODENHEIGHT/2, "Rage Italic", _H/10);
 	animalName:setFillColor( 0,0,0 );
