@@ -6,8 +6,13 @@ local storyboard = require ("storyboard")
 local widget = require ("widget")
 local constants = require ("constants")
 local data = require ("pairData")
+local popup = require ("utils.popup")
 
 local scene = storyboard.newScene()
+
+---------------------------texts
+local winMessage = "Well done!"
+--------------------------------
 
 local _FONTSIZE = constants.H / 13
 
@@ -17,9 +22,6 @@ local folds = {}
 
 local previous
 local totalCards
-
-local popupBg, popupText, homeBtn, nextBtn
-
 
 local function checkTotal()
    local function dbCheck()
@@ -45,47 +47,6 @@ local function updateScore()
 	totalScore.text = "Score: "..total
 end
 
-local function onHomeButtonClicked(event)
-	--goto main screen	
-end
-
-local function onNextButtonClicked(event)
-	storyboard.reloadScene( )
-end
-
-local function showPopUp()
-	updateScore()
-	popupBg = display.newImage( "images/popupbg.png", constants.CENTERX, constants.CENTERY );
-	popupBg.height = 0.7*constants.H;
-	popupBg.width = 0.7*constants.W;
-
-	popupText = display.newText("Well done !", popupBg.x, 0, native.systemFont, 2*_FONTSIZE);
-	popupText.y = popupBg.y-popupBg.height+2*popupText.width/3;
-
-	homeBtn = widget.newButton
-	{
-		width = 0.4*popupBg.height,
-		height = 0.4*popupBg.height,
-		x = popupBg.x - 0.4*popupBg.width/2,
-		y = popupBg.y + 0.4*popupBg.height/2,
-		defaultFile = "images/home.png",
-		overFile = "images/homehover.png",
-		
-	}
-	homeBtn:addEventListener( "tap", onHomeButtonClicked );
-
-	nextBtn = widget.newButton
-	{
-		width = 0.4*popupBg.height,
-		height = 0.4*popupBg.height,
-		x = popupBg.x + 0.4*popupBg.width/2,
-		y = popupBg.y + 0.4*popupBg.height/2,
-		defaultFile = "images/next.png",
-		overFile = "images/next.png"
-	}	
-	nextBtn:addEventListener( "tap", onNextButtonClicked);
-end
-
 local function findIndex(object)
 	local index = 1
 	for i = 1, #folds do
@@ -109,7 +70,7 @@ local function onFoldClicked (event)
 				local function checkAmount()
 					totalCards = totalCards - 2
 					if totalCards == 0	then
-						showPopUp()
+						popup.showPopUp(winMessage, "scenetemplate", "scenes.game3")
 					end				
 				end
 
@@ -280,14 +241,7 @@ function scene:exitScene(event)
 		end
 	end
 
-	if popupBg ~= nil then
-		popupBg:removeSelf()
-		popupText:removeSelf()
-		nextBtn:removeSelf()
-		homeBtn:removeSelf()
-		popupBg = nil
-		popupText = nil
-	end
+	popup.hidePopUp()
 end
 
 function scene:destroyScene(event)
