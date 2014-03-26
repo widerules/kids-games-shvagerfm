@@ -7,6 +7,7 @@ local storyboard = require("storyboard")
 local widget = require("widget")
 local constants = require("constants")
 local data = require("searchData")
+local popup = require ("utils.popup")
 
 local scene = storyboard.newScene()
 
@@ -45,6 +46,8 @@ local positions =
 
 }
 
+local gameNum = 1
+
 local indexes = {}
 local colorIndex
 
@@ -53,7 +56,6 @@ local colorText
 local colorSound
 local background
 
-local popupText, popupBg, nextBtn, homeBtn
 local total, totalScore
 
 local function checkTotal()
@@ -91,50 +93,12 @@ local function generateIndexes ()
                 table.remove( tmp, rand )
         end
 
-        colorIndex = indexes[math.random(1, table.maxn(indexes))]
+        tmp = math.random(1, table.maxn(indexes))
+        while gameNum <= 4 and tmp%2==0 do
+        	tmp = math.random(1, table.maxn(indexes))
+        end
+        colorIndex = indexes[tmp]
 end
-
-local function onNextButtonClicked()
-	storyboard.reloadScene( )
-end
-
-local function onHomeButtonClicked()
-	--TODO: 
-	--go to home screen
-end
-
-local function showPopUp()
-		updateScore()
-		totalScore.text = "Score: "..total
-        popupBg = display.newImage( "images/popupbg.png", constants.CENTERX, constants.CENTERY );
-        popupBg.height = 0.7*constants.H;
-        popupBg.width = 0.7*constants.W;
-
-        popupText = display.newText("Well done !", popupBg.x, 0, native.systemFont, 2*_FONTSIZE);
-        popupText.y = popupBg.y-popupBg.height/2+2*popupText.height/3;
-
-        homeBtn = widget.newButton
-        {
-                width = 0.4*popupBg.height,
-                height = 0.4*popupBg.height,
-                x = popupBg.x - 0.4*popupBg.width/2,
-                y = popupBg.y + 0.4*popupBg.height/2,
-                defaultFile = "images/home.png",
-                overFile = "images/homehover.png"
-        }
-        homeBtn:addEventListener( "tap", onHomeButtonClicked );
-
-        nextBtn = widget.newButton
-        {
-                width = 0.4*popupBg.height,
-                height = 0.4*popupBg.height,
-                x = popupBg.x + 0.4*popupBg.width/2,
-                y = popupBg.y + 0.4*popupBg.height/2,
-                defaultFile = "images/next.png",
-                overFile = "images/next.png"
-        }       
-        nextBtn:addEventListener( "tap", onNextButtonClicked );
-end;
 
 local function onButterflyClicked(event)
 	local butterflyIndex
@@ -147,7 +111,7 @@ local function onButterflyClicked(event)
 
 	if butterflyIndex == colorIndex then
 		local function toNormal()
-			transition.fadeOut( event.target, {xScale = 1.5, yScale = 1.5, time = 800, onComplete = showPopUp} )
+			transition.fadeOut( event.target, {xScale = 1.5, yScale = 1.5, time = 800, onComplete = popup.showPopUp("Well done!", "scenetemplate", "scenes.game2")} )
 		end		
 		event.target:toFront()
 		transition.to( event.target, {xScale = 2, yScale = 2, x = constants.CENTERX, y = constants.CENTERY, rotation = 0, time = 800, transition = easing.outBack, onComplete = toNormal} )		
@@ -161,6 +125,8 @@ end
 function scene:createScene(event)
 	local group = self.view
 
+	gameNum = 1
+
 	background = display.newImage("images/background2.png", constants.CENTERX, constants.CENTERY)
 	background.width = constants.W
 	background.height = constants.H
@@ -169,20 +135,23 @@ function scene:createScene(event)
 end
 
 function scene:enterScene(event)
-	local group = self.view
+	local group = self.view	
 	checkTotal()
+	gameNum = gameNum + 1
 	generateIndexes()
 	colorSound = audio.loadSound("sounds/find_"..data.colors[colorIndex].."_butterfly.mp3")
 	audio.play( colorSound )
-	for i = 1, 6, 1 do
-		butterflies[i] = display.newImage(data.butterfliesPath..data.colors[indexes[i]]..data.format, positions.x[i], positions.y[i])
-		butterflies[i].width = _IMAGESIZE
-		butterflies[i].height = _IMAGESIZE
-		butterflies[i].xScale, butterflies[i].yScale = 0.3, 0.3
-		butterflies[i].rotation = positions.rot[i]
-		butterflies[i]:addEventListener( "tap", onButterflyClicked )
-		transition.to( butterflies[i],{time = 500, xScale = 1, yScale=1, transition=easing.outBack} )
-		group:insert(butterflies[i])		
+	for i = 1, 6 do
+		if gameNum > 4 or i%2 == 1 then 
+			butterflies[i] = display.newImage(data.butterfliesPath..data.colors[indexes[i]]..data.format, positions.x[i], positions.y[i])
+			butterflies[i].width = _IMAGESIZE
+			butterflies[i].height = _IMAGESIZE
+			butterflies[i].xScale, butterflies[i].yScale = 0.3, 0.3
+			butterflies[i].rotation = positions.rot[i]
+			butterflies[i]:addEventListener( "tap", onButterflyClicked )
+			transition.to( butterflies[i],{time = 500, xScale = 1, yScale=1, transition=easing.outBack} )
+			group:insert(butterflies[i])		
+		end
 	end
 
 	colorText = display.newEmbossedText(data.colors[colorIndex], constants.CENTERX, constants.CENTERY- _IMAGESIZE/2 - _FONTSIZE/2, native.systemFont, _FONTSIZE)
@@ -200,22 +169,31 @@ function scene:exitScene(event)
 		table.remove(indexes)
 	end
 
+	if gameNum <= 4 then 
+		for i = 1, 5, 2 do 		
+			butterflies[i]:removeSelf()
+			table.remove(butterflies)
+		end
+	else
+		while table.maxn (butterflies) > 0 do
+			butterflies[#butterflies]:removeSelf()
+			table.remove(butterflies)
+		end	
+	end
+	--[[
 	while table.maxn (butterflies) > 0 do
 		butterflies[#butterflies]:removeSelf()
 		table.remove(butterflies)
 	end
+	]]
 
 	colorText:removeSelf( )
 
-	if popupBg ~= nil then
-		popupBg:removeSelf( )
-		popupText:removeSelf( )
-		nextBtn:removeSelf()
-		homeBtn:removeSelf( )
-	end
+	popup.hidePopUp()
 end
 
 function scene:destroyScene(event)
+	gameNum = 1
 end
 
 scene:addEventListener( "createScene", scene )
