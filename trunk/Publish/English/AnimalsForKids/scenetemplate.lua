@@ -19,12 +19,15 @@ local btnGame1, btnGame2, btnGame3, btnGame4, background, title
 local btnGameHeight = _H/4
 local btnGameWidth = 3*_H/4
 
+local total, totalScore, bgscore, coins
+
 --local bgsound = audio.loadSound( "sounds/bgsound.mp3" )
 
 --local harp = audio.loadSound( "sounds/harp.wav")
 ----------------------------------------------------------------------------------
 local function goGame1()
 		storyboard.gotoScene("scenes.game1", "slideLeft", 800)
+		storyboard.removeAll( )
 	end
 -- переход на игру 2
 local function goGame2()
@@ -49,6 +52,7 @@ local function checkTotal()
          return row.value
       end
    end
+
    total = dbCheck()
    if total == nil then
       local insertTotal = [[INSERT INTO statistic VALUES (NULL, 'total', '0'); ]]
@@ -66,7 +70,7 @@ end
 -- Called when the scene's view does not exist:
 function scene:createScene( event )
 	local group = self.view
-	checkTotal()
+	
 
 background = display.newImage( "images/background.png", _CENTERX, _CENTERY, _W, _H)
 	group:insert(background)
@@ -95,6 +99,7 @@ end
 
 -- Called immediately after scene has moved onscreen:
 function scene:enterScene( event )
+	checkTotal()
 	local group = self.view
 	admob.showAd( "interstitial" )
 	btnGame1 = widget.newButton
@@ -148,11 +153,28 @@ function scene:enterScene( event )
 	btnGame4.y = 3*btnGameHeight
 
 	group:insert(btnGame4)
-	
+	---------------------------------------------------------------
+----Score views
+	---------------------------------------------------------------
+	bgscore = display.newImage("images/bgscore.png", 0, 0, _W/4, _W/12)
+	bgscore.width, bgscore.height = _W/3, _W/12
+	bgscore.x = bgscore.width/2
+	bgscore.y = bgscore.height/2
+	group:insert(bgscore)
+
 	totalScore = display.newText("Score: "..total, 0,0, native.systemFont, _H/12)
-	totalScore.x = totalScore.width
-	totalScore.y = totalScore.height
+	totalScore.x = 2*totalScore.width/3
+	totalScore.y = bgscore.y
 	group:insert(totalScore)
+
+	coins = display.newImage("images/coins.png", 0, 0, bgscore.height/2, bgscore.height/2)
+	coins.width, coins.height = 2*bgscore.height/3, 2*bgscore.height/3
+	coins.x = bgscore.width - 3*coins.width/4
+	coins.y = bgscore.y
+	group:insert(coins)
+------------------------------------------------------------------------------
+--End score views
+------------------------------------------------------------------------------
 
 	--audio.play( bgsound )
 	admob.showAd( "interstitial" )
