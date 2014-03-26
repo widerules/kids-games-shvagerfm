@@ -123,9 +123,7 @@ local function updateScore()
 
 	totalScore.text = "Score: "..total
 end
-----------------------------------------
--- end totals f-ns
------------------------------------------
+
 
 ----animation update score
 local function animScore()
@@ -141,7 +139,9 @@ local function animScore()
 	spawnExplosionToTable(_CENTERX, _CENTERY)
 	transition.to(coinsToScore, {time = 300, xScale = 2, yScale = 2, transition = easing.outBack, onComplete = trans1})
 end
-
+----------------------------------------
+-- end totals f-ns
+-----------------------------------------
 --event listener for next button
 local function onNextButtonClicked( event )
 	index = index + 1;	--move to the next animal
