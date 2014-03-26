@@ -3,6 +3,10 @@
 -- scenetemplate.lua
 --
 ----------------------------------------------------------------------------------
+require "sqlite3"
+
+local path = system.pathForFile( "animalskids.sqlite", system.DocumentsDirectory )
+local db = sqlite3.open( path )
 
 local storyboard = require( "storyboard" )
 local scene = storyboard.newScene()
@@ -38,7 +42,23 @@ local function exit ()
 	rate.init()
 end
 ---------------------------------------------------------------------------------
-
+local function checkTotal()
+   local function dbCheck()
+      local sql = [[SELECT value FROM statistic WHERE name='total';]]
+      for row in db:nrows(sql) do
+         return row.value
+      end
+   end
+   total = dbCheck()
+   if total == nil then
+      local insertTotal = [[INSERT INTO statistic VALUES (NULL, 'total', '0'); ]]
+      db:exec( insertTotal )
+      print("total inserted to 0")
+      total = 0
+   else
+      print("Total is "..total)
+   end
+end
 ---------------------------------------------------------------------------------
 -- BEGINNING OF YOUR IMPLEMENTATION
 ---------------------------------------------------------------------------------
@@ -46,6 +66,7 @@ end
 -- Called when the scene's view does not exist:
 function scene:createScene( event )
 	local group = self.view
+	checkTotal()
 
 background = display.newImage( "images/background.png", _CENTERX, _CENTERY, _W, _H)
 	group:insert(background)
@@ -127,6 +148,11 @@ function scene:enterScene( event )
 	btnGame4.y = 3*btnGameHeight
 
 	group:insert(btnGame4)
+	
+	totalScore = display.newText("Score: "..total, 0,0, native.systemFont, _H/12)
+	totalScore.x = totalScore.width
+	totalScore.y = totalScore.height
+	group:insert(totalScore)
 
 	--audio.play( bgsound )
 	admob.showAd( "interstitial" )

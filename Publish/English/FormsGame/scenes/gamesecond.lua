@@ -89,6 +89,8 @@ function spawnExplosionToTable(spawnX, spawnY)
 end
 -----------------------------------------------------------
 
+	
+
 local function reload()
 	storyboard.reloadScene()
 end 
@@ -312,11 +314,12 @@ end
 -- Called when scene is about to move offscreen:
 function scene:exitScene( event )
 	local group = self.view
-	
+
 	display.remove(shape1)
 	display.remove(shape2)
 	display.remove(shape3)
 	display.remove(titleText)
+	
 	-----------------------------------------------------------------------------
 	
 	--	INSERT code here (e.g. stop timers, remove listeners, unload sounds, etc.)
