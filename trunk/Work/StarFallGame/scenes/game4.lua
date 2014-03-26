@@ -3,6 +3,8 @@ local widget = require ("widget")
 local physics = require( "physics")
 local constants = require ("constants")
 local data = require ("starFallData")
+local popup = require("utils.popup")
+local explosion = require("utils.explosion")
 
 local scene = storyboard.newScene()
 
@@ -29,6 +31,8 @@ local function onStarTouched(event)
 	if event.target.starType == starType then		
 		--remove event listener from this star
 		event.target:removeEventListener("touch", onStarTouched) 
+
+		explosion.spawnExplosion(event.target.x, event.target.y)
 		
 		--make it a little bit bigger
 		event.target.xScale = 1.5
@@ -88,14 +92,15 @@ function scene:enterScene (event)
 				--I didn't find any better way to catch the end of generating ...
 				loopNumber = loopNumber + 1
 				if loopNumber == data.totalGameLoops then
-					timer.performWithDelay( 2500, function() showPopUp() end) --lets all stars fall down and shows pop-up
+					--otherwise - popup shown without delay
+					timer.performWithDelay( 2500, function () popup.showPopUp("Well done !\nYour score: "..score, "scenetemplate", "scenes.game4") end) --lets all stars fall down and shows pop-up
 				end
 			end, data.totalGameLoops )
 		end
 	transition.to(starTypeImage, {time=500, xScale = 1.2, yScale=1.2, x = informationBackground.x - starTypeImage.width, y = informationBackground.y, onComplete= listener})
 	end
 
-	informationBackground = display.newImage("images/popupbg.png", constants.CENTERX, _STARSIZE/2)
+	informationBackground = display.newImage("images/informationbg.png", constants.CENTERX, _STARSIZE/2)
 	informationBackground.width = constants.W/3
 	informationBackground.height = 1.5*_STARSIZE
 	informationBackground.x = constants.W - informationBackground.width/2
@@ -127,6 +132,7 @@ function scene:exitScene(event)
 
 	starTypeImage:removeSelf( )
 	scoreLabel:removeSelf()
+	popup.hidePopUp()
 end
 
 function scene:destroyScene(event)
