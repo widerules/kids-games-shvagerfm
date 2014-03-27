@@ -12,9 +12,9 @@ local message = "Well done !"
 
 local _FONTSIZE = constants.H / 7
 
-local level = 7
-local itemsCount = {2, 3, 6, 9, 12, 16, 20}
-local rows = {1, 1, 2, 3, 3, 4, 4}
+local level = 3
+local itemsCount = {2, 3, 4, 6, 9, 12, 16, 20}
+local rows = {1, 1, 2, 2, 3, 3, 4, 4}
 local items = {}
 local images = {}
 
