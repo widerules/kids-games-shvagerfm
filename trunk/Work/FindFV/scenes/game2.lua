@@ -12,9 +12,10 @@ local message = "Well done !"
 
 local _FONTSIZE = constants.H / 7
 
+local gamesWon = 0
 local level = 3
 local itemsCount = {2, 3, 4, 6, 9, 12, 16, 20}
-local rows = {1, 1, 2, 2, 3, 3, 4, 4}
+local rows =       {1, 1, 2, 2, 3, 3,  4,  4}
 local items = {}
 local images = {}
 
@@ -40,7 +41,14 @@ local function onItemTapped (event)
 	local function encreaseScore()
 		searchAmount = searchAmount - 1
 		if searchAmount < 1 then
-			popup.showPopUp (message, "scenetemplate", "scenes.game2")
+			gamesWon = gamesWon + 1
+			if gamesWon>2 then
+				gamesWon = 0
+				if level<8 then
+					level = level + 1 
+				end
+			end
+			storyboard.reloadScene()
 		end
 	end
 
@@ -66,6 +74,9 @@ function scene:createScene(event)
 	background.width = constants.W
 	background.height = constants.H
 	group:insert(background)
+
+	gamesWon = 0
+	level = 1
 end
 
 function scene:willEnterScene(event)
@@ -118,14 +129,15 @@ function scene:enterScene(event)
 end
 
 function scene:exitScene(event)
+	
 	for i = 1, #images do
 		for j = 1, #images[i] do
+			print ("level "..level.." i "..i.." j "..j)
 			images[i][j]:removeSelf()
 		end
 	end	
 
-	taskLabel:removeSelf()
-	popup.hidePopUp()
+	taskLabel:removeSelf()	
 end
 
 function scene:destroyScene(event)
