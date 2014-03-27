@@ -1,0 +1,257 @@
+require "sqlite3"
+local path = system.pathForFile( "colorskids.sqlite", system.DocumentsDirectory )
+local db = sqlite3.open( path )
+
+local storyboard = require ("storyboard")
+local widget = require ("widget")
+local constants = require ("constants")
+local data = require ("pairData")
+local popup = require ("utils.popup")
+
+local scene = storyboard.newScene()
+
+---------------------------texts
+local winMessage = "Well done!"
+--------------------------------
+
+local _FONTSIZE = constants.H / 13
+
+local background
+local butterflies
+local folds = {}
+
+local previous
+local totalCards
+
+local function checkTotal()
+   local function dbCheck()
+      local sql = [[SELECT value FROM statistic WHERE name='total';]]
+      for row in db:nrows(sql) do
+         return row.value
+      end
+   end
+   total = dbCheck()
+   if total == nil then
+      local insertTotal = [[INSERT INTO statistic VALUES (NULL, 'total', '0'); ]]
+      db:exec( insertTotal )
+      print("total inserted to 0")
+      total = 0
+   else
+      print("Total is "..total)
+   end
+end
+local function updateScore()
+	total = total + 5
+	local tablesetup = [[UPDATE statistic SET value = ']]..total..[[' WHERE name = 'total']]
+	db:exec(tablesetup)
+	totalScore.text = "Score: "..total
+end
+
+local function findIndex(object)
+	local index = 1
+	for i = 1, #folds do
+		if folds[i]==object then
+			index = i
+			break
+		end
+	end
+	return index
+end
+
+local function onFoldClicked (event)
+	local function compare ()
+		if previous ~= nil then
+			if previous.butterflyType == event.target.butterflyType then
+				print ("pair!")
+
+				event.target:removeEventListener( "tap", onFoldClicked )
+				previous:removeEventListener( "tap", onFoldClicked )
+
+				local function checkAmount()
+					totalCards = totalCards - 2
+					if totalCards == 0	then
+						popup.showPopUp(winMessage, "scenetemplate", "scenes.game3")
+					end				
+				end
+
+				local function removeSecond()
+					print("hey, I am here !")
+					transition.to(items[findIndex(event.target)], {time = 1000, x = constants.W, y = 0, alpha = 0, onComplete = checkAmount})
+				end
+				transition.to(items[findIndex(previous)], {time = 1000, x = constants.W, y = 0, alpha = 0, onComplete = removeSecond})				
+			else
+				print("not pair!")
+				transition.fadeIn( event.target, {time = 500} )
+				transition.fadeIn(previous, {time = 500})
+			end
+			previous = nil
+		else
+			previous = event.target
+		end
+	end
+	transition.fadeOut(event.target, {time = 500, onComplete = compare})
+end
+
+function scene:createScene(event)
+	local group = self.view
+	checkTotal()
+	background = display.newImage ("images/background3.png", constants.CENTERX, constants.CENTERY)
+	background.width = constants.W
+	background.height = constants.H
+	group:insert(background)
+
+	totalScore = display.newText("Score: "..total, 0,0, native.systemFont, _H/12)
+	totalScore.x = totalScore.width
+	totalScore.y = totalScore.height
+	group:insert(totalScore)
+end
+
+function scene:willEnterScene(event)
+	butterflies = table.copy (data.butterflies)
+	totalCards = data.amount
+end
+
+function scene:enterScene (event)
+	local group = self.view
+
+	previous = nil
+
+	local sheetData = {
+		width = 512,
+		height = 512,
+		numFrames = 8,
+		sheetContentWidth = 2048,
+		sheetContentHeight = 1024
+	}
+	local butterfliesSheet = graphics.newImageSheet(data.butterfliesPath, sheetData)
+	local sequenceData = {
+		{
+		name = "red",
+		start = 1,
+		count = 1,
+		},
+		{
+		name = "orange",
+		start = 2,
+		count = 1,
+		},
+		{
+		name = "yellow",
+		start = 3,
+		count = 1,
+		},
+		{
+		name = "green",
+		start = 4,
+		count = 1,
+		},
+		{
+		name = "cyan",
+		start = 5,
+		count = 1,
+		},
+		{
+		name = "blue",
+		start = 6,
+		count = 1,
+		},
+		{
+		name = "purple",
+		start = 7,
+		count = 1,
+		},
+		{
+		name = "white",
+		start = 8,
+		count = 1,
+		}
+	}
+	
+
+	local itemW
+	local itemH = constants.H / 3
+	itemW = itemH
+	local i,j
+	items = {}
+	local temp
+
+	local indexes = {}
+
+	-- delete 2 random shape
+	-- because we have 2 useless colors
+	for i=1, 2 do
+		table.remove(butterflies, math.random(1, #butterflies))
+	end
+
+	for i=1, #butterflies do
+		indexes[butterflies[i]] = 2
+	end
+	local butterfly, index
+
+	for i=1, 3 do
+		for j=1, 4 do
+			temp = display.newSprite( butterfliesSheet, sequenceData )
+
+			index = math.random(1, 6)
+			while indexes[butterflies[index]] == 0 do
+				index = math.random(1, 6)
+			end
+
+			if indexes[butterflies[index]] > 0 then
+				temp:setSequence(butterflies[index])				
+				temp.butterflyType = butterflies[index]
+				indexes[butterflies[index]] = indexes[butterflies[index]] - 1
+			end
+
+			temp.width = itemW
+			temp.height = itemH
+
+			temp.x = 1.15 * j * itemW - itemW  / 2 + constants.W / 17
+			temp.y = i * itemH - itemH / 2
+
+			--temp:addEventListener( "tap", onItemTap )
+
+			table.insert(items, temp)
+		end
+	end
+
+	for i=1, #items do
+		group:insert( items[i] )
+
+		folds[i] = display.newImage (data.foldPath, items[i].x, items[i].y)
+		folds[i].width = items[i].width
+		folds[i].height = 0.8*items[i].height
+		folds[i]:addEventListener("tap", onFoldClicked)
+		folds[i].butterflyType = items[i].butterflyType
+		group:insert(folds[i])		
+	end
+
+end
+
+function scene:exitScene(event)
+	for i=1, #items do
+		if items[i] then
+			items[i]:removeSelf()
+		end
+	end
+
+	for i = 1, #folds do
+		if folds[i] then
+			folds[i]:removeSelf()
+		end
+	end
+
+	popup.hidePopUp()
+end
+
+function scene:destroyScene(event)
+end
+
+scene:addEventListener( "createScene", scene )
+scene:addEventListener( "willEnterScene", scene )
+scene:addEventListener( "enterScene", scene )
+scene:addEventListener( "exitScene", scene )
+scene:addEventListener( "destroyScene", scene )
+
+
+return scene
