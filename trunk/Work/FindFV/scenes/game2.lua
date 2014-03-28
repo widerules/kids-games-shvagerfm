@@ -13,7 +13,7 @@ local message = "Well done !"
 local _FONTSIZE = constants.H / 7
 
 local gamesWon = 0
-local level = 3
+local level = 5
 local itemsCount = {2, 3, 4, 6, 9, 12, 16, 20}
 local rows =       {1, 1, 2, 2, 3, 3,  4,  4}
 local items = {}
@@ -23,6 +23,9 @@ local imageSize, spacing
 local itemType, searchAmount
 local taskLabel
 
+local soundName
+local soundItIs
+local soundTitle
 --makes a set of names of fruits and vegetables
 local function generateItems()
 	for i = 1, math.round(itemsCount[level]/2) do
@@ -36,8 +39,9 @@ local function generateItems()
 		items[i].type = "fruit"
 	end
 end
-
+---tap on object
 local function onItemTapped (event)
+	---
 	local function encreaseScore()
 		searchAmount = searchAmount - 1
 		if searchAmount < 1 then
@@ -51,11 +55,16 @@ local function onItemTapped (event)
 			storyboard.reloadScene()
 		end
 	end
-
+-- right choice
 	if event.target.type == itemType then
+		soundName = audio.loadSound( "sounds/"..event.target.name..".mp3" )
+		audio.play( soundName )
 		event.target:removeEventListener( "tap", onItemTapped )
-		transition.fadeOut( event.target, {time = 500, onComplete = encreaseScore} )		
+		transition.fadeOut( event.target, {time = 500, onComplete = encreaseScore} )	
+-- wrong choice	
 	else
+		soundItIs = audio.loadSound( "sounds/"..event.target.name.."is"..event.target.type..".mp3" )
+		audio.play( soundItIs )
 		local function toNormal()
 			transition.to (event.target,{rotation = 0,  time = 125})
 		end
@@ -104,6 +113,7 @@ function scene:enterScene(event)
 			images[i][j] = display.newImage( data.pathToItems..items[index].value..data.format, i*spacingX+(i-0.5)*imageSize, j*spacingY+(j-0.5)*imageSize)			
 			images[i][j].width = imageSize
 			images[i][j].height = imageSize
+			images[i][j].name = items[index].value
 			images[i][j].type = items[index].type
 			images[i][j]:addEventListener("tap", onItemTapped)
 			group:insert(images[i][j])
@@ -117,10 +127,13 @@ function scene:enterScene(event)
 
 	taskLabel = display.newEmbossedText( "", constants.CENTERX, constants.CENTERY, native.systemFont, _FONTSIZE )	
 	if itemType == "vegetable" then
+		soundTitle = audio.loadSound( "sounds/lookforvegetables.mp3" )
 		taskLabel.text = findVegTask
 	else
+		soundTitle = audio.loadSound( "sounds/lookforfruits.mp3" )
 		taskLabel.text = findFrtTask
 	end
+	audio.play( soundTitle )
 	taskLabel.xScale = 0.3
 	taskLabel.yScale = 0.3
 	taskLabel:setFillColor( 0,0,0 )

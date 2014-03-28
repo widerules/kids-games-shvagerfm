@@ -17,6 +17,7 @@ local isVegetables = true
 local background, image, itemName
 local nextButton, previousButton, vegetablesButton, fruitsButton, homeButton
 
+local soundName
 local function onHomeButtonTapped (event)
 	--GOTO home screen
 end
@@ -144,6 +145,8 @@ function scene:enterScene(event)
 	local group = self.view
 
 	if isVegetables == true then
+		soundName = audio.loadSound( "sounds/"..data.vegetables[index]..".mp3" )
+		audio.play( soundName )
 		image = display.newImage (data.pathToVegetables..data.vegetables[index]..data.format, constants.CENTERX, constants.CENTERY)
 		image.widht = _IMAGESIZE
 		image.height = _IMAGESIZE
@@ -157,6 +160,8 @@ function scene:enterScene(event)
 
 		--load corresponding sound
 	else
+		soundName = audio.loadSound( "sounds/"..data.fruits[index]..".mp3" )
+		audio.play( soundName )
 		image = display.newImage (data.pathToFruits..data.fruits[index]..data.format, constants.CENTERX, constants.CENTERY)
 		image.widht = _IMAGESIZE
 		image.height = _IMAGESIZE
