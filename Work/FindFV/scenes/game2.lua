@@ -15,7 +15,7 @@ local _FONTSIZE = constants.H / 7
 local gamesWon = 0
 local level = 5
 local itemsCount = {2, 3, 4, 6, 9, 12, 16, 20}
-local rows =       {1, 1, 2, 2, 3, 3,  4,  4}
+local rows =       {1, 1, 2, 2, 3, 3, 4, 4}
 local items = {}
 local images = {}
 
@@ -26,6 +26,7 @@ local taskLabel
 local soundName
 local soundItIs
 local soundTitle
+local star = {}
 --makes a set of names of fruits and vegetables
 local function generateItems()
 	for i = 1, math.round(itemsCount[level]/2) do
@@ -50,6 +51,7 @@ local function onItemTapped (event)
 				gamesWon = 0
 				if level<8 then
 					level = level + 1 
+
 				end
 			end
 			storyboard.reloadScene()
@@ -83,9 +85,11 @@ function scene:createScene(event)
 	background.width = constants.W
 	background.height = constants.H
 	group:insert(background)
-
+	
+	
+	
 	gamesWon = 0
-	level = 1
+	level = 3
 end
 
 function scene:willEnterScene(event)
@@ -100,11 +104,12 @@ function scene:willEnterScene(event)
 	if itemType == "fruit" and itemsCount[level]%2 == 1 then
 		searchAmount = searchAmount - 1
 	end
+
 end
 
 function scene:enterScene(event)
 	local group = self.view
-
+	
 	generateItems()
 	for i = 1, itemsCount[level]/rows[level] do
 		images[i] = {}
@@ -139,14 +144,31 @@ function scene:enterScene(event)
 	taskLabel:setFillColor( 0,0,0 )
 	group:insert(taskLabel)
 	transition.to(taskLabel, {time = 500, xScale = 1, yScale = 1, onComplete = function() timer.performWithDelay(1000, hideLabel) end})
+---stars
+	for i=1, 8 do
+		if i < level then
+			star[i] = display.newImage("images/starfull.png", 0, 0, constants.H/8, constants.H/8)
+		else
+	star[i] = display.newImage("images/star.png", 0, 0, constants.H/8, constants.H/8)
+	end
+	star[i].x = constants.W - star[i].width
+	if i == 1 then
+		star[i].y = constants.H - star[i].height/2
+	else
+		star[i].y = star[i-1].y - star[i].height
+	end
+	group:insert(star[i])
+	end
 end
 
 function scene:exitScene(event)
 	
 	for i = 1, #images do
 		for j = 1, #images[i] do
+			if images[i][j] ~= nil then
 			print ("level "..level.." i "..i.." j "..j)
 			images[i][j]:removeSelf()
+			end
 		end
 	end	
 
