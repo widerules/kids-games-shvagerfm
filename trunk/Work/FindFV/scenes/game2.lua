@@ -89,7 +89,7 @@ function scene:createScene(event)
 	
 	
 	gamesWon = 0
-	level = 3
+	level = 2
 end
 
 function scene:willEnterScene(event)
