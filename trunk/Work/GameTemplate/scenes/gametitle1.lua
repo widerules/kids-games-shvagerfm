@@ -53,7 +53,7 @@ background = display.newImage("images/background1.png", constants.CENTERX, const
 group:insert( background )
 
 titlePic = display.newImage("images/game1/titlepic.png", 0, constants.CENTERY, constants.W/2, 3*constants.W/8)
-titlePic.x = titlePic.width/2
+titlePic.x = 0.7*titlePic.width
 group:insert(titlePic)
 
 title = display.newImage( "images/game1/title.png",  0, 0, constants.W/4, constants.W/12)
@@ -154,7 +154,7 @@ end
 -- Called prior to the removal of scene's "view" (display group)
 function scene:destroyScene( event )
         local group = self.view
-
+        background:removeEventListener("touch", startDrag )
         -----------------------------------------------------------------------------
 
         --      INSERT code here (e.g. remove listeners, widgets, save state, etc.)
