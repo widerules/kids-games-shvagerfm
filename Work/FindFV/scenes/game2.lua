@@ -29,15 +29,32 @@ local soundTitle
 local star = {}
 --makes a set of names of fruits and vegetables
 local function generateItems()
+	local tmpindex = 1
+
+	local veg = table.copy(data.vegetables)	
 	for i = 1, math.round(itemsCount[level]/2) do
+		tmpindex = math.random(1,#veg)	 
 		items[i] = {}
-		items[i].value = data.vegetables[math.random(1,#data.vegetables)]
+		items[i].value = veg[tmpindex]
 		items[i].type = "vegetable"
+		table.remove(veg, tmpindex)
+
+		if #veg < 1 then
+			veg = table.copy(data.vegetables)
+		end
 	end
+
+	local frt = table.copy(data.fruits)
 	for i = math.round(itemsCount[level]/2)+1, itemsCount[level] do
+		tmpindex = math.random(1,#frt)
 		items[i] = {}
-		items[i].value = data.fruits[math.random(1,#data.fruits)]
+		items[i].value = frt[tmpindex]
 		items[i].type = "fruit"
+		table.remove (frt, tmpindex)
+
+		if #frt<1 then
+			frt = table.copy(data.fruits)
+		end
 	end
 end
 ---tap on object
@@ -89,7 +106,7 @@ function scene:createScene(event)
 	
 	
 	gamesWon = 0
-	level = 2
+	level = 1
 end
 
 function scene:willEnterScene(event)
@@ -168,6 +185,7 @@ function scene:exitScene(event)
 			if images[i][j] ~= nil then
 			print ("level "..level.." i "..i.." j "..j)
 			images[i][j]:removeSelf()
+			images[i][j] = nil
 			end
 		end
 	end	
