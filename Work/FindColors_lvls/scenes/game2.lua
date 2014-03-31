@@ -70,8 +70,9 @@ local function onItemTapped (event)
 	else
 		--soundItIs = audio.loadSound( "sounds/"..event.target.name.."is"..event.target.type..".mp3" )
 		--audio.play( soundItIs )
+		local baseRot = event.target.rotation
 		local function toNormal()
-			transition.to (event.target,{rotation = 0,  time = 125})
+			transition.to (event.target,{rotation = baseRot,  time = 125})
 		end
 		local function toRight()
 			transition.to (event.target,{rotation = 30,  time = 250, onComplete = toNormal})
@@ -109,8 +110,9 @@ function scene:enterScene(event)
 			local index = math.random (1, #items)			
 			images[i][j] = display.newImage( data.butterfliesPath..items[index]..data.format, i*spacingX+(i-0.5)*imageSize, j*spacingY+(j-0.5)*imageSize)			
 			images[i][j].width = imageSize
-			images[i][j].height = imageSize		
-			images[i][j].type = items[index]
+			images[i][j].height = imageSize	
+			images[i][j].rotation = math.random (-30,30)	
+			images[i][j].type = items[index]			
 			images[i][j]:addEventListener("tap", onItemTapped)
 			group:insert(images[i][j])
 			table.remove(items, index)
