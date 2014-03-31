@@ -12,7 +12,9 @@ local scene = storyboard.newScene()
 local _STARSIZE = constants.H/6
 local _FRICTION = 0.7
 local _FONTSIZE = constants.H / 15
-local _STARSPEED = 5
+local _STARSPEED = 9
+local _TOTALSTARS = 50 				--total amount of stars, wich will be created
+local _GENERATIONDELAY = 200		--pause between star generation
 
 -------------------------------------texts
 local scoreText = "Score: "
@@ -24,6 +26,7 @@ local score, record					--score variables
 local starGroup, informationGroup 	--group for falling stars and for information such as type of the star and score
 local scoreLabel 					--for showing score during the game
 local background, informationBackground  --for showing main background, and panel with information
+local gameWon, level
 
 --this function called each time when user touch star
 local function onStarTouched(event)
@@ -60,11 +63,18 @@ function scene:createScene(event)
 
  	informationGroup = display.newGroup( )
  	group:insert(informationGroup)
+
+ 	gameWon = 0
+ 	level = 1
 end
 
 function scene:willEnterScene(event)
+	_STARSPEED = data.difficults[level].speed
+	_TOTALSTARS = data.difficults[level].amount
+	_GENERATIONDELAY = data.difficults[level].generationDelay
+
 	physics.start(true)
-	physics.getGravity(0, _STARSPEED) 
+	physics.setGravity(0, _STARSPEED) 
 	index = math.random(1, #data.colors)
 	starType = data.colors[index]
 	score = 0
@@ -76,7 +86,7 @@ function scene:enterScene (event)
 	local group = self.view
 	local function startFalling()
 		local function listener()
-		timerID = timer.performWithDelay( data.delay, 
+		timerID = timer.performWithDelay( _GENERATIONDELAY, 
 			function()
 				for i = 1, 5 do
 					index = math.random (1, #data.colors)
@@ -91,11 +101,21 @@ function scene:enterScene (event)
 				end
 				--I didn't find any better way to catch the end of generating ...
 				loopNumber = loopNumber + 1
-				if loopNumber == data.totalGameLoops then
+				if loopNumber == _TOTALSTARS then
 					--otherwise - popup shown without delay
-					timer.performWithDelay( 2500, function () popup.showPopUp("Well done !\nYour score: "..score, "scenetemplate", "scenes.game4") end) --lets all stars fall down and shows pop-up
+					timer.performWithDelay( 2500, 
+						function () 
+							popup.showPopUp("Well done !\nYour score: "..score, "scenetemplate", "scenes.game4") 
+							gameWon = gameWon + 1
+							if gameWon>2 then
+								gameWon = 0
+								if level<4 then
+									level = level + 1
+								end
+							end
+						end) --lets all stars fall down and shows pop-up
 				end
-			end, data.totalGameLoops )
+			end, _TOTALSTARS )
 		end
 	transition.to(starTypeImage, {time=500, xScale = 1.2, yScale=1.2, x = informationBackground.x - starTypeImage.width, y = informationBackground.y, onComplete= listener})
 	end
