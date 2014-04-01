@@ -1,12 +1,14 @@
+
 require "sqlite3"
 local path = system.pathForFile( "colorskids.sqlite", system.DocumentsDirectory )
 local db = sqlite3.open( path )
+
 local storyboard = require("storyboard")
 local constants = require("constants")
 local data = require("searchData")
 
 local scene = storyboard.newScene()
-
+local widget = require("widget")
 -------------------------texts
 local taskText = "Look for "
 local message = "Well done !"
@@ -23,66 +25,13 @@ local images = {}
 local imageSize, spacingX, spacingY
 local itemType, searchAmount
 local taskLabel
-local findSound, colorSound
 
-local total, totalScore, bgscore, coins
+local background, backBtn, homeBtn, backBtn
+local counter
 
-local coinsToScore
-local counter = 0
-
+local soundName, soundTitle
 local star = {}
----------------------------------------------
---explosion
---------------------------------------------------
-explosionTable        = {}                    -- Define a Table to hold the Spawns
-i                    = 0                        -- Explosion counter in table
-explosionTime        = 416.6667                    -- Time defined from EXP Gen 3 tool
-_w                     = display.contentWidth    -- Get the devices Width
-_h                     = display.contentHeight    -- Get the devices Height
-resources            = "_resources"            -- Path to external resource files
 
-local explosionSheetInfo    = require(resources..".".."Explosion")
-local explosionSheet        = graphics.newImageSheet( resources.."/".."Explosion.png", explosionSheetInfo:getSheet() )
-
---------------------------------------------------
--- Define the animation sequence for the Explosion
--- from the Sprite sheet data
--- Change the sequence below to create IMPLOSIONS 
--- and EXPLOSIONS etc...
---------------------------------------------------
-local animationSequenceData = {
-  { name = "dbiExplosion",
-      frames={
-          1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25
-      },
-      time=explosionTime, loopCount=1
-  },
-}
-
-local function spawnExplosionToTable(spawnX, spawnY)
-    i = i + 1                                        -- Increment the spawn counter
-    
-    explosionTable[i] = display.newSprite( explosionSheet, animationSequenceData )
-    explosionTable[i]:setSequence( "dbiExplosion" )    -- assign the Animation to play
-    explosionTable[i].x=spawnX                        -- Set the X position (touch X)
-    explosionTable[i].y=spawnY                        -- Set the Y position (touch Y)
-    explosionTable[i]:play()                        -- Start the Animation playing
-    explosionTable[i].xScale = 1                    -- X Scale the Explosion if required
-    explosionTable[i].yScale = 1                    -- Y Scale the Explosion if required
-    
-    --Create a function to remove the Explosion - triggered from the DelatedTimer..
-    local function removeExplosionSpawn( object )
-        return function()
-            object:removeSelf()    -- remove the explosion from table
-            object = nil
-        end
-    end
-    
-    --Add a timer to the Spawned Explosion.
-    --Explosion are destroyed after all the frames have been played after a determined
-    --amount of time as setup by the Explosion Generator Tool.
-    local destroySpawneExplosion = timer.performWithDelay (explosionTime, removeExplosionSpawn(explosionTable[i]))
-end
 ---------------------------------------
 -----check totals & update 
 ---------------------------------------
@@ -123,12 +72,62 @@ local function animScore()
 	local function trans1()
 	 	transition.to(coinsToScore, {time = 200, xScale = 1, yScale = 1, x = coins.x, y= coins.y, onComplete = listener})
 	end
-	spawnExplosionToTable(_CENTERX, _CENTERY)
+	--spawnExplosionToTable(_CENTERX, _CENTERY)
 	transition.to(coinsToScore, {time = 300, xScale = 2, yScale = 2, transition = easing.outBack, onComplete = trans1})
 end
 ----------------------------------------
 -- end totals f-ns
 -----------------------------------------
+local function backHome()
+
+		storyboard.gotoScene( "scenetemplate", "slideRight", 800 )
+		storyboard.removeScene( "scenes.game2" )
+end
+local function playAgain()
+	level = 1
+	popupBg:removeSelf( )
+	popupText:removeSelf( )
+	homeBtn:removeSelf( )
+	nextBtn:removeSelf( )
+
+	storyboard.reloadScene()
+end
+
+local function showPopUp()
+	local sound = audio.loadSound( "sounds/playagain.mp3")
+	audio.play( sound )
+	popupBg = display.newImage( "images/popupbg.png", constants.CENTERX, constants.CENTERY );
+	popupBg.height = 0.7*constants.H;
+	popupBg.width = 0.7*constants.W;
+
+	popupText = display.newText("Well done !", popupBg.x, 0, native.systemFont, _FONTSIZE);
+	popupText.y = popupBg.y-popupBg.height+2*popupText.width/3;
+
+	homeBtn = widget.newButton
+	{
+		width = 0.4*popupBg.height,
+		height = 0.4*popupBg.height,
+		x = popupBg.x - 0.4*popupBg.width/2,
+		y = popupBg.y + 0.4*popupBg.height/2,
+		defaultFile = "images/home.png",
+		overFile = "images/homehover.png",
+		onRelease = backHome
+	}
+
+
+	nextBtn = widget.newButton
+	{
+		width = 0.4*popupBg.height,
+		height = 0.4*popupBg.height,
+		x = popupBg.x + 0.4*popupBg.width/2,
+		y = popupBg.y + 0.4*popupBg.height/2,
+		defaultFile = "images/reload.png",
+		overFile = "images/reloadhover.png",
+		onRelease = playAgain
+	}	
+
+
+end;
 
 local function generateItems()
 	local tmp = table.copy(data.colors)
@@ -155,9 +154,17 @@ local function generateItems()
 end
 
 local function wellDone()
-	local wellSound = audio.loadSound( "sounds/welldone.mp3")
-	audio.play( wellSound )
+
+	local tempsound = math.random()
+	if tempsound < 0.5 then 
+	soundName = audio.loadSound( "sounds/good.mp3" )
+	else
+		soundName = audio.loadSound( "sounds/welldone.mp3" )
+	end
+
+		audio.play( soundName )
 end
+
 local function onItemTapped (event)
 	---
 	local function reloadFunc()
@@ -174,7 +181,7 @@ local function onItemTapped (event)
 					level = level + 1
 				end
 				wellDone()
-				timer.performWithDelay( 500, reloadFunc )
+				timer.performWithDelay( 700, reloadFunc )
 			else
 				reloadFunc()
 			end
@@ -183,15 +190,25 @@ local function onItemTapped (event)
 	end
 -- right choice
 	if event.target.type == itemType then
-		colorSound = audio.loadSound( "sounds/"..event.target.type..".mp3" )
-		audio.play( colorSound )
+		wellDone()
 		event.target:removeEventListener( "tap", onItemTapped )
-		transition.fadeOut( event.target, {time = 500, onComplete = encreaseScore} )	
-
+		local function animDisapp(self)
+			transition.to(self, {time = 700, xScale = 0.1, yScale = 0.1 , alpha = 0.1, transition = easing.inBack, onComplete = encreaseScore})
+		end
+		event.target:toFront()
+		transition.to( event.target, {time = 700, rotation = 360, xScale = 1.5, yScale = 1.5, x = constants.CENTERX, y = constants.CENTERY, transition = easing.outBack, onComplete = animDisapp} )	
 -- wrong choice	
 	else
-		local soundItIs = audio.loadSound( "sounds/its_"..event.target.type..".mp3" )
-		audio.play( soundItIs )
+		local soundItIs
+		if counter > 2 then
+			audio.play( soundTitle )
+			counter = 1
+		else
+			soundItIs = audio.loadSound( "sounds/its_"..event.target.type..".mp3" )
+			audio.play( soundItIs )
+		end
+		
+		
 		local baseRot = event.target.rotation
 		local function toNormal()
 			transition.to (event.target,{rotation = baseRot,  time = 125})
@@ -199,7 +216,9 @@ local function onItemTapped (event)
 		local function toRight()
 			transition.to (event.target,{rotation = 30,  time = 250, onComplete = toNormal})
 		end
+		
 		transition.to (event.target,{rotation = -30,  time = 125, onComplete = toRight})
+		counter = counter + 1
 	end
 end
 
@@ -213,25 +232,40 @@ function scene:createScene(event)
 	background.height = constants.H
 	group:insert(background)	
 	
-	---------------------------------------------------------------
+	backBtn = widget.newButton
+		{
+		    --left = 0,
+		    --top = 0,
+		    defaultFile = "images/home.png",
+		    overFile = "images/homehover.png",
+		    id = "home",
+		    onRelease = backHome,
+		    
+		}
+	backBtn.width, backBtn.height = 0.1*constants.W, 0.1*constants.W
+	backBtn.x, backBtn.y = backBtn.width/2, backBtn.height/2
+	group:insert( backBtn )
+---------------------------------------------------------------
 ----Score views
-	---------------------------------------------------------------
-	bgscore = display.newImage("images/bgscore.png", 0, 0, _W/5, _W/15)
+---------------------------------------------------------------
+	bgscore = display.newImage("images/bgscore.png", 0, 0, _W/4, _W/12)
 	bgscore.width, bgscore.height = _W/5, _W/20
-	bgscore.x = bgscore.width/2
+	bgscore.x = constants.W - bgscore.width/2
 	bgscore.y = bgscore.height/2
 	group:insert(bgscore)
+	
+	
+	coins = display.newImage("images/coins.png", 0, 0, bgscore.height/2, bgscore.height/2)
+	coins.width, coins.height = 2*bgscore.height/3, 2*bgscore.height/3
+	coins.x = bgscore.x + 0.5*bgscore.width - 3*coins.width/4
+	coins.y = bgscore.y
+	group:insert(coins)
 
 	totalScore = display.newText("Score: "..total, 0,0, native.systemFont, _H/24)
-	totalScore.x = 2*totalScore.width/3
+	totalScore.x = bgscore.x - totalScore.width/4
 	totalScore.y = bgscore.y
 	group:insert(totalScore)
 
-	coins = display.newImage("images/coins.png", 0, 0, bgscore.height/2, bgscore.height/2)
-	coins.width, coins.height = 2*bgscore.height/3, 2*bgscore.height/3
-	coins.x = bgscore.width - 3*coins.width/4
-	coins.y = bgscore.y
-	group:insert(coins)
 ------------------------------------------------------------------------------
 --End score views
 ------------------------------------------------------------------------------
@@ -248,7 +282,7 @@ end
 
 function scene:enterScene(event)
 		local group = self.view
-	
+	counter = 1
 	generateItems()
 	for i = 1, itemsCount[level]/rows[level] do
 		images[i] = {}
@@ -258,31 +292,27 @@ function scene:enterScene(event)
 			images[i][j].width = imageSize
 			images[i][j].height = imageSize	
 			images[i][j].rotation = math.random (-30,30)	
-			images[i][j].type = items[index]	
+			images[i][j].type = items[index]			
 			images[i][j]:addEventListener("tap", onItemTapped)
 			group:insert(images[i][j])
 			table.remove(items, index)
 		end
 	end
 
-
 	local function hideLabel()
 		transition.fadeOut( taskLabel, {time = 500} )
 	end
 
 	taskLabel = display.newEmbossedText( taskText..itemType, constants.CENTERX, constants.CENTERY, native.systemFont, _FONTSIZE )	
-	
+    soundTitle = audio.loadSound( "sounds/find_"..itemType.."_butterfly.mp3" )
+	audio.play( soundTitle )
 	taskLabel.xScale = 0.3
 	taskLabel.yScale = 0.3
 	taskLabel:setFillColor( 0,0,0 )
 	group:insert(taskLabel)
-	---- Sound
-	findSound = audio.loadSound("sounds/find_"..itemType.."_butterfly.mp3")
-	audio.play( findSound )
-
 	transition.to(taskLabel, {time = 500, xScale = 1, yScale = 1, onComplete = function() timer.performWithDelay(1000, hideLabel) end})
 
----stars
+	---stars
 	for i=1, 8 do
 		if i < level then
 			star[i] = display.newImage("images/starfull.png", 0, 0, constants.H/20, constants.H/12)
@@ -297,6 +327,7 @@ function scene:enterScene(event)
 		star[i].y = star[i-1].y - star[i].height
 	end
 	group:insert(star[i])
+
 	end
 end
 
@@ -312,6 +343,16 @@ function scene:exitScene(event)
 	end	
 
 	taskLabel:removeSelf()
+	if popupBg ~= nil then
+		popupBg:removeSelf();
+		popupText:removeSelf();
+		nextBtn:removeSelf();
+		homeBtn:removeSelf();
+		popupBg = nil
+	end;
+	transition.cancel( )
+	audio.stop()
+
 end
 
 function scene:destroyScene(event)
