@@ -126,6 +126,8 @@ end
 
 ----animation update score
 local function animScore()
+	local wellSound = audio.loadSound( "sounds/welldone.mp3")
+    audio.play( wellSound )
 	local function listener()
 		updateScore()
 		coinsToScore:removeSelf( )
@@ -334,21 +336,23 @@ function scene:createScene(event)
 ----Score views
 ---------------------------------------------------------------
 	bgscore = display.newImage("images/bgscore.png", 0, 0, _W/4, _W/12)
-	bgscore.width, bgscore.height = _W/3, _W/12
-	bgscore.x = bgscore.width/2
+	bgscore.width, bgscore.height = _W/5, _W/20
+	bgscore.x = constants.W - bgscore.width/2
 	bgscore.y = bgscore.height/2
 	group:insert(bgscore)
 	
-	totalScore = display.newText("Score: "..total, 0,0, native.systemFont, _H/12)
-	totalScore.x = 2*totalScore.width/3
+	
+	coins = display.newImage("images/coins.png", 0, 0, bgscore.height/2, bgscore.height/2)
+	coins.width, coins.height = 2*bgscore.height/3, 2*bgscore.height/3
+	coins.x = bgscore.x + 0.5*bgscore.width - 3*coins.width/4
+	coins.y = bgscore.y
+	group:insert(coins)
+
+	totalScore = display.newText("Score: "..total, 0,0, native.systemFont, _H/24)
+	totalScore.x = bgscore.x - totalScore.width/4
 	totalScore.y = bgscore.y
 	group:insert(totalScore)
 
-	coins = display.newImage("images/coins.png", 0, 0, bgscore.height/2, bgscore.height/2)
-	coins.width, coins.height = 2*bgscore.height/3, 2*bgscore.height/3
-	coins.x = bgscore.width - 3*coins.width/4
-	coins.y = bgscore.y
-	group:insert(coins)
 ------------------------------------------------------------------------------
 --End score views
 ------------------------------------------------------------------------------
