@@ -154,8 +154,15 @@ local function generateItems()
 	end
 end
 
+local function wellDone()
+	local wellSound = audio.loadSound( "sounds/welldone.mp3")
+	audio.play( wellSound )
+end
 local function onItemTapped (event)
 	---
+	local function reloadFunc()
+		storyboard.reloadScene() 
+	end
 	local function encreaseScore()
 		searchAmount = searchAmount - 1
 		if searchAmount < 1 then
@@ -166,8 +173,12 @@ local function onItemTapped (event)
 				if level<8 then
 					level = level + 1
 				end
+				wellDone()
+				timer.performWithDelay( 500, reloadFunc )
+			else
+				reloadFunc()
 			end
-			storyboard.reloadScene()
+			
 		end
 	end
 -- right choice
@@ -179,8 +190,8 @@ local function onItemTapped (event)
 
 -- wrong choice	
 	else
-		--soundItIs = audio.loadSound( "sounds/"..event.target.name.."is"..event.target.type..".mp3" )
-		--audio.play( soundItIs )
+		local soundItIs = audio.loadSound( "sounds/its_"..event.target.type..".mp3" )
+		audio.play( soundItIs )
 		local baseRot = event.target.rotation
 		local function toNormal()
 			transition.to (event.target,{rotation = baseRot,  time = 125})
