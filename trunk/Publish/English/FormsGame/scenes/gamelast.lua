@@ -356,6 +356,8 @@ end
 -- Called when scene is about to move offscreen:
 function scene:exitScene( event )
 	local group = self.view
+	transition.cancel( )
+	audio.stop()
 	storyboard.purgeAll()
 	print ("exitScene")
 	
