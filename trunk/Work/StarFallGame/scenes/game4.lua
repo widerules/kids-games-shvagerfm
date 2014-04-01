@@ -96,14 +96,15 @@ function scene:enterScene (event)
 			function()
 				for i = 1, 5 do
 					index = math.random (1, #colors)
-					local star = display.newImage(data.starPath..data.colors[colors[index]]..data.format, 0, 0)
+					local star = display.newImage(data.starPath..data.colors[colors[index]]..data.format, 0, 0)					
 					star.x = constants.W * math.random()
+					star.y = -_STARSIZE
 					star.width = _STARSIZE
 					star.height = _STARSIZE
 					star.starType = data.colors[colors[index]]
 					star:addEventListener( "touch", onStarTouched )
 					starGroup:insert(star)
-					physics.addBody( star, {density=1, friction=_FRICTION, bounce=0} )
+					physics.addBody( star, {density=15, friction=_FRICTION, bounce=0} )
 				end
 				--I didn't find any better way to catch the end of generating ...
 				loopNumber = loopNumber + 1
