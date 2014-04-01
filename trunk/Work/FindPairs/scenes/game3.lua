@@ -2,10 +2,17 @@ local storyboard = require ("storyboard")
 local widget = require ("widget")
 local constants = require ("constants")
 local data = require ("pairData")
+local popup = require ("utils.popup")
 
 local scene = storyboard.newScene()
 
 local _FONTSIZE = constants.H / 13
+local _MAXLEVEL = 4
+
+local cardAmount = {6, 8, 12, 16}
+local rows = {2, 2, 3, 4}
+local level = 1
+local gameWon = 0
 
 local background
 local butterflies
@@ -14,50 +21,6 @@ local folds = {}
 local previous
 local totalCards
 
-local popupBg
-local popupText
-local homeBtn
-local nextBtn
-
-local function onHomeButtonClicked(event)
-	--goto main screen	
-end
-
-local function onNextButtonClicked(event)
-	storyboard.reloadScene( )
-end
-
-local function showPopUp()
-	popupBg = display.newImage( "images/popupbg.png", constants.CENTERX, constants.CENTERY );
-	popupBg.height = 0.7*constants.H;
-	popupBg.width = 0.7*constants.W;
-
-	popupText = display.newText("Well done !", popupBg.x, 0, native.systemFont, 2*_FONTSIZE);
-	popupText.y = popupBg.y-popupBg.height+2*popupText.width/3;
-
-	homeBtn = widget.newButton
-	{
-		width = 0.4*popupBg.height,
-		height = 0.4*popupBg.height,
-		x = popupBg.x - 0.4*popupBg.width/2,
-		y = popupBg.y + 0.4*popupBg.height/2,
-		defaultFile = "images/home.png",
-		overFile = "images/homehover.png",
-		
-	}
-	homeBtn:addEventListener( "tap", onHomeButtonClicked );
-
-	nextBtn = widget.newButton
-	{
-		width = 0.4*popupBg.height,
-		height = 0.4*popupBg.height,
-		x = popupBg.x + 0.4*popupBg.width/2,
-		y = popupBg.y + 0.4*popupBg.height/2,
-		defaultFile = "images/next.png",
-		overFile = "images/next.png"
-	}	
-	nextBtn:addEventListener( "tap", onNextButtonClicked);
-end
 
 local function findIndex(object)
 	local index = 1
@@ -74,7 +37,6 @@ local function onFoldClicked (event)
 	local function compare ()
 		if previous ~= nil then
 			if previous.butterflyType == event.target.butterflyType then
-				print ("pair!")
 
 				event.target:removeEventListener( "tap", onFoldClicked )
 				previous:removeEventListener( "tap", onFoldClicked )
@@ -82,17 +44,20 @@ local function onFoldClicked (event)
 				local function checkAmount()
 					totalCards = totalCards - 2
 					if totalCards == 0	then
-						showPopUp()
+						popup.showPopUp("Well done!", "scenetemplate", "scenes.game3")
+						gameWon = gameWon + 1
+						if gameWon>0 and level < _MAXLEVEL then
+							gameWon = 0
+							level = level + 1
+						end
 					end				
 				end
 
 				local function removeSecond()
-					print("hey, I am here !")
 					transition.to(items[findIndex(event.target)], {time = 1000, x = constants.W, y = 0, alpha = 0, onComplete = checkAmount})
 				end
 				transition.to(items[findIndex(previous)], {time = 1000, x = constants.W, y = 0, alpha = 0, onComplete = removeSecond})				
 			else
-				print("not pair!")
 				transition.fadeIn( event.target, {time = 500} )
 				transition.fadeIn(previous, {time = 500})
 			end
@@ -116,7 +81,7 @@ end
 
 function scene:willEnterScene(event)
 	butterflies = table.copy (data.butterflies)
-	totalCards = data.amount
+	totalCards = cardAmount[level]
 end
 
 function scene:enterScene (event)
@@ -154,7 +119,7 @@ function scene:enterScene (event)
 		count = 1,
 		},
 		{
-		name = "cyan",
+		name = "indigo",
 		start = 5,
 		count = 1,
 		},
@@ -164,7 +129,7 @@ function scene:enterScene (event)
 		count = 1,
 		},
 		{
-		name = "purple",
+		name = "violet",
 		start = 7,
 		count = 1,
 		},
@@ -175,10 +140,17 @@ function scene:enterScene (event)
 		}
 	}
 	
+	local itemH, itemW
+	if constants.H / rows[level]<constants.W/(cardAmount[level]/rows[level]) then
+		itemH = constants.H / rows[level]
+		itemW = itemH
+	else
+		itemW = constants.W / (cardAmount[level]/rows[level]+1)
+		itemH = itemW
+	end
 
-	local itemW
-	local itemH = constants.H / 3
-	itemW = itemH
+	local spacingX = (constants.W - itemW * cardAmount[level]/rows[level]) / (cardAmount[level]/rows[level]+1) 
+	local spacingY = (constants.H - itemH * rows[level]) / (rows[level]+1) 
 	local i,j
 	items = {}
 	local temp
@@ -187,22 +159,23 @@ function scene:enterScene (event)
 
 	-- delete 2 random shape
 	-- because we have 2 useless colors
-	for i=1, 2 do
+	for i=1, 8 - cardAmount[level]/2 do
 		table.remove(butterflies, math.random(1, #butterflies))
 	end
 
 	for i=1, #butterflies do
 		indexes[butterflies[i]] = 2
 	end
+	
 	local butterfly, index
 
-	for i=1, 3 do
-		for j=1, 4 do
+	for i=1, rows[level] do
+		for j= 1, (cardAmount[level]/rows[level]) do
 			temp = display.newSprite( butterfliesSheet, sequenceData )
 
-			index = math.random(1, 6)
+			index = math.random(1, cardAmount[level]/2)
 			while indexes[butterflies[index]] == 0 do
-				index = math.random(1, 6)
+				index = math.random(1, cardAmount[level]/2)
 			end
 
 			if indexes[butterflies[index]] > 0 then
@@ -214,8 +187,8 @@ function scene:enterScene (event)
 			temp.width = itemW
 			temp.height = itemH
 
-			temp.x = 1.15 * j * itemW - itemW  / 2 + constants.W / 17
-			temp.y = i * itemH - itemH / 2
+			temp.x = (j-1) * itemW + itemW/2 + j*spacingX
+			temp.y = i * itemH - itemH / 2 + i * spacingY
 
 			--temp:addEventListener( "tap", onItemTap )
 
@@ -249,14 +222,7 @@ function scene:exitScene(event)
 		end
 	end
 
-	if popupBg ~= nil then
-		popupBg:removeSelf()
-		popupText:removeSelf()
-		nextBtn:removeSelf()
-		homeBtn:removeSelf()
-		popupBg = nil
-		popupText = nil
-	end
+	popup.hidePopUp()
 end
 
 function scene:destroyScene(event)

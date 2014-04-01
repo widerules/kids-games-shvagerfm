@@ -8,9 +8,9 @@ data.butterflies =
 	"orange", 
 	"yellow",
 	"green",
-	"cyan",
+	"indigo",
 	"blue",
-	"purple",
+	"violet",
 	"white"
 }
 data.amount = 12
