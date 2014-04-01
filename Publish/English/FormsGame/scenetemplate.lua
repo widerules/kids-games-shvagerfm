@@ -53,11 +53,11 @@ local function getAnimalsForKids()
 	system.openURL( "market://details?id=com.shvagerfm.AnimalsForKids" )
 end
 local function gameFirst()
-	storyboard.gotoScene( "scenes.gamefirst", "slideLeft", 500 )
+	storyboard.gotoScene( "scenes.game1", "slideLeft", 500 )
 	storyboard.removeScene("scenetemplate")
 end 
 local function gameSecond()
-	storyboard.gotoScene( "scenes.gamesecond", "slideLeft", 500 )
+	storyboard.gotoScene( "scenes.game2", "slideLeft", 500 )
 	storyboard.removeScene("scenetemplate")
 
 end 

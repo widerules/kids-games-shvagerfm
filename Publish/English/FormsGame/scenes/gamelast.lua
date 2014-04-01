@@ -24,7 +24,7 @@ local centerY = display.contentCenterY
 local amount = 12
 local shapes = {"square", "triangle", "rhombus", "oval", "rectangle",  "round", "heart", "star"}
 local items, backBtn
-local find = audio.loadSound("sounds/fpairs.wav")
+local find
 local magicSound = audio.loadSound("sounds/magic.mp3")
 local shapeSound
 local selected
@@ -179,7 +179,7 @@ local function onItemTap( event )
 			selected = nil
 		elseif selected.shapeType == event.target.shapeType then
 			print(selected.shapeType)
-			shapeSound = audio.loadSound( "sounds/"..selected.shapeType..".wav")
+			shapeSound = audio.loadSound( "sounds/"..selected.shapeType..".mp3")
 			audio.play( shapeSound )
 			print ("right choise")
 			-- hide pair
@@ -214,6 +214,7 @@ end
 function scene:createScene( event )
 	local group = self.view
 	print('createScene')
+	find = audio.loadSound("sounds/fpairs.mp3")
 	audio.play(find)
 	background = display.newImage( "images/background3.png", centerX, centerY, _W, _H)
 	group:insert( background )
@@ -323,9 +324,9 @@ function scene:enterScene( event )
 
 			temp.x = j * itemW - itemW / 2 + _W / 8
 			temp.y = i * itemH - itemH / 2
-
+			temp.xScale, temp.yScale = 0.3, 0.3
 			temp:addEventListener( "tap", onItemTap )
-
+			
 			table.insert(items, temp)
 		end
 	end
@@ -344,6 +345,7 @@ function scene:enterScene( event )
 	
 	group:insert( backBtn )
 	for i=1, #items do
+		transition.to( items[i], {time = 500, xScale = 1, yScale=1, transition=easing.outBack} )
 		group:insert( items[i] )
 	end
 
