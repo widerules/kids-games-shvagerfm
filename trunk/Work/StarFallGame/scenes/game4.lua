@@ -9,12 +9,13 @@ local explosion = require("utils.explosion")
 local scene = storyboard.newScene()
 
 -------------------------------------constants
-local _STARSIZE = constants.H/6
+local _INFOSTARSIZE = constants.H/6
 local _FRICTION = 0.7
 local _FONTSIZE = constants.H / 15
 local _STARSPEED = 9
 local _TOTALSTARS = 50 				--total amount of stars, wich will be created
 local _GENERATIONDELAY = 200		--pause between star generation
+local _STARSIZE
 
 -------------------------------------texts
 local scoreText = "Score: "
@@ -26,7 +27,7 @@ local score, record					--score variables
 local starGroup, informationGroup 	--group for falling stars and for information such as type of the star and score
 local scoreLabel 					--for showing score during the game
 local background, informationBackground  --for showing main background, and panel with information
-local gameWon, level
+local gameWon, level, colors
 
 --this function called each time when user touch star
 local function onStarTouched(event)
@@ -75,26 +76,31 @@ function scene:willEnterScene(event)
 
 	physics.start(true)
 	physics.setGravity(0, _STARSPEED) 
-	index = math.random(1, #data.colors)
-	starType = data.colors[index]
+	colors = {1, 2, 3, 4, 5, 6, 7}
+	while #colors > data.difficults[level].colors do
+		table.remove (colors, math.random(1, #colors))
+	end
+	index = math.random(1, #colors)
+	starType = data.colors[colors[index]]
 	score = 0
 	loopNumber = 0
+	_STARSIZE = constants.H / data.difficults[level].size
 end
 
 function scene:enterScene (event)
+	local group = self.view	
 
-	local group = self.view
 	local function startFalling()
 		local function listener()
 		timerID = timer.performWithDelay( _GENERATIONDELAY, 
 			function()
 				for i = 1, 5 do
-					index = math.random (1, #data.colors)
-					local star = display.newImage(data.starPath..data.colors[index]..data.format, 0, 0)
+					index = math.random (1, #colors)
+					local star = display.newImage(data.starPath..data.colors[colors[index]]..data.format, 0, 0)
 					star.x = constants.W * math.random()
 					star.width = _STARSIZE
 					star.height = _STARSIZE
-					star.starType = data.colors[index]
+					star.starType = data.colors[colors[index]]
 					star:addEventListener( "touch", onStarTouched )
 					starGroup:insert(star)
 					physics.addBody( star, {density=1, friction=_FRICTION, bounce=0} )
@@ -107,7 +113,7 @@ function scene:enterScene (event)
 						function () 
 							popup.showPopUp("Well done !\nYour score: "..score, "scenetemplate", "scenes.game4") 
 							gameWon = gameWon + 1
-							if gameWon>2 then
+							if gameWon>0 then
 								gameWon = 0
 								if level<4 then
 									level = level + 1
@@ -120,15 +126,15 @@ function scene:enterScene (event)
 	transition.to(starTypeImage, {time=500, xScale = 1.2, yScale=1.2, x = informationBackground.x - starTypeImage.width, y = informationBackground.y, onComplete= listener})
 	end
 
-	informationBackground = display.newImage("images/informationbg.png", constants.CENTERX, _STARSIZE/2)
+	informationBackground = display.newImage("images/informationbg.png", constants.CENTERX, _INFOSTARSIZE/2)
 	informationBackground.width = constants.W/3
-	informationBackground.height = 1.5*_STARSIZE
+	informationBackground.height = 1.5*_INFOSTARSIZE
 	informationBackground.x = constants.W - informationBackground.width/2
 	informationGroup:insert(informationBackground)
 
-	starTypeImage = display.newImage( data.starPath..data.colors[index]..data.format, _STARSIZE, _STARSIZE )
-	starTypeImage.width = _STARSIZE
-	starTypeImage.height = _STARSIZE
+	starTypeImage = display.newImage( data.starPath..data.colors[colors[index]]..data.format, _INFOSTARSIZE, _INFOSTARSIZE )
+	starTypeImage.width = _INFOSTARSIZE
+	starTypeImage.height = _INFOSTARSIZE
 	starTypeImage.x = constants.CENTERX
 	starTypeImage.y = constants.CENTERY
 	informationGroup:insert(starTypeImage)
