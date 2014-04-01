@@ -9,7 +9,7 @@ data.colors =
 	"indigo",
 	"green",
 	"orange",
-	"purple",
+	"violet",
 	"red",
 	"white",
 	"yellow"

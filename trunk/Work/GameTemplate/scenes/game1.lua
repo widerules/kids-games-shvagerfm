@@ -139,18 +139,6 @@ function scene:createScene(event)
 	
 
 	currentColor = 1
-end
-
-function scene:enterScene(event)
-	--TODO :
-	if counter == 5 then
-		updateScore()
-		counter = 0
-	end
-	--checkTotal()
-	local group = self.view
-	colorSound = audio.loadSound( "sounds/"..data.colors[currentColor]..".mp3" )
-	audio.play( colorSound )
 	for i = 1,7,1 do
 		circles[i] = display.newImage (data.circlesPath..data.colors[i]..data.format, 0, 0)
 		circles[i]:addEventListener( "tap", onCircleClicked )
@@ -183,6 +171,19 @@ function scene:enterScene(event)
 	for i = 1, 7 do
 		transition.to( circles[i],{time = 500, xScale = 1, yScale=1, transition=easing.outBack} )
 	end
+end
+
+function scene:enterScene(event)
+	--TODO :
+	if counter == 5 then
+		updateScore()
+		counter = 0
+	end
+	--checkTotal()
+	local group = self.view
+	colorSound = audio.loadSound( "sounds/"..data.colors[currentColor]..".mp3" )
+	audio.play( colorSound )
+	
 	butterfly = display.newImage (data.butterfliesPath..data.colors[currentColor]..data.format, 0, 0)
 	butterfly.x = canvas.x
 	butterfly.y = canvas.y
@@ -201,9 +202,9 @@ end
 
 function scene:exitScene(event)
 	--TODO :
-	for i=1,7 do
-		circles[i]:removeSelf()
-	end
+	--for i=1,7 do
+	--	circles[i]:removeSelf()
+	--end
 	butterfly:removeSelf()
 	colorName:removeSelf()	
 end
