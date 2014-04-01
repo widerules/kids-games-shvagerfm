@@ -40,108 +40,7 @@ local animalImage;			--Image, for animal picture
 local foodImage;			--Image, for food picture
 local animalSound			--Sound of the animal
 
-local total, totalScore, bgscore, coins
-local coinsToScore
-local counter = 0
 
----------------------------------------------
---explosion
---------------------------------------------------
-explosionTable        = {}                    -- Define a Table to hold the Spawns
-i                    = 0                        -- Explosion counter in table
-explosionTime        = 416.6667                    -- Time defined from EXP Gen 3 tool
-_w                     = display.contentWidth    -- Get the devices Width
-_h                     = display.contentHeight    -- Get the devices Height
-resources            = "_resources"            -- Path to external resource files
-
-local explosionSheetInfo    = require(resources..".".."Explosion")
-local explosionSheet        = graphics.newImageSheet( resources.."/".."Explosion.png", explosionSheetInfo:getSheet() )
-
---------------------------------------------------
--- Define the animation sequence for the Explosion
--- from the Sprite sheet data
--- Change the sequence below to create IMPLOSIONS 
--- and EXPLOSIONS etc...
---------------------------------------------------
-local animationSequenceData = {
-  { name = "dbiExplosion",
-      frames={
-          1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25
-      },
-      time=explosionTime, loopCount=1
-  },
-}
-
-local function spawnExplosionToTable(spawnX, spawnY)
-    i = i + 1                                        -- Increment the spawn counter
-    
-    explosionTable[i] = display.newSprite( explosionSheet, animationSequenceData )
-    explosionTable[i]:setSequence( "dbiExplosion" )    -- assign the Animation to play
-    explosionTable[i].x=spawnX                        -- Set the X position (touch X)
-    explosionTable[i].y=spawnY                        -- Set the Y position (touch Y)
-    explosionTable[i]:play()                        -- Start the Animation playing
-    explosionTable[i].xScale = 1                    -- X Scale the Explosion if required
-    explosionTable[i].yScale = 1                    -- Y Scale the Explosion if required
-    
-    --Create a function to remove the Explosion - triggered from the DelatedTimer..
-    local function removeExplosionSpawn( object )
-        return function()
-            object:removeSelf()    -- remove the explosion from table
-            object = nil
-        end
-    end
-    
-    --Add a timer to the Spawned Explosion.
-    --Explosion are destroyed after all the frames have been played after a determined
-    --amount of time as setup by the Explosion Generator Tool.
-    local destroySpawneExplosion = timer.performWithDelay (explosionTime, removeExplosionSpawn(explosionTable[i]))
-end
----------------------------------------
------check totals & update 
----------------------------------------
-local function checkTotal()
-   local function dbCheck()
-      local sql = [[SELECT value FROM statistic WHERE name='total';]]
-      for row in db:nrows(sql) do
-         return row.value
-      end
-   end
-   total = dbCheck()
-   if total == nil then
-      local insertTotal = [[INSERT INTO statistic VALUES (NULL, 'total', '0'); ]]
-      db:exec( insertTotal )
-      print("total inserted to 0")
-      total = 0
-   else
-      print("Total is "..total)
-   end
-end
-local function updateScore()
-	total = total + 5
-	local tablesetup = [[UPDATE statistic SET value = ']]..total..[[' WHERE name = 'total']]
-	db:exec(tablesetup)
-
-	totalScore.text = "Score: "..total
-end
-
-
-----animation update score
-local function animScore()
-	local function listener()
-		updateScore()
-		coinsToScore:removeSelf( )
-	end
-	coinsToScore = display.newImage( "images/coins.png", _CENTERX, _CENTERY, _H/8, _H/8)
-	coinsToScore.xScale, coinsToScore.yScale = 0.1, 0.1
-	local function trans1()
-	 	transition.to(coinsToScore, {time = 200, xScale = 1, yScale = 1, x = coins.x, y= coins.y, onComplete = listener})
-	end
-	spawnExplosionToTable(_CENTERX, _CENTERY)
-	transition.to(coinsToScore, {time = 300, xScale = 2, yScale = 2, transition = easing.outBack, onComplete = trans1})
-end
-----------------------------------------
--- end totals f-ns
------------------------------------------
 --event listener for next button
 local function onNextButtonClicked( event )
 	index = index + 1;	--move to the next animal
@@ -149,7 +48,7 @@ local function onNextButtonClicked( event )
 	if index > table.maxn(data.animalsNames) then
 		index = 1;
 	end;
-	counter = counter + 1
+
 	storyboard.reloadScene(); 
 end;
 
@@ -166,7 +65,8 @@ end;
 local function onHomeButtonClicked( event )
 	--TO DO:
 	storyboard.gotoScene("scenetemplate", "slideRight", 800)
-	storyboard.removeScene("scenes.game1")
+	storyboard.removeScene("scenes/game1")
+
 end;
 
 local function onAnimalClicked( event )	
@@ -176,7 +76,7 @@ end;
 
 function scene:createScene(event)
 	local group = self.view;
-	checkTotal()
+
 
 	--setting up background (I have problems with this ...)
 	background = display.newImage( "images/background2.png", _CENTERX, _CENTERY, true);
@@ -227,38 +127,12 @@ function scene:createScene(event)
 	}
 	homeButton:addEventListener("tap", onHomeButtonClicked);
 	group:insert (homeButton);	
----------------------------------------------------------------
-----Score views
----------------------------------------------------------------
-	bgscore = display.newImage("images/bgscore.png", 0, 0, _W/4, _W/12)
-	bgscore.width, bgscore.height = _W/3, _W/12
-	bgscore.x = bgscore.width/2
-	bgscore.y = bgscore.height/2
-	group:insert(bgscore)
-	
-	totalScore = display.newText("Score: "..total, 0,0, native.systemFont, _H/12)
-	totalScore.x = 2*totalScore.width/3
-	totalScore.y = bgscore.y
-	group:insert(totalScore)
 
-	coins = display.newImage("images/coins.png", 0, 0, bgscore.height/2, bgscore.height/2)
-	coins.width, coins.height = 2*bgscore.height/3, 2*bgscore.height/3
-	coins.x = bgscore.width - 3*coins.width/4
-	coins.y = bgscore.y
-	group:insert(coins)
-------------------------------------------------------------------------------
---End score views
-------------------------------------------------------------------------------
 end;
 
 function scene:enterScene(event)
 	local group = self.view;	
 
-	if counter == #data.animalsNames then
-		animScore()
-		
-		counter = 0
-	end
 
 	animalName = display.newEmbossedText( data.animalsNames[index], woodenLayer.x, _CENTERY-_WOODENHEIGHT/2, "Rage Italic", _H/10);
 	animalName:setFillColor( 0,0,0 );

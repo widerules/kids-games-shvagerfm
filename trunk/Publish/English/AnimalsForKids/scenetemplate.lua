@@ -159,13 +159,13 @@ function scene:enterScene( event )
 	---------------------------------------------------------------
 ----Score views
 	---------------------------------------------------------------
-	bgscore = display.newImage("images/bgscore.png", 0, 0, _W/4, _W/12)
-	bgscore.width, bgscore.height = _W/3, _W/12
+	bgscore = display.newImage("images/bgscore.png", 0, 0, _W/4, _W/20)
+	bgscore.width, bgscore.height = _W/5, _W/20
 	bgscore.x = bgscore.width/2
 	bgscore.y = bgscore.height/2
 	group:insert(bgscore)
 
-	totalScore = display.newText("Score: "..total, 0,0, native.systemFont, _H/12)
+	totalScore = display.newText("Score: "..total, 0,0, native.systemFont, _H/24)
 	totalScore.x = 2*totalScore.width/3
 	totalScore.y = bgscore.y
 	group:insert(totalScore)

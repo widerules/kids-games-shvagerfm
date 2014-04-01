@@ -43,6 +43,7 @@ local function onKeyEvent( event )
        
          else
             storyboard.gotoScene( "scenetemplate" )
+            storyboard.removeAll( )
          end
    end
    if ( keyName == "volumeUp" and phase == "down" ) then
