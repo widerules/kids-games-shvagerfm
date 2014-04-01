@@ -1,3 +1,6 @@
+require "sqlite3"
+local path = system.pathForFile( "animalskids.sqlite", system.DocumentsDirectory )
+local db = sqlite3.open( path )
 local storyboard = require( "storyboard")
 local widget = require("widget")
 --local timer = require( "timer")
@@ -36,13 +39,17 @@ local popupText
 local nextBtn
 local homeBtn
 
-local soundHarp = audio.loadSound( "sounds/harp.ogg")
-local birdSound = audio.loadSound("sounds/birds_sing.ogg")
-local rainSound = audio.loadSound("sounds/rain_sound.ogg")
-local hogSound = audio.loadSound("sounds/hog_sound2.mp3")
+local soundHarp 
+local birdSound
+local rainSound
+local hogSound
 
 local timers = {}
---------------------------
+local total, totalScore, bgscore, coins
+local coinsToScore
+---------------------------------------------
+--explosion
+--------------------------------------------------
 explosionTable        = {}                    -- Define a Table to hold the Spawns
 i                    = 0                        -- Explosion counter in table
 explosionTime        = 416.6667                    -- Time defined from EXP Gen 3 tool
@@ -92,7 +99,54 @@ local function spawnExplosionToTable(spawnX, spawnY)
     --amount of time as setup by the Explosion Generator Tool.
     local destroySpawneExplosion = timer.performWithDelay (explosionTime, removeExplosionSpawn(explosionTable[i]))
 end
------------------------------
+---------------------------------------
+-----check totals & update 
+---------------------------------------
+local function checkTotal()
+   local function dbCheck()
+      local sql = [[SELECT value FROM statistic WHERE name='total';]]
+      for row in db:nrows(sql) do
+         return row.value
+      end
+   end
+   total = dbCheck()
+   if total == nil then
+      local insertTotal = [[INSERT INTO statistic VALUES (NULL, 'total', '0'); ]]
+      db:exec( insertTotal )
+      print("total inserted to 0")
+      total = 0
+   else
+      print("Total is "..total)
+   end
+end
+local function updateScore()
+	total = total + 5
+	local tablesetup = [[UPDATE statistic SET value = ']]..total..[[' WHERE name = 'total']]
+	db:exec(tablesetup)
+
+	totalScore.text = "Score: "..total
+end
+
+
+----animation update score
+local function animScore()
+	local wellSound = audio.loadSound( "sounds/welldone.mp3")
+    audio.play( wellSound )
+	local function listener()
+		updateScore()
+		coinsToScore:removeSelf( )
+	end
+	coinsToScore = display.newImage( "images/coins.png", _CENTERX, _CENTERY, _H/8, _H/8)
+	coinsToScore.xScale, coinsToScore.yScale = 0.1, 0.1
+	local function trans1()
+	 	transition.to(coinsToScore, {time = 200, xScale = 1, yScale = 1, x = coins.x, y= coins.y, onComplete = listener})
+	end
+	spawnExplosionToTable(_CENTERX, _CENTERY)
+	transition.to(coinsToScore, {time = 300, xScale = 2, yScale = 2, transition = easing.outBack, onComplete = trans1})
+end
+----------------------------------------
+-- end totals f-ns
+-----------------------------------------
 
 local function onNextButtonClicked()
 	storyboard.reloadScene( )
@@ -131,6 +185,7 @@ local function showPopUp()
 		defaultFile = "images/next.png",
 		overFile = "images/next.png"
 	}       
+	animScore()
 	nextBtn:addEventListener( "tap", onNextButtonClicked )
 end
 
@@ -142,7 +197,7 @@ local function onItemClicked(event)
 	end
 
 	local function vanishAway ()    
-		transition.to(t,{time = 1000, alpha = 0, x =constants.W, y = 0, xScale = 0.1, yScale = 0.1, onComplete = updateScore})
+		transition.to(t,{time = 1000, alpha = 0, x =constants.W, y = 0, xScale = 0.1, yScale = 0.1})
 	end
 	transition.scaleTo(t, {xScale = 1.5*t.xScale, yScale = 1.5*t.yScale, time = 500, onComplete = vanishAway})
 	spawnExplosionToTable(t.x, t.y)
@@ -151,6 +206,7 @@ local function onItemClicked(event)
 	itemsFound = itemsFound + 1
 	
 	if (itemsFound == 7) then
+		soundHarp = audio.loadSound( "sounds/harp.ogg")
 		audio.play( soundHarp )
 		timers[#timers+1] = timer.performWithDelay( 800, showPopUp, 1)             
 	end
@@ -158,7 +214,7 @@ end
 
 local function fillWithHogs(group)
 	local i
-
+	hogSound = audio.loadSound("sounds/hog_sound2.mp3")
 	audio.play(hogSound)
 
 	for i = 1, 7, 1 do
@@ -172,7 +228,12 @@ local function fillWithHogs(group)
 			groups[data.hogsGroups[i]]:insert (hogs[i])                             
 		end
 		timers[#timers + 1] = timer.performWithDelay( i*300, addHog )
-	end     
+	end  
+	local function sayFind()
+		findSound = audio.loadSound( "sounds/findhedgehogs.mp3" )
+		audio.play( findSound )
+	end
+	timer.performWithDelay( 2100, sayFind )   
 end
 
 local function fillWithMushrooms(group)
@@ -189,6 +250,11 @@ local function fillWithMushrooms(group)
 		end
 		timers[#timers + 1] = timer.performWithDelay( i*300, addMushroom)
 	end
+	local function sayFind()
+		findSound = audio.loadSound( "sounds/findmushrums.mp3" )
+		audio.play( findSound )
+	end
+	timer.performWithDelay( 2100, sayFind ) 
 end
 
 local function fillWithBerries(group)
@@ -204,9 +270,15 @@ local function fillWithBerries(group)
 		end
 		timers[#timers + 1] = timer.performWithDelay( i*300, addBerry )
 	end
+	local function sayFind()
+		findSound = audio.loadSound( "sounds/findberryes.mp3" )
+		audio.play( findSound )
+	end
+	timer.performWithDelay( 2100, sayFind ) 
 end
 
 local function sunAnimation ()
+	birdSound = audio.loadSound("sounds/birds_sing.ogg")
 	audio.play(birdSound)
 
 	sun = display.newImage("images/sun.png", constants.W, constants.H)
@@ -252,6 +324,7 @@ end
 
 
 local function rainAnimation()
+	rainSound = audio.loadSound("sounds/rain_sound.ogg")
 	audio.play( rainSound )
 	cloud = display.newImage("images/tucha.png", 0,0)
 	cloud.width = _IMAGESIZE
@@ -292,6 +365,7 @@ local function rainAnimation()
 end
 
 function scene:createScene (event)
+	checkTotal()
 	group = self.view
 	local i
 
@@ -326,14 +400,34 @@ function scene:createScene (event)
 	group:insert (17, layers[9])
 	group:insert (18, groups[9])
 	group:insert (19, layers[10])
+	---------------------------------------------------------------
+----Score views
+---------------------------------------------------------------
+	bgscore = display.newImage("images/bgscore.png", 0, 0, _W/4, _W/12)
+	bgscore.width, bgscore.height = _W/5, _W/20
+	bgscore.x = constants.W - bgscore.width/2
+	bgscore.y = bgscore.height/2
+	group:insert(bgscore)
+	
+	
+	coins = display.newImage("images/coins.png", 0, 0, bgscore.height/2, bgscore.height/2)
+	coins.width, coins.height = 2*bgscore.height/3, 2*bgscore.height/3
+	coins.x = bgscore.x + 0.5*bgscore.width - 3*coins.width/4
+	coins.y = bgscore.y
+	group:insert(coins)
+
+	totalScore = display.newText("Score: "..total, 0,0, native.systemFont, _H/24)
+	totalScore.x = bgscore.x - totalScore.width/4
+	totalScore.y = bgscore.y
+	group:insert(totalScore)
+
+------------------------------------------------------------------------------
+--End score views
+------------------------------------------------------------------------------
 end
 		
 function scene:enterScene(event)
 	itemsFound = 0
-
-	score = display.newText("Score: 0", constants.W - _FONTSIZE/2, _FONTSIZE/2, native.systemFont, _FONTSIZE)
-	score.x = constants.W-score.width/2
-	group:insert(score)
 
 	if iteration == 1 then  
 		--TODO:Sun animation
@@ -375,7 +469,6 @@ function scene:exitScene(event)
 		rain = nil
 	end
 
-	score:removeSelf( )
 	while (table.maxn(hogs)>0) do
         hogs[#hogs]:removeSelf()
         table.remove( hogs )
