@@ -1,10 +1,10 @@
 local data = {};
 
-data.animals = 
+data.shapes = 
 {
 	"square",
 	"rectangle",
-	"round",
+	"circle",
 	"oval",
 	"rhombus",
 	"triangle",
