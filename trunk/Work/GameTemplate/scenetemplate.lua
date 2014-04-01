@@ -26,17 +26,21 @@ local total, totalScore, bgscore, coins
 ----------------------------------------------------------------------------------
 local function goGame1()
 		storyboard.gotoScene("scenes.gametitle1", "slideLeft", 800)
+		storyboard.removeAll( )
 	end
 -- переход на игру 2
 local function goGame2()
 		storyboard.gotoScene("scenes.game2", "slideLeft", 800)
+		storyboard.removeAll( )
 	end
 local function goGame3()
 		storyboard.gotoScene("scenes.game3", "slideLeft", 800)
+		storyboard.removeAll( )
 	end
 
 local function goGame4()
 		storyboard.gotoScene("scenes.game4", "slideLeft", 800)
+		storyboard.removeAll( )
 	end
 
 local function exit ()
