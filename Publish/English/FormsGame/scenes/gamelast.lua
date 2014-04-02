@@ -360,13 +360,13 @@ function scene:exitScene( event )
 	audio.stop()
 	storyboard.purgeAll()
 	print ("exitScene")
-	
+	if items ~=nil then
 	for i=1, #items do
-		if items[i] then
+		if items[i] ~= nil then
 			items[i]:removeSelf()
 		end
 	end
-
+	end
 	if popupBg ~= nil then
 		popupBg:removeSelf()
 		popupText:removeSelf()

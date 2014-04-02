@@ -283,11 +283,13 @@ end
 
 
 function scene:exitScene(event)
+	transition.cancel( )
 	for i = 1, table.maxn(animalsPictures), 1 do 
-		if animalsPictures[i] then
+		if animalsPictures[i] ~= nil then
 		animalsPictures[i]:removeSelf( );
 	end
-	if shapesPictures[i] then
+	
+	if shapesPictures[i] ~= nil then
 		shapesPictures[i]:removeSelf();
 	end
 

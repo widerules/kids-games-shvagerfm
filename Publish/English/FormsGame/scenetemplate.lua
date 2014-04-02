@@ -53,20 +53,20 @@ local function getAnimalsForKids()
 	system.openURL( "market://details?id=com.shvagerfm.AnimalsForKids" )
 end
 local function gameFirst()
-	storyboard.gotoScene( "scenes.game1", "slideLeft", 500 )
+	storyboard.gotoScene( "scenes.game1", "slideLeft", 100 )
 	storyboard.removeScene("scenetemplate")
 end 
 local function gameSecond()
-	storyboard.gotoScene( "scenes.game2", "slideLeft", 500 )
+	storyboard.gotoScene( "scenes.game2", "slideLeft", 100 )
 	storyboard.removeScene("scenetemplate")
 
 end 
 local function gameThree()	
-	storyboard.gotoScene( "scenes.gamelast", "crossFade", 300 )
+	storyboard.gotoScene( "scenes.gamelast", "crossFade", 100 )
 	storyboard.removeScene("scenetemplate")
 end 
 local function gameFour()
-	storyboard.gotoScene( "scenes.game3", "slideLeft", 500 )
+	storyboard.gotoScene( "scenes.game3", "slideLeft", 100 )
 	storyboard.removeScene("scenetemplate")
 end 
 
@@ -75,6 +75,19 @@ function moveBack()
 end
 function moveForward()
 transition.to( sun, {rotation = 20, time = 3000, transition = easing.inOutCubic, onComplete = moveBack})
+end
+
+local function sayMikki(event)
+	if event.phase == "ended" or event.phase == "cancelled" then
+	local soundMikki = audio.loadSound( "sounds/mikkie1.mp3")
+	audio.play( soundMikki )
+	end
+end
+local function sayMinni(event)
+	if event.phase == "ended" or event.phase == "cancelled" then
+	local soundMinni = audio.loadSound( "sounds/minnie1.mp3")
+	audio.play( soundMinni )
+end
 end
 local function sunMoving(self, event)
 	if event.phase == "ended" or event.phase == "cancelled" then
@@ -106,10 +119,12 @@ function scene:createScene( event )
 	mikki.width = _W/6
 	mikki.height = _H/2
 	group:insert( mikki )
+	mikki:addEventListener("touch", sayMikki )
 	minni = display.newImage("images/mini.png", 5*_W/6, 3*centerY/2, _W/10, _H/10)
 	minni.width = _W/6
 	minni.height = _H/2
 	group:insert( minni )
+	minni:addEventListener("touch", sayMinni )
 	btnOne = widget.newButton
 		{
 		    width = bWidth,
@@ -256,12 +271,15 @@ function scene:exitScene( event )
 	local group = self.view
 	audio.stop()
 	audio.dispose( bgsound )
+	transition.cancel( )
 	bgsound = nil
 
-	if (sun) then
+	if sun ~= nil then
 		sun:removeEventListener("touch",  sun)
 	end
-	
+	kidsAnimals:removeEventListener("tap", getAnimalsForKids )
+	mikki:removeEventListener( "touch", sayMikki )
+	minni:removeEventListener( "touch", sayMinni )
 end
 
 
