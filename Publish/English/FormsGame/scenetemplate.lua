@@ -19,12 +19,12 @@ local admob = require( "admob" )
 -- 
 ---------------------------------------------------------------------------------
 --variables
-local background, btnOne, btnTwo, btnThree, mikki, minni, sun, kidsAnimals, moreGames
+local background, btnOne, btnTwo, btnThree, btnFour, btnFive, mikki, minni, sun, kidsAnimals, moreGames
 local centerX = display.contentCenterX
 local centerY = display.contentCenterY
 local _W = display.contentWidth
 local _H = display.contentHeight
-local bWidth = _W/2
+local bWidth = _W/3
 local bHeight = bWidth/3
 
 
@@ -66,6 +66,10 @@ local function gameThree()
 	storyboard.removeScene("scenetemplate")
 end 
 local function gameFour()
+	storyboard.gotoScene( "scenes.game4", "slideLeft", 100 )
+	storyboard.removeScene("scenetemplate")
+end 
+local function gameFive()
 	storyboard.gotoScene( "scenes.game3", "slideLeft", 100 )
 	storyboard.removeScene("scenetemplate")
 end 
@@ -156,6 +160,7 @@ function scene:createScene( event )
 		    onRelease = gameSecond,
 		    
 		}
+	btnTwo.y = btnOne.y + bHeight
 	btnTwo.x = centerX
 	
 
@@ -174,9 +179,29 @@ function scene:createScene( event )
 		    onRelease = gameThree,
 		    
 		}
+	btnThree.y = btnTwo.y + bHeight
 	btnThree.x = centerX
 
 	btnFour = widget.newButton
+		{
+			top = 3*_H/4,
+		    width = bWidth,
+		    height = bHeight,
+		    defaultFile = "images/button.png",
+		    overFile = "images/pbutton.png",
+		    id = "button_3",
+		    label = "Memory pairs",
+		    labelColor = { default={ 0, 0, 0 }, over={ 0, 0, 0, 0.9 } },
+		    fontSize = _H/12,
+		    emboss = true,
+		    onRelease = gameFour,
+		    
+		}
+	btnFour.x = centerX
+	btnFour.y = btnThree.y + bHeight
+	admob.init()
+
+	btnFive = widget.newButton
 		{
 			top = 3*_H/4,
 		    width = bWidth,
@@ -188,17 +213,18 @@ function scene:createScene( event )
 		    labelColor = { default={ 0, 0, 0 }, over={ 0, 0, 0, 0.9 } },
 		    fontSize = _H/12,
 		    emboss = true,
-		    onRelease = gameFour,
+		    onRelease = gameFive,
 		    
 		}
-	btnFour.x = centerX
-	
+	btnFive.x = centerX
+	btnFive.y = btnFour.y + bHeight
 	admob.init()
 	
 	group:insert( btnOne)
 	group:insert( btnTwo)
 	group:insert( btnThree)
 	group:insert( btnFour)	
+	group:insert(btnFive)
 end
 
 
