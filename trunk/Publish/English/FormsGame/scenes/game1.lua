@@ -42,7 +42,10 @@ local function onNextButtonTapped (event)
 	
 	storyboard.reloadScene()
 end
-
+local function sayName()
+		soundName = audio.loadSound( "sounds/"..data.shapes[index]..".mp3" )
+		audio.play( soundName )
+	end
 
 function scene:createScene(event)
 	local group = self.view
@@ -93,10 +96,7 @@ function scene:createScene(event)
 
 end
 
-local function sayName()
-		soundName = audio.loadSound( "sounds/"..data.shapes[index]..".mp3" )
-		audio.play( soundName )
-	end
+
 
 function scene:enterScene(event)
 	local group = self.view
