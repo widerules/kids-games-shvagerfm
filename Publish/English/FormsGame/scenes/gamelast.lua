@@ -172,6 +172,7 @@ end
 
 local function onItemTap( event )
 	print( "Tap event on: " .. event.target.id )
+	event.target:removeEventListener( "tap", onItemTap )
 	if selected ~= nil then
 		if selected.id == event.target.id then 
 			print ("same figure")
@@ -198,8 +199,11 @@ local function onItemTap( event )
 			end
 		else
 			-- cancel transition
+			event.target:addEventListener( "tap", onItemTap )
+			selected:addEventListener( "tap", onItemTap )
 			cancelAll(selected)
 			selected = nil
+
 		end
 	else
 		selected = event.target
