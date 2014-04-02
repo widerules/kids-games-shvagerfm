@@ -115,9 +115,12 @@ end
 
 function scene:exitScene(event)
 	transition.cancel( )
-
+	if image ~= nil then
 	image:removeSelf( )
+	end
+	if itemName ~= nil then
 	itemName:removeSelf()
+	end
 end
 
 function scene:destroyScene(event)
