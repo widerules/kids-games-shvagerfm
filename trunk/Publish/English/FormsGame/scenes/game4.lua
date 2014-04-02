@@ -11,7 +11,7 @@ local _MAXLEVEL = 4
 
 local cardAmount = {6, 8, 12, 16}
 local rows = {2, 2, 3, 4}
-local level = 4
+local level = 1
 local gameWon = 0
 
 local background
