@@ -368,6 +368,7 @@ function scene:exitScene( event )
 	for i=1, #items do
 		if items[i] ~= nil then
 			items[i]:removeSelf()
+			items[i] = nil
 		end
 	end
 	end
