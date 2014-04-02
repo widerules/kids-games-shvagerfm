@@ -93,18 +93,22 @@ function scene:createScene(event)
 
 end
 
-function scene:enterScene(event)
-	local group = self.view
-
-	
+local function sayName()
 		soundName = audio.loadSound( "sounds/"..data.shapes[index]..".mp3" )
 		audio.play( soundName )
+	end
+
+function scene:enterScene(event)
+	local group = self.view
+	
+		sayName()
 		image = display.newImage ("images/"..data.shapes[index]..".png", constants.CENTERX, constants.CENTERY)
 		image.width = _IMAGESIZE
 		image.height = _IMAGESIZE
 		image.xScale, image.yScale = 0.3, 0.3
 		transition.to( image, {time = 500, xScale = 1, yScale=1, transition=easing.outBack} )
 		group:insert(image)
+		image:addEventListener( "tap",  sayName)
 
 		itemName = display.newText (data.shapes[index], constants.CENTERX, constants.CENTERY + _IMAGESIZE/2 + _FONTSIZE, native.systemFont, _FONTSIZE)
 		itemName:setFillColor( 0, 0, 0 )		
