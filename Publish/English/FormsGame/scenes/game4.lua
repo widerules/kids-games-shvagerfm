@@ -11,7 +11,7 @@ local _MAXLEVEL = 4
 
 local cardAmount = {6, 8, 12, 16}
 local rows = {2, 2, 3, 4}
-local level = 1
+local level = 4
 local gameWon = 0
 
 local background
@@ -225,15 +225,19 @@ function scene:exitScene(event)
 	for i=1, #items do
 		if items[i] then
 			items[i]:removeSelf()
+			items[i] = nil
 		end
-	end
 
+	end
+if folds ~= nil then
 	for i = 1, #folds do
-		if folds[i] then
+		if folds[i] ~= nil then
 			folds[i]:removeSelf()
+			folds[i] = nil
 		end
+		
 	end
-
+end
 	popup.hidePopUp()
 end
 
