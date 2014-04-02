@@ -54,7 +54,8 @@ local function onFoldClicked (event)
 							gameWon = 0
 							level = level + 1
 						else
-							print("end game")
+							level = 1
+							
 						end
 					end				
 				end
