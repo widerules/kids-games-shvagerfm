@@ -175,7 +175,7 @@ local function onStarTouched(event)
 	--if user touched star of correct type
 	if event.target.starType == starType then
 		--SOUND_PLACE Correct item selected sound
-				
+
 		--remove event listener from this star
 		event.target:removeEventListener("touch", onStarTouched) 
 
@@ -225,14 +225,7 @@ end
 
 function scene:enterScene (event)
 	local group = self.view	
-	
-	--[[
-	score = 9
-	generated = 12
-	print (math.round (generated/score))
-	print((math.floor(3/math.floor(generated/score))+1))
-	showPopUp ("Well Done !")
-	]]
+
 	local function startFalling()
 		local function listener()
 		timerID = timer.performWithDelay( _GENERATIONDELAY, 
