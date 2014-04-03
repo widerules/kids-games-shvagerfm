@@ -138,7 +138,7 @@ function scene:createScene( event )
 		    id = "button_1",
 		    label = "Learn shapes",
 		    labelColor = { default={ 0, 0, 0 }, over={ 0, 0, 0, 0.9 } },
-		    fontSize = _H/12,
+		    fontSize = _H/14,
 		    emboss = true,
 		    onRelease = gameFirst,
 		    
@@ -155,7 +155,7 @@ function scene:createScene( event )
 		    id = "button_2",
 		    label = "Find",
 		    labelColor = { default={ 0,0,0 }, over={ 0, 0, 0, 0.9 } },
-		    fontSize = _H/12,
+		    fontSize = _H/14,
 		    emboss = true,
 		    onRelease = gameSecond,
 		    
@@ -174,7 +174,7 @@ function scene:createScene( event )
 		    id = "button_3",
 		    label = "Find pairs",
 		    labelColor = { default={ 0, 0, 0 }, over={ 0, 0, 0, 0.9 } },
-		    fontSize = _H/12,
+		    fontSize = _H/14,
 		    emboss = true,
 		    onRelease = gameThree,
 		    
@@ -192,7 +192,7 @@ function scene:createScene( event )
 		    id = "button_3",
 		    label = "Memory pairs",
 		    labelColor = { default={ 0, 0, 0 }, over={ 0, 0, 0, 0.9 } },
-		    fontSize = _H/12,
+		    fontSize = _H/14,
 		    emboss = true,
 		    onRelease = gameFour,
 		    
@@ -211,7 +211,7 @@ function scene:createScene( event )
 		    id = "button_3",
 		    label = "Place shapes",
 		    labelColor = { default={ 0, 0, 0 }, over={ 0, 0, 0, 0.9 } },
-		    fontSize = _H/12,
+		    fontSize = _H/14,
 		    emboss = true,
 		    onRelease = gameFive,
 		    
