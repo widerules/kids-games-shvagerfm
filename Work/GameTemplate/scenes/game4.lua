@@ -5,7 +5,7 @@ local constants = require ("constants")
 local data = require ("starFallData")
 local popup = require("utils.popup")
 local explosion = require("utils.explosion")
-
+local gmanager = require("utils.gmanager")
 local scene = storyboard.newScene()
 
 -------------------------------------constants
@@ -60,6 +60,7 @@ function scene:createScene(event)
 
  	informationGroup = display.newGroup( )
  	group:insert(informationGroup)
+    gmanager.initGame()
 end
 
 function scene:willEnterScene(event)
@@ -93,7 +94,11 @@ function scene:enterScene (event)
 				loopNumber = loopNumber + 1
 				if loopNumber == data.totalGameLoops then
 					--otherwise - popup shown without delay
-					timer.performWithDelay( 2500, function () popup.showPopUp("Well done !\nYour score: "..score, "scenetemplate", "scenes.game4") end) --lets all stars fall down and shows pop-up
+                    
+					timer.performWithDelay( 2500, function ()
+                        gmanager.nextGame()
+                        --popup.showPopUp("Well done !\nYour score: "..score, "scenetemplate", "scenes.game4") 
+                    end) --lets all stars fall down and shows pop-up
 				end
 			end, data.totalGameLoops )
 		end

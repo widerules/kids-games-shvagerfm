@@ -3,6 +3,7 @@ local widget = require ("widget")
 local constants = require ("constants")
 local data = require ("pairData")
 local popup = require ("utils.popup")
+local gmanager = require("utils.gmanager")
 
 local scene = storyboard.newScene()
 
@@ -11,7 +12,7 @@ local _MAXLEVEL = 4
 
 local cardAmount = {6, 8, 12, 16}
 local rows = {2, 2, 3, 4}
-local level = 1
+local level = 4
 local gameWon = 0
 
 local background
@@ -53,9 +54,9 @@ local function onFoldClicked (event)
 						if gameWon>0 and level < _MAXLEVEL then
 							gameWon = 0
 							level = level + 1
-						else
+                        else
+                            gmanager.nextGame()
 							level = 1
-							
 						end
 					end				
 				end
@@ -88,7 +89,7 @@ function scene:createScene(event)
 	background.width = constants.W
 	background.height = constants.H
 	group:insert(background)
-
+    gmanager.initGame()
 end
 
 function scene:willEnterScene(event)
