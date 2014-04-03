@@ -6,6 +6,7 @@ local storyboard = require("storyboard")
 local widget = require("widget")
 local constants = require ("constants")
 local data = require ("studyData")
+local gmanager = require("utils.gmanager")
 
 local scene = storyboard.newScene()
 
@@ -84,7 +85,8 @@ function scene:createScene(event)
 	circles[7].y = pallete.y - pallete.height/2 + _CIRCLESSIZE/2 + constants.H/3.25
 	for i = 1, 7 do
 		transition.to( circles[i],{time = 500, xScale = 1, yScale=1, transition=easing.outBack} )
-	end
+    end
+    gmanager.initGame()
 end
 
 function scene:enterScene(event)

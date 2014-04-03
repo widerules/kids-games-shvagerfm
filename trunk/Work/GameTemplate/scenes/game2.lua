@@ -9,6 +9,7 @@ local data = require("searchData")
 
 local scene = storyboard.newScene()
 local widget = require("widget")
+local gmanager = require("utils.gmanager")
 -------------------------texts
 local taskText = "Look for "
 local message = "Well done !"
@@ -218,24 +219,26 @@ local function onItemTapped (event)
 	local function reloadFunc()
 		storyboard.reloadScene() 
 	end
-	local function encreaseScore()
-		searchAmount = searchAmount - 1
-		if searchAmount < 1 then
-			gamesWon = gamesWon + 1
-			if gamesWon>2 then
-				gamesWon = 0
-				animScore()
-				if level<8 then
-					level = level + 1
-				end
-				wellDone()
-				timer.performWithDelay( 700, reloadFunc )
-			else
-				reloadFunc()
-			end
-			
-		end
-	end
+    local function encreaseScore()
+        searchAmount = searchAmount - 1
+        if searchAmount < 1 then
+            gamesWon = gamesWon + 1
+            if gamesWon>2 then
+                gamesWon = 0
+                if level<8 then
+                    level = level + 1
+                    storyboard.reloadScene()
+                else
+                    gmanager.nextGame()
+                    --showPopUp()
+                end
+            else
+                storyboard.reloadScene()
+
+            end
+
+        end
+    end
 -- right choice
 	if event.target.type == itemType then
 		wellDone()
@@ -318,7 +321,9 @@ function scene:createScene(event)
 --End score views
 ------------------------------------------------------------------------------
 	gamesWon = 0
-	level = 1
+	level = 8
+
+    gmanager.initGame()
 end
 
 function scene:willEnterScene(event)
@@ -329,7 +334,7 @@ function scene:willEnterScene(event)
 end
 
 function scene:enterScene(event)
-		local group = self.view
+	local group = self.view
 	counter = 1
 	generateItems()
 	for i = 1, itemsCount[level]/rows[level] do
@@ -389,8 +394,9 @@ function scene:exitScene(event)
 			end
 		end
 	end	
-
+    
 	taskLabel:removeSelf()
+    taskLabel = nil
 	if popupBg ~= nil then
 		popupBg:removeSelf();
 		popupText:removeSelf();
