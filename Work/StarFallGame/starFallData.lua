@@ -1,6 +1,17 @@
 local data = {}
 
-data.starPath = "images/stars/"
+local _BIGSIZE	= 4
+local _MIDSIZE	= 6
+local _SMALLSIZE = 7
+
+local _FASTSPEED = 9
+local _MIDSPEED  = 6
+local _SLOWSPEED = 3
+
+data.itemPath = 
+{
+	"images/stars/"
+}
 data.format = ".png"
 
 data.colors = 
@@ -17,33 +28,40 @@ data.colors =
 data.difficults =
 {
 	{
-		speed = 3,
+		colors = 2,
+		size = _BIGSIZE,				--smaller value of size var means bigger size on the display
+		speed = _SLOWSPEED
+	},
+	{	
+		colors = 3,	
+		size = _BIGSIZE,
+		speed = _SLOWSPEED
+	},
+	{
 		colors = 3,
-		size = 4,				--smaller value of size var means bigger size on the display
-		amount = 50,
-		generationDelay = 200
+		size = _BIGSIZE,
+		speed = _MIDSPEED
 	},
 	{
-		speed = 7,
 		colors = 4,
-		size = 5,
-		amount = 70,
-		generationDelay = 180
+		size = _MIDSIZE,
+		speed = _MIDSPEED
 	},
 	{
-		speed = 8,
+		colors = 5,
+		size = _MIDSIZE,
+		speed = _MIDSPEED
+	},
+	{
 		colors = 6,
-		size = 6,
-		amount = 80,
-		generationDelay = 160
+		size = _SMALLSIZE,
+		speed = _MIDSPEED
 	},
 	{
-		speed = 9.8,
 		colors = 7,
-		size = 7,
-		amount = 90,
-		generationDelay = 140
-	},
+		size = _SMALLSIZE,
+		speed = _FASTSPEED
+	}
 }
 
 return data
