@@ -1,7 +1,3 @@
-require "sqlite3"
-local path = system.pathForFile( "colorskids.sqlite", system.DocumentsDirectory )
-local db = sqlite3.open( path )
-
 local storyboard = require ("storyboard")
 local widget = require ("widget")
 local constants = require ("constants")
@@ -10,11 +6,13 @@ local popup = require ("utils.popup")
 
 local scene = storyboard.newScene()
 
----------------------------texts
-local winMessage = "Well done!"
---------------------------------
-
 local _FONTSIZE = constants.H / 13
+local _MAXLEVEL = 4
+
+local cardAmount = {6, 8, 12, 16}
+local rows = {2, 2, 3, 4}
+local level = 1
+local gameWon = 0
 
 local background
 local butterflies
@@ -23,29 +21,6 @@ local folds = {}
 local previous
 local totalCards
 
-local function checkTotal()
-   local function dbCheck()
-      local sql = [[SELECT value FROM statistic WHERE name='total';]]
-      for row in db:nrows(sql) do
-         return row.value
-      end
-   end
-   total = dbCheck()
-   if total == nil then
-      local insertTotal = [[INSERT INTO statistic VALUES (NULL, 'total', '0'); ]]
-      db:exec( insertTotal )
-      print("total inserted to 0")
-      total = 0
-   else
-      print("Total is "..total)
-   end
-end
-local function updateScore()
-	total = total + 5
-	local tablesetup = [[UPDATE statistic SET value = ']]..total..[[' WHERE name = 'total']]
-	db:exec(tablesetup)
-	totalScore.text = "Score: "..total
-end
 
 local function findIndex(object)
 	local index = 1
@@ -59,56 +34,66 @@ local function findIndex(object)
 end
 
 local function onFoldClicked (event)
+	event.target:removeEventListener( "tap", onFoldClicked )
+
 	local function compare ()
+
 		if previous ~= nil then
+			
 			if previous.butterflyType == event.target.butterflyType then
-				print ("pair!")
-
-				event.target:removeEventListener( "tap", onFoldClicked )
-				previous:removeEventListener( "tap", onFoldClicked )
-
+				
+				--previous:removeEventListener( "tap", onFoldClicked )
+				local wellDone = audio.loadSound( "sounds/welldone.mp3" )
+				audio.play(wellDone)
 				local function checkAmount()
 					totalCards = totalCards - 2
 					if totalCards == 0	then
-						popup.showPopUp(winMessage, "scenetemplate", "scenes.game3")
+						popup.showPopUp("Well done!", "scenetemplate", "scenes.game3")
+						gameWon = gameWon + 1
+						if gameWon>0 and level < _MAXLEVEL then
+							gameWon = 0
+							level = level + 1
+						else
+							level = 1
+							
+						end
 					end				
 				end
 
 				local function removeSecond()
-					print("hey, I am here !")
-					transition.to(items[findIndex(event.target)], {time = 1000, x = constants.W, y = 0, alpha = 0, onComplete = checkAmount})
+					transition.to(items[findIndex(event.target)], {time = 300, x = constants.W, y = 0, alpha = 0, onComplete = checkAmount})
 				end
-				transition.to(items[findIndex(previous)], {time = 1000, x = constants.W, y = 0, alpha = 0, onComplete = removeSecond})				
+				transition.to(items[findIndex(previous)], {time = 300, x = constants.W, y = 0, alpha = 0, onComplete = removeSecond})
+							
 			else
-				print("not pair!")
-				transition.fadeIn( event.target, {time = 500} )
-				transition.fadeIn(previous, {time = 500})
+				event.target:addEventListener( "tap", onFoldClicked )
+				previous:addEventListener( "tap", onFoldClicked )
+				transition.to( event.target, {time = 500, xScale = 1, alpha = 1, transition = easing.outBack} )
+				transition.to(previous, {time = 500, xScale = 1, alpha = 1, transition = easing.outBack})
 			end
 			previous = nil
 		else
+			local soundName = audio.loadSound( "sounds/"..event.target.butterflyType..".mp3" )
+			audio.play(soundName)
 			previous = event.target
 		end
 	end
-	transition.fadeOut(event.target, {time = 500, onComplete = compare})
+	transition.to(event.target, {time = 500, xScale = 0, alpha = 0, transition = easing.inBack, onComplete = compare})
 end
 
 function scene:createScene(event)
 	local group = self.view
-	checkTotal()
-	background = display.newImage ("images/background3.png", constants.CENTERX, constants.CENTERY)
+
+	background = display.newImage ("images/background4.png", constants.CENTERX, constants.CENTERY)
 	background.width = constants.W
 	background.height = constants.H
 	group:insert(background)
 
-	totalScore = display.newText("Score: "..total, 0,0, native.systemFont, _H/12)
-	totalScore.x = totalScore.width
-	totalScore.y = totalScore.height
-	group:insert(totalScore)
 end
 
 function scene:willEnterScene(event)
 	butterflies = table.copy (data.butterflies)
-	totalCards = data.amount
+	totalCards = cardAmount[level]
 end
 
 function scene:enterScene (event)
@@ -146,7 +131,7 @@ function scene:enterScene (event)
 		count = 1,
 		},
 		{
-		name = "cyan",
+		name = "indigo",
 		start = 5,
 		count = 1,
 		},
@@ -156,7 +141,7 @@ function scene:enterScene (event)
 		count = 1,
 		},
 		{
-		name = "purple",
+		name = "violet",
 		start = 7,
 		count = 1,
 		},
@@ -167,10 +152,17 @@ function scene:enterScene (event)
 		}
 	}
 	
+	local itemH, itemW
+	if constants.H / rows[level]<constants.W/(cardAmount[level]/rows[level]) then
+		itemH = 0.9*constants.H / rows[level]
+		itemW = itemH
+	else
+		itemW = 0.9*constants.W / (cardAmount[level]/rows[level]+1)
+		itemH = itemW
+	end
 
-	local itemW
-	local itemH = constants.H / 3
-	itemW = itemH
+	local spacingX = (constants.W - itemW * cardAmount[level]/rows[level]) / (cardAmount[level]/rows[level]+1) 
+	local spacingY = (constants.H - itemH * rows[level]) / (rows[level]+1) 
 	local i,j
 	items = {}
 	local temp
@@ -179,22 +171,23 @@ function scene:enterScene (event)
 
 	-- delete 2 random shape
 	-- because we have 2 useless colors
-	for i=1, 2 do
+	for i=1, 8 - cardAmount[level]/2 do
 		table.remove(butterflies, math.random(1, #butterflies))
 	end
 
 	for i=1, #butterflies do
 		indexes[butterflies[i]] = 2
 	end
+	
 	local butterfly, index
 
-	for i=1, 3 do
-		for j=1, 4 do
+	for i=1, rows[level] do
+		for j= 1, (cardAmount[level]/rows[level]) do
 			temp = display.newSprite( butterfliesSheet, sequenceData )
 
-			index = math.random(1, 6)
+			index = math.random(1, cardAmount[level]/2)
 			while indexes[butterflies[index]] == 0 do
-				index = math.random(1, 6)
+				index = math.random(1, cardAmount[level]/2)
 			end
 
 			if indexes[butterflies[index]] > 0 then
@@ -206,8 +199,8 @@ function scene:enterScene (event)
 			temp.width = itemW
 			temp.height = itemH
 
-			temp.x = 1.15 * j * itemW - itemW  / 2 + constants.W / 17
-			temp.y = i * itemH - itemH / 2
+			temp.x = (j-1) * itemW + itemW/2 + j*spacingX
+			temp.y = i * itemH - itemH / 2 + i * spacingY
 
 			--temp:addEventListener( "tap", onItemTap )
 
@@ -219,8 +212,8 @@ function scene:enterScene (event)
 		group:insert( items[i] )
 
 		folds[i] = display.newImage (data.foldPath, items[i].x, items[i].y)
-		folds[i].width = items[i].width
-		folds[i].height = 0.8*items[i].height
+		folds[i].width = 1.05*items[i].width
+		folds[i].height = 1.05*items[i].height
 		folds[i]:addEventListener("tap", onFoldClicked)
 		folds[i].butterflyType = items[i].butterflyType
 		group:insert(folds[i])		
@@ -232,15 +225,19 @@ function scene:exitScene(event)
 	for i=1, #items do
 		if items[i] then
 			items[i]:removeSelf()
+			items[i] = nil
 		end
-	end
 
+	end
+if folds ~= nil then
 	for i = 1, #folds do
-		if folds[i] then
+		if folds[i] ~= nil then
 			folds[i]:removeSelf()
+			folds[i] = nil
 		end
+		
 	end
-
+end
 	popup.hidePopUp()
 end
 
