@@ -26,7 +26,7 @@ local total, totalScore, bgscore, coins
 --local harp = audio.loadSound( "sounds/harp.wav")
 ----------------------------------------------------------------------------------
 local function goGame1()
-		storyboard.gotoScene("scenes.game1", "slideLeft", 800)
+		storyboard.gotoScene("scenes.game5", "slideLeft", 800)
 		storyboard.removeAll( )
 	end
 -- переход на игру 2
