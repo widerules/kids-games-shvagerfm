@@ -17,7 +17,7 @@ local message = "Well done !"
 local _FONTSIZE = constants.H/7
 
 local gamesWon = 0
-local level = 1
+local level
 local itemsCount = {2, 3, 4, 6, 9, 12, 16, 20}
 local rows =       {1, 1, 2, 2, 3, 3, 4, 4}
 local items = {}
@@ -27,7 +27,7 @@ local imageSize, spacingX, spacingY
 local itemType, searchAmount
 local taskLabel
 
-local background, backBtn, homeBtn, backBtn
+local background, backBtn, homeBtn, nextBtn, popupBg, popupText
 local counter
 
 local soundName, soundTitle
@@ -39,7 +39,7 @@ local star = {}
 explosionTable        = {}                    -- Define a Table to hold the Spawns
 i                    = 0                        -- Explosion counter in table
 explosionTime        = 466.6667                    -- Time defined from EXP Gen 3 tool
-resources            = "_resources"  
+resources            = "_resources"
 --------------------------------------------------
 -- Create and assign a new Image Sheet using the
 -- Coordinates file and packed texture.
@@ -58,7 +58,7 @@ local animationSequenceData = {
 
 function spawnExplosionToTable(spawnX, spawnY)
     i = i + 1                                        -- Increment the spawn counter
-    
+
     explosionTable[i] = display.newSprite( explosionSheet, animationSequenceData )
     explosionTable[i]:setSequence( "dbiExplosion" )    -- assign the Animation to play
     explosionTable[i].x=spawnX                        -- Set the X position (touch X)
@@ -66,7 +66,7 @@ function spawnExplosionToTable(spawnX, spawnY)
     explosionTable[i]:play()                        -- Start the Animation playing
     explosionTable[i].xScale = 1                    -- X Scale the Explosion if required
     explosionTable[i].yScale = 1                    -- Y Scale the Explosion if required
-    
+
     --Create a function to remove the Explosion - triggered from the DelatedTimer..
     local function removeExplosionSpawn( object )
         return function()
@@ -74,7 +74,7 @@ function spawnExplosionToTable(spawnX, spawnY)
             object = nil
         end
     end
-    
+
     --Add a timer to the Spawned Explosion.
     --Explosion are destroyed after all the frames have been played after a determined
     --amount of time as setup by the Explosion Generator Tool.
@@ -149,7 +149,7 @@ local function showPopUp()
 	popupBg.height = 0.7*constants.H;
 	popupBg.width = 0.7*constants.W;
 
-	popupText = display.newText("Well done !", popupBg.x, 0, native.systemFont, _FONTSIZE);
+	popupText = display.newText(message, popupBg.x, 0, native.systemFont, _FONTSIZE);
 	popupText.y = popupBg.y-popupBg.height+2*popupText.width/3;
 
 	homeBtn = widget.newButton
@@ -227,14 +227,15 @@ local function onItemTapped (event)
                 gamesWon = 0
                 if level<8 then
                     level = level + 1
-                    storyboard.reloadScene()
+                    animScore()
                 else
                     gmanager.nextGame()
                     --showPopUp()
                 end
+                wellDone()
+				timer.performWithDelay( 700, reloadFunc )
             else
-                storyboard.reloadScene()
-
+                reloadFunc()
             end
 
         end
@@ -321,7 +322,7 @@ function scene:createScene(event)
 --End score views
 ------------------------------------------------------------------------------
 	gamesWon = 0
-	level = 8
+	level = 1
 
     gmanager.initGame()
 end
