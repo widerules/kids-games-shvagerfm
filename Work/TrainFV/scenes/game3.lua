@@ -8,11 +8,11 @@ local _INFOSIZE = constants.H/6
 local _SPACINGY = constants.H/15
 local _BASKETSIZE = 0.4*constants.H
 local _ITEMSIZE = 0.3*constants.H
-local _SPEED = 5000
+local _SPEED = 5000  -- less - faster
 local _DELTA = 0.15*constants.H;
 
 local background, informationBackground, fruitBasket, vegetableBasket
-local score, lifes
+local score, lifes, currentTimer
 
 --make item bigger on touch
 local function scaleOnDrag (target)
@@ -20,17 +20,24 @@ local function scaleOnDrag (target)
 	target.yScale = 1.2
 end
 
-
-local function transitionFinished(item)
-	item:removeSelf()
-
-	lifes = lifes - 1	
-	--[[if lifes < 1 then
+local function decLifes()
+	lifes = lifes - 1
+	if lifes < 1 then
 		transition.cancel( )
+		timer.cancel( currentTimer )
 		print ("you loose")
-	end]]
+	end
 end
 
+local function onTransitionCanceled(item)
+	transition.to (item, {time = 500, y = constants.H+_ITEMSIZE/2, alpha = 0, onComplete = function() display:remove(item) end})
+end
+
+local function onTransitionFinished(item)
+	display:remove(item)
+
+	decLifes()
+end
 
 --stop transition and move element wherever you want, rather put it to a basket or drop down
 local function onElementTouched (event)
@@ -65,21 +72,21 @@ local function onElementTouched (event)
 					transition.to(t,{time = 300, x = fruitBasket.x, y = fruitBasket.y, alpha = 0})
 					score = score + 1
 				else
-					transition.to(t,{time = 300, x = constants.CENTERX, y = constants.H+ _ITEMSIZE, alpha = 0})
-
+					transition.to(t,{time = 300, x = constants.CENTERX, y = constants.H+ _ITEMSIZE, alpha = 0, onComplete = decLifes})
 				end
 			else
 				if math.abs(t.x - vegetableBasket.x)<_DELTA and math.abs(t.y - vegetableBasket.y)<_DELTA then
 					transition.to(t,{time = 300, x = vegetableBasket.x, y = vegetableBasket.y, alpha = 0})
 					score = score + 1
 				else
-					transition.to(t,{time = 300, x = constants.CENTERX, y = constants.H+ _ITEMSIZE, alpha = 0})
+					transition.to(t,{time = 300, x = constants.CENTERX, y = constants.H+ _ITEMSIZE, alpha = 0, onComplete = decLifes})
 				end
 			end			
 		end
 
 end
 
+--generates one element and reqursively calls it self 
 local function generateElement(group)
 	local item
 
@@ -96,6 +103,8 @@ local function generateElement(group)
 		local index = math.random (1, #fruits)
 		item = display.newImage( data.pathToItems..fruits[index]..data.format, - _ITEMSIZE/2, constants.CENTERY - _SPACINGY)
 		item.type = "fruit"
+
+		table.remove( fruits, index )
 	else
 		if #vegetables < 1 then
 			vegetables = table.copy(data.vegetables)
@@ -104,13 +113,18 @@ local function generateElement(group)
 		local index = math.random (1, #vegetables)
 		item = display.newImage( data.pathToItems..vegetables[index]..data.format, - _ITEMSIZE/2, constants.CENTERY - _SPACINGY)
 		item.type = "vegetable"
+
+		table.remove(vegetables, index)
 	end 
 	item.width = _ITEMSIZE
 	item.height = _ITEMSIZE
 	item:addEventListener( "touch", onElementTouched )
-	item.transition = transition.to (item, {time = _SPEED, x = constants.W + _ITEMSIZE, onComplete = transitionFinished(item)})
+	item.transition = transition.to (item, {time = _SPEED, x = constants.W + _ITEMSIZE, onComplete = onTransitionFinished, onCancel = onTransitionCanceled})
 	group:insert(item)
 
+	if lifes > 0 then
+		currentTimer = timer.performWithDelay( _SPEED/constants.W*_ITEMSIZE, function () generateElement(group) end )
+	end
 end
 
 function scene:createScene(event)
@@ -149,10 +163,7 @@ end
 function scene:enterScene (event)
 	local group = self.view
 
-	--here would be while
-	for i = 1,10 do
-		timer.performWithDelay(i*_SPEED/constants.W*_ITEMSIZE, function() generateElement(group) end)
-	end
+	generateElement(group)
 end
 
 function scene:exitScene(event)
