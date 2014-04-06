@@ -4,15 +4,24 @@ local data = require("data.trainData")
 
 local scene = storyboard.newScene()
 
+local _FONTSIZE = constants.H / 15
 local _INFOSIZE = constants.H/6
 local _SPACINGY = constants.H/15
 local _BASKETSIZE = 0.4*constants.H
 local _ITEMSIZE = 0.3*constants.H
-local _SPEED = 5000  -- less - faster
+local _SPEED = 10000  -- less - faster
 local _DELTA = 0.15*constants.H;
+local _ITEMSTOUP = 5
+
+-----------------------------------------------texts
+local _SCORETEXT = "Score: "
+local _LEVELTEXT = "Level: "
+local _LIFETEXT = "Lifes: "
 
 local background, informationBackground, fruitBasket, vegetableBasket
-local score, lifes, currentTimer
+local score, level, lifes, currentTimer, itemsGenerated
+local scoreLabel, levelLabel, lifesLabel
+local fruits, vegetables
 
 --make item bigger on touch
 local function scaleOnDrag (target)
@@ -20,8 +29,10 @@ local function scaleOnDrag (target)
 	target.yScale = 1.2
 end
 
+--on item out of screen or put to wrong basket - lifes decreased and checked to be more than zero
 local function decLifes()
 	lifes = lifes - 1
+	lifesLabel.text = _LIFETEXT..lifes
 	if lifes < 1 then
 		transition.cancel( )
 		timer.cancel( currentTimer )
@@ -29,27 +40,21 @@ local function decLifes()
 	end
 end
 
-local function onTransitionCanceled(item)
-	transition.to (item, {time = 500, y = constants.H+_ITEMSIZE/2, alpha = 0, onComplete = function() display:remove(item) end})
-end
-
+--if transition finished, this means that item is out of screen - so we should remove it and decrease lifes
 local function onTransitionFinished(item)
 	display:remove(item)
-
 	decLifes()
 end
 
 --stop transition and move element wherever you want, rather put it to a basket or drop down
 local function onElementTouched (event)
 	local t = event.target
-	transition.cancel(t)
 	local phase = event.phase
-	scaleOnDrag(t)
+
+	transition.cancel(t) --stops moving of the object	
+	scaleOnDrag(t)		 --makes object bigger
 
 	if phase == "began" then
-		startX = t.x
-		startY = t.y
-
 		local parent = t.parent
 		parent:insert(t)
 		display.getCurrentStage():setFocus(t)
@@ -57,41 +62,47 @@ local function onElementTouched (event)
 		t.isFocus = true
 		t.x0 = event.x - t.x
 		t.y0 = event.y - t.y
-		elseif phase == "moved" and t.isFocus then
-			t.x = event.x - t.x0
-			t.y = event.y - t.y0
-		elseif phase == "ended" or phase == "cancel" then
-			t:removeEventListener( "touch", onElementTouched )
-			display.getCurrentStage():setFocus(nil)
-			t.isFocus = false
-			startX = nil
-			startY = nil
 
-			if  t.type == fruitBasket.type then
-				if math.abs(t.x - fruitBasket.x)<_DELTA and math.abs(t.y-fruitBasket.y)<_DELTA then
-					transition.to(t,{time = 300, x = fruitBasket.x, y = fruitBasket.y, alpha = 0})
-					score = score + 1
-				else
-					transition.to(t,{time = 300, x = constants.CENTERX, y = constants.H+ _ITEMSIZE, alpha = 0, onComplete = decLifes})
-				end
+	elseif phase == "moved" and t.isFocus then
+		t.x = event.x - t.x0
+		t.y = event.y - t.y0
+
+	elseif phase == "ended" or phase == "cancel" then
+		t:removeEventListener( "touch", onElementTouched )
+		display.getCurrentStage():setFocus(nil)
+		t.isFocus = false
+	
+		if  t.type == fruitBasket.type then
+			if math.abs(t.x - fruitBasket.x)<_DELTA and math.abs(t.y-fruitBasket.y)<_DELTA then
+				transition.to(t,{time = 300, x = fruitBasket.x, y = fruitBasket.y, alpha = 0})
+				score = score + 1
+				scoreLabel.text = _SCORETEXT..score
 			else
-				if math.abs(t.x - vegetableBasket.x)<_DELTA and math.abs(t.y - vegetableBasket.y)<_DELTA then
-					transition.to(t,{time = 300, x = vegetableBasket.x, y = vegetableBasket.y, alpha = 0})
-					score = score + 1
-				else
-					transition.to(t,{time = 300, x = constants.CENTERX, y = constants.H+ _ITEMSIZE, alpha = 0, onComplete = decLifes})
-				end
-			end			
-		end
-
+				transition.to(t,{time = 300, x = constants.CENTERX, y = constants.H+ _ITEMSIZE, alpha = 0, onComplete = decLifes})
+			end
+		else
+			if math.abs(t.x - vegetableBasket.x)<_DELTA and math.abs(t.y - vegetableBasket.y)<_DELTA then
+				transition.to(t,{time = 300, x = vegetableBasket.x, y = vegetableBasket.y, alpha = 0})
+				score = score + 1
+				scoreLabel.text = _SCORETEXT..score
+			else
+				transition.to(t,{time = 300, x = constants.CENTERX, y = constants.H+ _ITEMSIZE, alpha = 0, onComplete = decLifes})
+			end
+		end			
+	end
 end
 
---generates one element and reqursively calls it self 
+--if game lost - we stops all transitions and lets items fall down 
+local function onTransitionCanceled(item)
+	if lifes<1 then 
+		item:removeEventListener( "touch", onElementTouched )
+		transition.to (item, {time = 500, y = constants.H+_ITEMSIZE/2, alpha = 0, onComplete = function() display:remove(item) end})
+	end
+end
+
+--generates one element and recursively calls it self 
 local function generateElement(group)
 	local item
-
-	local fruits = table.copy(data.fruits)
-	local vegetables = table.copy(data.vegetables)
 
 	local itemType = data.types[math.random(1,2)]
 
@@ -116,13 +127,23 @@ local function generateElement(group)
 
 		table.remove(vegetables, index)
 	end 
+
 	item.width = _ITEMSIZE
 	item.height = _ITEMSIZE
 	item:addEventListener( "touch", onElementTouched )
 	item.transition = transition.to (item, {time = _SPEED, x = constants.W + _ITEMSIZE, onComplete = onTransitionFinished, onCancel = onTransitionCanceled})
 	group:insert(item)
 
+	itemsGenerated = itemsGenerated + 1
+
 	if lifes > 0 then
+		if itemsGenerated >= _ITEMSTOUP and _SPEED > 4500 then			
+			_SPEED = _SPEED - 500
+			itemsGenerated = 0
+
+			level = level + 1
+			levelLabel.text = _LEVELTEXT..level
+		end
 		currentTimer = timer.performWithDelay( _SPEED/constants.W*_ITEMSIZE, function () generateElement(group) end )
 	end
 end
@@ -158,15 +179,35 @@ function scene:createScene(event)
 
 	lifes = 3
 	score = 0
+	level = 1
+	itemsGenerated = 0
+	_SPEED = 10000
+
+	fruits = table.copy(data.fruits)
+	vegetables = table.copy(data.vegetables)
 end
 
 function scene:enterScene (event)
 	local group = self.view
 
+	scoreLabel = display.newEmbossedText( _SCORETEXT..0, 0, informationBackground.y, native.systemFont, _FONTSIZE )
+	scoreLabel.anchorX = 0
+	group:insert(scoreLabel)
+
+	levelLabel = display.newEmbossedText( _LEVELTEXT..1, informationBackground.x, informationBackground.y, native.systemFont, _FONTSIZE)
+	group:insert (levelLabel)
+
+	lifesLabel = display.newEmbossedText( _LIFETEXT..3, constants.W, informationBackground.y, native.systemFont, _FONTSIZE )
+	lifesLabel.anchorX = 1
+	group:insert(lifesLabel)
+
+
 	generateElement(group)
 end
 
 function scene:exitScene(event)
+	lifes = 0
+	transition.cancel()
 end
 
 function scene:destroyScene(event)
