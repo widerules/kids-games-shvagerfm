@@ -5,6 +5,7 @@ local data = require("shapesData")
 local scene = storyboard.newScene()
 
 local _BARHEIGHT = 0.2*constants.H
+local _DELTA = 0.1*constants.W
 local _ITEMSIZE
 local _SHADOWSIZE
 local _SPACINGANIMALS
@@ -21,8 +22,76 @@ local animalsImages = {}
 local shadows = {}
 local shadowsImages = {}
 
-local level
+local level, onPlaces
 local background, barBackground, plate
+
+local function animScaleBack (item)
+	item.xScale = 1
+	item.yScale = 1
+end
+
+local function animScaleOnDrag (item)
+	item.xScale = _SHADOWSIZE/_ITEMSIZE
+	item.yScale = _SHADOWSIZE/_ITEMSIZE
+end
+
+local function onAnimalDrag(event)
+	local t = event.target
+	local phase = event.phase
+	animScaleOnDrag(t)
+	if "began" == phase then 
+		startX = t.x
+		startY = t.y
+
+		--bring the letter on top (just for being sure)
+		local parent = t.parent
+		parent:insert (t)
+		display.getCurrentStage():setFocus(t)
+		
+		t.isFocus = true
+		t.x0 = event.x - t.x
+		t.y0 = event.y - t.y
+
+	elseif "moved" == phase and t.isFocus then
+		t.x = event.x-t.x0
+		t.y = event.y-t.y0
+	elseif "ended" == phase or "cancel" == phase then 
+		local flag = false
+		local index = 0
+		--find which animal dragged
+		for i = 1, #shadowsImages do
+			for j = 1, #shadowsImages[i] do
+				if shadowsImages[i][j].type == t.type then
+					if math.abs(t.x - shadowsImages[i][j].x)<_DELTA and math.abs (t.y-shadowsImages[i][j].y)<_DELTA then
+						t.x = shadowsImages[i][j].x
+						t.y = shadowsImages[i][j].y
+						onPlaces = onPlaces - 1
+						--animOnPutOn(t)
+						--animOnPutOnShape(shapesPictures[index])
+						t:removeEventListener( "touch", onAnimalDrag )
+					else 
+						t.x = startX
+						t.y = startY
+						animScaleBack(t)
+					end
+				end
+			end
+		end		
+
+		
+
+		display.getCurrentStage():setFocus(nil)
+		t.isFocus = false
+		startX = nil
+		startY = nil
+
+		if onPlaces < 1 then
+			--audio.play( soundHarp )
+			timer.performWithDelay( 800, showPopUp, 1)
+		end
+
+	end
+end
 
 local function generateItems()
 	local tmpindex = 1
@@ -80,6 +149,7 @@ end
 
 function scene:willEnterScene(event)	
 	generateItems()
+	onPlaces = itemAmount[level]
 end
 
 function scene:enterScene (event)
@@ -90,6 +160,7 @@ function scene:enterScene (event)
 		animalsImages[i].width = _ITEMSIZE
 		animalsImages[i].height = _ITEMSIZE
 		animalsImages[i].type = animals[i]
+		animalsImages[i]:addEventListener( "touch", onAnimalDrag )
 		group:insert(animalsImages[i])
 	end
 
