@@ -88,6 +88,7 @@ local function onAnimalDrag(event)
 						onPlaces = onPlaces - 1
 						animOnPutOn(t)
 						animOnPutOnShape(shadowsImages[i][j])
+						shadowsImages[i][j].isUsed = true
 						t:removeEventListener( "touch", onAnimalDrag )
 					else 
 						t.x = startX
@@ -110,8 +111,16 @@ local function onAnimalDrag(event)
 				level = 0
 				popup.showPopUp("You won !", "scenetemplate", "scenes.game2")
 			else
-				--audio.play( soundHarp )
-				print ("you won")
+				--audio.play( soundHarp )				
+			
+				for i = 1, #shadowsImages do
+					for j = 1, #shadowsImages[i] do
+						if shadowsImages[i][j].isUsed == false then
+							transition.to( shadowsImages[i][j], {time = 500, xScale = 0.1, yScale = 0.1, alpha = 0} )
+						end
+					end
+				end
+
 				wellDoneLabel = display.newEmbossedText( _WELLDONETEXT, constants.CENTERX, constants.CENTERY, native.systemFont, 2*_FONTSIZE )
 				transition.to (wellDoneLabel, 
 					{
@@ -122,8 +131,8 @@ local function onAnimalDrag(event)
 						yScale = 0.1,
 						onComplete = function ()
 							display.remove (wellDoneLabel)
-							wellDoneLabel = nil
-							timer.performWithDelay( 300, function () storyboard.reloadScene( ) end )
+							wellDoneLabel = nil	
+							timer.performWithDelay( 300, function () storyboard.reloadScene() end)						
 						end
 					})
 			end
@@ -217,6 +226,7 @@ function scene:enterScene (event)
 			shadowsImages[i][j].width = _SHADOWSIZE
 			shadowsImages[i][j].height = _SHADOWSIZE
 			shadowsImages[i][j].type = shadows[index]
+			shadowsImages[i][j].isUsed = false
 			group:insert (shadowsImages[i][j])
 			table.remove (shadows, index)
 		end
