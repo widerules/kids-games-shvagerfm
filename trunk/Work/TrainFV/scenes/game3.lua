@@ -227,14 +227,14 @@ function scene:enterScene (event)
 	fruits = table.copy(data.fruits)
 	vegetables = table.copy(data.vegetables)
 
-	scoreLabel = display.newEmbossedText( _SCORETEXT..0, 0, informationBackground.y, native.systemFont, _FONTSIZE )
+	scoreLabel = display.newEmbossedText( _SCORETEXT..score, 0, informationBackground.y, native.systemFont, _FONTSIZE )
 	scoreLabel.anchorX = 0
 	group:insert(scoreLabel)
 
-	levelLabel = display.newEmbossedText( _LEVELTEXT..1, informationBackground.x, informationBackground.y, native.systemFont, _FONTSIZE)
+	levelLabel = display.newEmbossedText( _LEVELTEXT..level, informationBackground.x, informationBackground.y, native.systemFont, _FONTSIZE)
 	group:insert (levelLabel)
 
-	lifesLabel = display.newEmbossedText( _LIFETEXT..3, constants.W, informationBackground.y, native.systemFont, _FONTSIZE )
+	lifesLabel = display.newEmbossedText( _LIFETEXT..lifes, constants.W, informationBackground.y, native.systemFont, _FONTSIZE )
 	lifesLabel.anchorX = 1
 	group:insert(lifesLabel)
 
