@@ -1,5 +1,9 @@
 local data = {};
 
+data.animalsPath = "images/animals/"
+data.shapesPath = "images/animals/s"
+data.format = ".png"
+
 data.animals = 
 {
 	"bat",
@@ -14,7 +18,7 @@ data.animals =
 	"deer",
 	"dog",
 	"duck",
-	"elephant",
+	"elefant",
 	"fox",
 	"hippo",
 	"lion",
