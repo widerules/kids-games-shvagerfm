@@ -139,7 +139,7 @@ end
 local function onTransitionCanceled(item)
 	if lifes<1 then 
 		item:removeEventListener( "touch", onElementTouched )
-		transition.to (item, {time = 500, y = constants.H+_ITEMSIZE/2, alpha = 0, onComplete = function() display:remove(item) end})
+		transition.to (item, {time = 500, y = constants.H+_ITEMSIZE/2, alpha = 0, onComplete = function() display:remove(item) end, onCancle = onTransitionCanceled})
 	end
 end
 
