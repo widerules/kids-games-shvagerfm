@@ -99,6 +99,10 @@ local function onElementTouched (event)
 			end
 		end	
 		if flag == true then
+			
+			--SOUND_PLACE : correct basket
+			--firework
+
 			if score >= level*_SCORETOUP and _SPEED > 4500 then			
 				_SPEED = _SPEED - 500
 				itemsGenerated = 0
@@ -122,6 +126,10 @@ local function onElementTouched (event)
 					end
 				})
 			end
+		else
+
+			--SOUND_PLACE : uncorrect basket
+
 		end		
 	end
 end
@@ -210,7 +218,7 @@ end
 function scene:enterScene (event)
 	local group = self.view
 
-	lifes = 3
+	lifes = 5
 	score = 0
 	level = 1
 	itemsGenerated = 0
