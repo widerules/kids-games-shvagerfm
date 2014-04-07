@@ -1,11 +1,17 @@
 local storyboard = require ("storyboard")
 local constants = require("constants")
 local data = require("shapesData")
+local popup = require("utils.popupTrain")
 
 local scene = storyboard.newScene()
 
+local _WELLDONETEXT = "Well done !"
+
 local _BARHEIGHT = 0.2*constants.H
 local _DELTA = 0.1*constants.W
+local _FONTSIZE = constants.H / 14
+local _MAXLEVEL = 15
+local _SCALEVAL
 local _ITEMSIZE
 local _SHADOWSIZE
 local _SPACINGANIMALS
@@ -13,9 +19,9 @@ local _SPACINGSHADOWS
 local _PLATEXZERO 
 local _PLATEYZERO 
 
-local itemAmount = 		{1, 2, 4, 6, 8} --items
-local shadowAmount = 	{2, 3, 6, 6, 8}	--shadows
-local rows = 			{1, 1, 2, 2, 2}	--rows
+local itemAmount = 		{1, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5, 6, 6, 7, 8} --items
+local shadowAmount = 	{1, 2, 3, 2, 3, 4, 3, 4, 4, 6, 6, 6, 8, 8, 8}	--shadows
+local rows = 			{1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2}	--rows
 
 local animals = {}
 local animalsImages = {}
@@ -23,7 +29,7 @@ local shadows = {}
 local shadowsImages = {}
 
 local level, onPlaces
-local background, barBackground, plate
+local background, barBackground, plate, wellDoneLabel
 
 local function animScaleBack (item)
 	item.xScale = 1
@@ -31,8 +37,22 @@ local function animScaleBack (item)
 end
 
 local function animScaleOnDrag (item)
-	item.xScale = _SHADOWSIZE/_ITEMSIZE
-	item.yScale = _SHADOWSIZE/_ITEMSIZE
+	item.xScale = _SCALEVAL
+	item.yScale = _SCALEVAL
+end
+
+local function animOnPutOn(self)
+	local function setToBig()
+		transition.scaleTo(self, {xScale = _SCALEVAL, yScale = _SCALEVAL, time = 500})
+	end	
+	transition.scaleTo(self, {xScale = 0.8*_SCALEVAL, yScale = 0.8*_SCALEVAL, time = 300, onComplete=setToBig})
+end
+
+local function animOnPutOnShape(self)
+	local function setToBig()
+		transition.scaleTo(self, {xScale = 1, yScale = 1, time = 500})
+	end	
+	transition.scaleTo(self, {xScale = 0.8, yScale = 0.8, time = 300, onComplete=setToBig})
 end
 
 local function onAnimalDrag(event)
@@ -66,8 +86,8 @@ local function onAnimalDrag(event)
 						t.x = shadowsImages[i][j].x
 						t.y = shadowsImages[i][j].y
 						onPlaces = onPlaces - 1
-						--animOnPutOn(t)
-						--animOnPutOnShape(shapesPictures[index])
+						animOnPutOn(t)
+						animOnPutOnShape(shadowsImages[i][j])
 						t:removeEventListener( "touch", onAnimalDrag )
 					else 
 						t.x = startX
@@ -86,8 +106,27 @@ local function onAnimalDrag(event)
 		startY = nil
 
 		if onPlaces < 1 then
-			--audio.play( soundHarp )
-			timer.performWithDelay( 800, showPopUp, 1)
+			if level == _MAXLEVEL then
+				level = 0
+				popup.showPopUp("You won !", "scenetemplate", "scenes.game2")
+			else
+				--audio.play( soundHarp )
+				print ("you won")
+				wellDoneLabel = display.newEmbossedText( _WELLDONETEXT, constants.CENTERX, constants.CENTERY, native.systemFont, 2*_FONTSIZE )
+				transition.to (wellDoneLabel, 
+					{
+						time = 1000,
+						y = 0,
+						alpha = 0,
+						xScale = 0.1,
+						yScale = 0.1,
+						onComplete = function ()
+							display.remove (wellDoneLabel)
+							wellDoneLabel = nil
+							timer.performWithDelay( 300, function () storyboard.reloadScene( ) end )
+						end
+					})
+			end
 		end
 
 	end
@@ -114,6 +153,8 @@ end
 function scene:createScene(event)
 	local group = self.view
 
+	level = 0
+
 	background = display.newImage ("images/background3.png", constants.CENTERX, constants.CENTERY)
 	background.width = constants.W
 	background.height = constants.H
@@ -128,8 +169,20 @@ function scene:createScene(event)
 	plate.width = 0.95*constants.W
 	plate.height = 0.7*constants.H
 	group:insert (plate)
+end
 
-	level = 3
+function scene:willEnterScene(event)	
+	if level < _MAXLEVEL then
+		level = level + 1
+	end
+
+	generateItems()
+	onPlaces = itemAmount[level]
+end
+
+function scene:enterScene (event)
+	local group = self.view
+
 
 	_ITEMSIZE = barBackground.height*0.95	
 	_SPACINGANIMALS = (constants.W-_ITEMSIZE*itemAmount[level])/(itemAmount[level]+1)
@@ -145,15 +198,7 @@ function scene:createScene(event)
 		_SPACINGY = (plate.height - _SHADOWSIZE*rows[level])/(rows[level]+1)
 		_SPACINGSHADOWS = _SHADOWSIZE / (shadowAmount[level]/rows[level]+1)
 	end
-end
-
-function scene:willEnterScene(event)	
-	generateItems()
-	onPlaces = itemAmount[level]
-end
-
-function scene:enterScene (event)
-	local group = self.view
+	_SCALEVAL = _SHADOWSIZE/_ITEMSIZE
 
 	for i = 1, #animals do
 		animalsImages[i] = display.newImage( data.animalsPath..animals[i]..data.format, i * _SPACINGANIMALS + (i-0.5)*_ITEMSIZE, barBackground.y)
@@ -187,10 +232,17 @@ function scene:exitScene(event)
 		table.remove(shadows)
 	end
 	while #animalsImages > 0 do
-
 		display.remove(animalsImages[#animalsImages])
 		table.remove (animalsImages, #animalsImages)
 	end
+
+	for i = 1, #shadowsImages do
+		for j = 1, #shadowsImages[i] do
+			display.remove (shadowsImages[i][j])
+			shadowsImages[i][j] = nil			
+		end
+	end
+	popup.hidePopUp()
 end
 
 function scene:destroyScene(event)
