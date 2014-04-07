@@ -32,17 +32,18 @@ end
 
 --on item out of screen or put to wrong basket - lifes decreased and checked to be more than zero
 local function decLifes()
-	lifes = lifes - 1
-	lifesLabel.text = _LIFETEXT..lifes
+	if lifes > 0 then 
+		lifes = lifes - 1
+		lifesLabel.text = _LIFETEXT..lifes
 
-	if lifes < 1 then
-		transition.cancel( )
-		timer.cancel( currentTimer )
-		popup.showPopUp (_SCORETEXT..score, "scenetemplate", "scenes.game3")
+		if lifes < 1 then
+			transition.cancel( )
+			timer.cancel( currentTimer )
+			popup.showPopUp (_SCORETEXT..score, "scenetemplate", "scenes.game3")
+		end
+
+		transition.to (lifesLabel, {time = 300, xScale = 1.6, yScale = 1.6, onComplete = function() transition.to(lifesLabel, {time = 300, xScale = 1, yScale = 1}) end})
 	end
-
-	transition.to (lifesLabel, {time = 300, xScale = 1.6, yScale = 1.6, onComplete = function() transition.to(lifesLabel, {time = 300, xScale = 1, yScale = 1}) end})
-	
 end
 
 --if transition finished, this means that item is out of screen - so we should remove it and decrease lifes
@@ -81,21 +82,21 @@ local function onElementTouched (event)
 	
 		if  t.type == fruitBasket.type then
 			if math.abs(t.x - fruitBasket.x)<_DELTA and math.abs(t.y-fruitBasket.y)<_DELTA then
-				transition.to(t,{time = 300, x = fruitBasket.x, y = fruitBasket.y, alpha = 0})
+				transition.to(t,{time = 300, x = fruitBasket.x, y = fruitBasket.y, alpha = 0, onCancel = onTransitionCanceled})
 				score = score + 1
 				scoreLabel.text = _SCORETEXT..score
 				flag = true
 			else
-				transition.to(t,{time = 300, x = constants.CENTERX, y = constants.H+ _ITEMSIZE, alpha = 0, onComplete = decLifes})
+				transition.to(t,{time = 300, x = constants.CENTERX, y = constants.H+ _ITEMSIZE, alpha = 0, onComplete = decLifes, onCancel = onTransitionCanceled})
 			end
 		else
 			if math.abs(t.x - vegetableBasket.x)<_DELTA and math.abs(t.y - vegetableBasket.y)<_DELTA then
-				transition.to(t,{time = 300, x = vegetableBasket.x, y = vegetableBasket.y, alpha = 0})
+				transition.to(t,{time = 300, x = vegetableBasket.x, y = vegetableBasket.y, alpha = 0, onCancel = onTransitionCanceled})
 				score = score + 1
 				scoreLabel.text = _SCORETEXT..score
 				flag = true
 			else
-				transition.to(t,{time = 300, x = constants.CENTERX, y = constants.H+ _ITEMSIZE, alpha = 0, onComplete = decLifes})
+				transition.to(t,{time = 300, x = constants.CENTERX, y = constants.H+ _ITEMSIZE, alpha = 0, onComplete = decLifes, onCancel = onTransitionCanceled})
 			end
 		end	
 		if flag == true then
