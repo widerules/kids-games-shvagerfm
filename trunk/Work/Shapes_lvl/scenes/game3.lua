@@ -10,7 +10,7 @@ local _WELLDONETEXT = "Well done !"
 local _BARHEIGHT = 0.2*constants.H
 local _DELTA = 0.1*constants.W
 local _FONTSIZE = constants.H / 14
-local _MAXLEVEL = 15
+local _MAXLEVEL = 24
 local _SCALEVAL
 local _ITEMSIZE
 local _SHADOWSIZE
@@ -19,9 +19,9 @@ local _SPACINGSHADOWS
 local _PLATEXZERO 
 local _PLATEYZERO 
 
-local itemAmount = 		{1, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5, 6, 6, 7, 8} --items
-local shadowAmount = 	{1, 2, 3, 2, 3, 4, 3, 4, 4, 6, 6, 6, 8, 8, 8}	--shadows
-local rows = 			{1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2}	--rows
+local itemAmount = 		{1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 8} --items
+local shadowAmount = 	{1, 2, 3, 2, 3, 4, 3, 4, 5, 4, 5, 6, 5, 6, 7, 6, 7, 8, 7, 8, 8}	--shadows
+local rows = 			{1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2}	--rows
 
 local animals = {}
 local animalsImages = {}
@@ -162,7 +162,7 @@ end
 function scene:createScene(event)
 	local group = self.view
 
-	level = 0
+	level = 8
 
 	background = display.newImage ("images/background3.png", constants.CENTERX, constants.CENTERY)
 	background.width = constants.W
@@ -197,16 +197,15 @@ function scene:enterScene (event)
 	_SPACINGANIMALS = (constants.W-_ITEMSIZE*itemAmount[level])/(itemAmount[level]+1)
 	_PLATEXZERO = plate.x - plate.width/2
 	_PLATEYZERO = plate.y - plate.height/2
-
+	
 	if plate.height / rows[level] < plate.width / (shadowAmount[level]/rows[level]) then
 		_SHADOWSIZE = plate.height / (rows[level]+1)
-		_SPACINGY = _SHADOWSIZE / rows[level]
-		_SPACINGSHADOWS = (plate.width - _SHADOWSIZE*shadowAmount[level]/rows[level]) / (shadowAmount[level]/rows[level]+1)
+		_SPACINGY = _SHADOWSIZE / rows[level]		
 	else
 		_SHADOWSIZE = plate.width / (shadowAmount[level]/rows[level]+1)
-		_SPACINGY = (plate.height - _SHADOWSIZE*rows[level])/(rows[level]+1)
-		_SPACINGSHADOWS = _SHADOWSIZE / (shadowAmount[level]/rows[level]+1)
+		_SPACINGY = (plate.height - _SHADOWSIZE*rows[level])/(rows[level]+1)		
 	end
+	
 	_SCALEVAL = _SHADOWSIZE/_ITEMSIZE
 
 	for i = 1, #animals do
@@ -218,11 +217,21 @@ function scene:enterScene (event)
 		group:insert(animalsImages[i])
 	end
 
-	for i = 1, shadowAmount[level]/rows[level] do
+	local tmpShadowAmount = shadowAmount[level]
+	local itemsInRow = 0
+	local rowsLeft = rows[level]
+
+	for i = 1, rows[level] do
 		shadowsImages[i] = {}
-		for j = 1, rows[level] do
+
+		itemsInRow = math.ceil (tmpShadowAmount/rowsLeft)
+		tmpShadowAmount = tmpShadowAmount - itemsInRow
+		rowsLeft = rowsLeft - 1
+
+		_SPACINGSHADOWS = (plate.width - itemsInRow*_SHADOWSIZE) / (itemsInRow+1)
+		for j = 1, itemsInRow do
 			local index = math.random(1, #shadows)
-			shadowsImages[i][j] = display.newImage (data.shapesPath..shadows[index]..data.format, _PLATEXZERO + i * _SPACINGSHADOWS + (i-0.5) * _SHADOWSIZE, j * _SPACINGY + (j - 0.5)* _SHADOWSIZE)
+			shadowsImages[i][j] = display.newImage (data.shapesPath..shadows[index]..data.format, _PLATEXZERO + j * _SPACINGSHADOWS + (j-0.5) * _SHADOWSIZE, i * _SPACINGY + (i - 0.5)* _SHADOWSIZE)
 			shadowsImages[i][j].width = _SHADOWSIZE
 			shadowsImages[i][j].height = _SHADOWSIZE
 			shadowsImages[i][j].type = shadows[index]
