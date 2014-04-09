@@ -16,7 +16,7 @@ local message = "Well done !"
 
 local _FONTSIZE = constants.H/7
 
-local gamesWon = 0
+local gamesWon
 local level
 local itemsCount = {2, 3, 4, 6, 9, 12, 16, 20}
 local rows =       {1, 1, 2, 2, 3, 3, 4, 4}
@@ -33,6 +33,7 @@ local counter
 local soundName, soundTitle
 local star = {}
 
+local total, totalScore, coins, bgscore, coinsToScore
 ---------------------------------------------------------------------------------
 -- functions
 --------------------------
@@ -115,8 +116,9 @@ local function animScore()
 	local function listener()
 		updateScore()
 		coinsToScore:removeSelf( )
+        coinsToScore = nil
 	end
-	coinsToScore = display.newImage( "images/coins.png", constants.CENTERX, constants.CENTERY, _H/8, _H/8)
+	coinsToScore = display.newImage( "images/coins.png", constants.CENTERX, constants.CENTERY, constants.H/8, constants.H/8)
 	coinsToScore.xScale, coinsToScore.yScale = 0.1, 0.1
 	local function trans1()
 	 	transition.to(coinsToScore, {time = 200, xScale = 1, yScale = 1, x = coins.x, y= coins.y, onComplete = listener})
@@ -279,7 +281,7 @@ function scene:createScene(event)
 ----Checking total from DB
 	checkTotal()
 
-	background = display.newImage("images/background2.png", constants.CENTERX, constants.CENTERY)
+	background = display.newImage("images/background2.png", constants.CENTERX, constants.CENTERY, 0, 0)
 	background.width = constants.W
 	background.height = constants.H
 	group:insert(background)	
@@ -300,8 +302,8 @@ function scene:createScene(event)
 ---------------------------------------------------------------
 ----Score views
 ---------------------------------------------------------------
-	bgscore = display.newImage("images/bgscore.png", 0, 0, _W/4, _W/12)
-	bgscore.width, bgscore.height = _W/5, _W/20
+	bgscore = display.newImage("images/bgscore.png", 0, 0, constants.W/4, constants.W/12)
+	bgscore.width, bgscore.height = constants.W/5, constants.W/20
 	bgscore.x = constants.W - bgscore.width/2
 	bgscore.y = bgscore.height/2
 	group:insert(bgscore)
