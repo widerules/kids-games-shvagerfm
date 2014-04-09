@@ -1,4 +1,5 @@
 local storyboard = require ("storyboard")
+local widget = require("widget")
 local constants = require("constants")
 local data = require("shapesData")
 local popup = require("utils.popupReload")
@@ -10,26 +11,28 @@ local _WELLDONETEXT = "Well done !"
 local _BARHEIGHT = 0.2*constants.H
 local _DELTA = 0.1*constants.W
 local _FONTSIZE = constants.H / 14
-local _MAXLEVEL = 15
-local _SCALEVAL
-local _ITEMSIZE
-local _SHADOWSIZE
-local _SPACINGANIMALS
-local _SPACINGSHADOWS
-local _PLATEXZERO 
+local _MAXLEVEL = 21
+local _BUTTONSIZE
+local _SCALEVAL			--коэфициент увеличения животного до размеров его тени
+local _ITEMSIZE 		--размер животного
+local _SHADOWSIZE 		--размер тени
+local _SPACINGANIMALS 	--отступы между животными в нижнем баре
+local _SPACINGSHADOWS	--отступы по горизонтали между тенями
+local _PLATEXZERO 		--левый верхний угол деревянной панели
 local _PLATEYZERO 
 
-local itemAmount = 		{1, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5, 6, 6, 7, 8} --items
-local shadowAmount = 	{1, 2, 3, 2, 3, 4, 3, 4, 4, 6, 6, 6, 8, 8, 8}	--shadows
-local rows = 			{1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2}	--rows
+local itemAmount = 		{1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 8} --items
+local shadowAmount = 	{1, 2, 3, 2, 3, 4, 3, 4, 5, 4, 5, 6, 5, 6, 7, 6, 7, 8, 7, 8, 8}	--shadows
+local rows = 			{1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2}	--rows
 
 local animals = {}
 local animalsImages = {}
 local shadows = {}
 local shadowsImages = {}
+local stars = {}
 
 local level, onPlaces
-local background, barBackground, plate, wellDoneLabel
+local background, barBackground, plate, wellDoneLabel, homeBtn
 
 local function animScaleBack (item)
 	item.xScale = 1
@@ -55,6 +58,11 @@ local function animOnPutOnShape(self)
 	transition.scaleTo(self, {xScale = 0.8, yScale = 0.8, time = 300, onComplete=setToBig})
 end
 
+local function onHomeButtonClicked () 
+	storyboard.gotoScene("scenetemplate", "slideRight", 800)
+   	storyboard.removeScene("scenes.game3")
+end
+
 local function onAnimalDrag(event)
 	local t = event.target
 	local phase = event.phase
@@ -63,7 +71,7 @@ local function onAnimalDrag(event)
 		startX = t.x
 		startY = t.y
 
-		--bring the letter on top (just for being sure)
+		--bring the animal on top (just for being sure)
 		local parent = t.parent
 		parent:insert (t)
 		display.getCurrentStage():setFocus(t)
@@ -97,9 +105,7 @@ local function onAnimalDrag(event)
 					end
 				end
 			end
-		end		
-
-		
+		end			
 
 		display.getCurrentStage():setFocus(nil)
 		t.isFocus = false
@@ -141,6 +147,24 @@ local function onAnimalDrag(event)
 	end
 end
 
+local function drawStars (group)
+	local _STARSIZE = (constants.H - _BARHEIGHT - _BUTTONSIZE) / 8
+	local _STARPATH
+
+	for i = 1, 8 do
+		if i <= itemAmount[level] then
+			_STARPATH = "images/starfull.png"
+		else
+			_STARPATH = "images/star.png"
+		end
+
+		stars[i] = display.newImage( _STARPATH , _PLATEXZERO/2, constants.H - _BARHEIGHT - (i-0.5)*_STARSIZE)
+		stars[i].width = _STARSIZE
+		stars[i].height = _STARSIZE
+		group:insert(stars[i])
+	end
+end
+
 local function generateItems()
 	local tmpindex = 1
 	local items = table.copy(data.animals)
@@ -174,10 +198,28 @@ function scene:createScene(event)
 	barBackground.height = _BARHEIGHT
 	group:insert(barBackground)
 
-	plate = display.newImage ("images/plate.png", constants.CENTERX, constants.CENTERY - _BARHEIGHT/3)
-	plate.width = 0.95*constants.W
-	plate.height = 0.7*constants.H
+	plate = display.newImage ("images/plate.png", 0,0)
+	plate.width = 0.9*constants.W
+	plate.height = (constants.H-_BARHEIGHT)
+	plate.x = constants.W - plate.width/2 - 0.01*constants.W
+	plate.y = constants.H - _BARHEIGHT - plate.height / 2
 	group:insert (plate)
+
+	_PLATEXZERO = plate.x - plate.width/2
+	_PLATEYZERO = plate.y - plate.height/2
+	_BUTTONSIZE = _PLATEXZERO
+
+	homeBtn = widget.newButton
+    {
+    	width = _BUTTONSIZE,
+        height = _BUTTONSIZE,
+        x = _BUTTONSIZE/2,
+        y = _BUTTONSIZE/2,
+        defaultFile = "images/home.png",
+        overFile = "images/homehover.png",
+        onRelease = onHomeButtonClicked
+    }
+    group:insert(homeBtn)
 end
 
 function scene:willEnterScene(event)	
@@ -195,17 +237,13 @@ function scene:enterScene (event)
 
 	_ITEMSIZE = barBackground.height*0.95	
 	_SPACINGANIMALS = (constants.W-_ITEMSIZE*itemAmount[level])/(itemAmount[level]+1)
-	_PLATEXZERO = plate.x - plate.width/2
-	_PLATEYZERO = plate.y - plate.height/2
 
 	if plate.height / rows[level] < plate.width / (shadowAmount[level]/rows[level]) then
 		_SHADOWSIZE = plate.height / (rows[level]+1)
-		_SPACINGY = _SHADOWSIZE / rows[level]
-		_SPACINGSHADOWS = (plate.width - _SHADOWSIZE*shadowAmount[level]/rows[level]) / (shadowAmount[level]/rows[level]+1)
+		_SPACINGY = _SHADOWSIZE / (rows[level]+1)
 	else
 		_SHADOWSIZE = plate.width / (shadowAmount[level]/rows[level]+1)
 		_SPACINGY = (plate.height - _SHADOWSIZE*rows[level])/(rows[level]+1)
-		_SPACINGSHADOWS = _SHADOWSIZE / (shadowAmount[level]/rows[level]+1)
 	end
 	_SCALEVAL = _SHADOWSIZE/_ITEMSIZE
 
@@ -218,11 +256,21 @@ function scene:enterScene (event)
 		group:insert(animalsImages[i])
 	end
 
-	for i = 1, shadowAmount[level]/rows[level] do
+	local tmpShadowAmount = shadowAmount[level]
+	local itemsInRow = 0
+	local rowsLeft = rows[level]
+
+	for i = 1, rows[level] do
 		shadowsImages[i] = {}
-		for j = 1, rows[level] do
+
+		itemsInRow = math.ceil (tmpShadowAmount/rowsLeft)
+		tmpShadowAmount = tmpShadowAmount - itemsInRow
+		rowsLeft = rowsLeft - 1
+
+		_SPACINGSHADOWS = (plate.width - itemsInRow*_SHADOWSIZE) / (itemsInRow+1)
+		for j = 1, itemsInRow do
 			local index = math.random(1, #shadows)
-			shadowsImages[i][j] = display.newImage (data.shapesPath..shadows[index]..data.format, _PLATEXZERO + i * _SPACINGSHADOWS + (i-0.5) * _SHADOWSIZE, j * _SPACINGY + (j - 0.5)* _SHADOWSIZE)
+			shadowsImages[i][j] = display.newImage (data.shapesPath..shadows[index]..data.format, _PLATEXZERO + j * _SPACINGSHADOWS + (j-0.5) * _SHADOWSIZE, i * _SPACINGY + (i - 0.5)* _SHADOWSIZE)
 			shadowsImages[i][j].width = _SHADOWSIZE
 			shadowsImages[i][j].height = _SHADOWSIZE
 			shadowsImages[i][j].type = shadows[index]
@@ -232,6 +280,7 @@ function scene:enterScene (event)
 		end
 	end
 	
+	drawStars(group)
 end
 
 function scene:exitScene(event)
@@ -252,6 +301,12 @@ function scene:exitScene(event)
 			shadowsImages[i][j] = nil			
 		end
 	end
+
+	while #stars > 0 do
+		display.remove(stars[#stars])
+		table.remove(stars)
+	end
+
 	popup.hidePopUp()
 end
 
