@@ -45,7 +45,21 @@ local function startDrag(event)
 ---------------------------------------------------------------------------------
 -- BEGINNING OF YOUR IMPLEMENTATION
 ---------------------------------------------------------------------------------
+local function animTitle()
+	transition.to( background, { x1=constants.CENTERX, x2=constants.CENTERX, x3=-constants.CENTERX, x4=-constants.CENTERX, time=1500, delay=1000, transition=easing.inExpo } )
+--transition.from( background, { x1=constants.CENTERX, y1= 100, x3=-constants.CENTERX, x2=constants.CENTERX, y2=-100, x4=-constants.CENTERX, time=1500, delay=2500, transition=easing.outExpo } )
+end
 
+local function animButtons(target)
+	local function transIn() 
+		transition.to( target, {time = 1500, alpha = 1, onComplete = animButtons} )
+	end
+	local transout = transition.to( target, {time = 1500, alpha = 0.3, onComplete = transIn} )
+	end
+
+local function animPlay()
+	transition.to(btnPlay, {time = 300, xScale = 2.2, yScale = 2.2, transition = easing.continuousLoop})
+end
 -- Called when the scene's view does not exist:
 function scene:createScene( event )
         local group = self.view
@@ -116,6 +130,11 @@ end
 function scene:enterScene( event )
         local group = self.view
         background:addEventListener("touch", startDrag)
+        --rightArrow:setEffect("filter", "pixelate")
+        animTitle()
+        animButtons(rightArrow)
+        animButtons(leftArrow)
+        animPlay()
         -----------------------------------------------------------------------------
 
         --      INSERT code here (e.g. start timers, load audio, start listeners, etc.)
