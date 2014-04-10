@@ -82,6 +82,58 @@ function scene:createScene(event)
 
 	background = display.newImage("images/background1.png", constants.CENTERX, constants.CENTERY)
 	group:insert(background)
+	
+	group:addEventListener( "touch", startDrag )
+end
+
+function scene:enterScene (event)
+	local group = self.view
+	
+	index = event.params.ind
+
+	titlePic = display.newImage(resPath .. index .. imagePath .. format, 0, constants.CENTERY, constants.W/2, 3*constants.W/8)
+	titlePic.x = 0.7*titlePic.width
+	titlePic.alpha = 0
+	transition.to(titlePic, {time = 200, alpha = 1})
+	group:insert(titlePic)
+
+	
+	title = display.newImage(resPath .. index .. namePath .. format,  0, 0, constants.W/4, constants.W/12)
+	title.y = title.height
+	title.x = constants.W - title.width
+	title.alpha = 0
+	transition.to(title, {time = 200, alpha = 1})
+	group:insert(title)
+
+	leftArrow = widget.newButton
+		{
+			width = constants.W/12,
+			height = constants.W/4,
+			defaultFile = "images/leftarrow.png",
+			id = "button_2",
+			onRelease = goPreviousGame
+		}
+	leftArrow.x =  leftArrow.width/2
+	leftArrow.y = constants.CENTERY
+	leftArrow.alpha = 0
+	transition.to(leftArrow, {time = 200, alpha = 1})
+	group:insert(leftArrow)
+
+	if index < _GAMEAMOUNT then
+		rightArrow = widget.newButton
+			{
+				width = constants.W/12,
+				height = constants.W/4,
+				defaultFile = "images/rightarrow.png",
+				id = "button_3",
+				onRelease = goNextGame
+			}
+		rightArrow.x = constants.W - rightArrow.width/2
+		rightArrow.y = constants.CENTERY	
+		rightArrow.alpha = 0
+		transition.to(rightArrow, {time = 200, alpha = 1})
+		group:insert(rightArrow)
+	end
 
 	btnPlay = widget.newButton
 		{
@@ -94,47 +146,9 @@ function scene:createScene(event)
 		}
 	btnPlay.x = 0.7*constants.W
 	btnPlay.y = constants.CENTERY
+	btnPlay.alpha = 0
+	transition.to(btnPlay, {time = 200, alpha = 1})
 	group:insert(btnPlay)
-	leftArrow = widget.newButton
-		{
-			width = constants.W/12,
-			height = constants.W/4,
-			defaultFile = "images/leftarrow.png",
-			id = "button_2",
-			onRelease = goPreviousGame
-		}
-	leftArrow.x =  leftArrow.width/2
-	leftArrow.y = constants.CENTERY
-
-	rightArrow = widget.newButton
-		{
-			width = constants.W/12,
-			height = constants.W/4,
-			defaultFile = "images/rightarrow.png",
-			id = "button_3",
-			onRelease = goNextGame
-		}
-	rightArrow.x = constants.W - rightArrow.width/2
-	rightArrow.y = constants.CENTERY
-	group:insert(leftArrow)
-	group:insert(rightArrow)
-
-	group:addEventListener( "touch", startDrag )
-end
-
-function scene:enterScene (event)
-	local group = self.view
-	
-	index = event.params.ind
-
-	titlePic = display.newImage(resPath .. index .. imagePath .. format, 0, constants.CENTERY, constants.W/2, 3*constants.W/8)
-	titlePic.x = 0.7*titlePic.width
-	group:insert(titlePic)
-	
-	title = display.newImage(resPath .. index .. namePath .. format,  0, 0, constants.W/4, constants.W/12)
-	title.y = title.height
-	title.x = constants.W - title.width
-	group:insert(title)
 end
 
 function scene:exitScene(event)
@@ -146,6 +160,12 @@ function scene:exitScene(event)
 	complexity = nil
 	display.remove (swypeGroup)
 	swypeGroup = nil
+	display.remove(rightArrow)
+	rightArrow = nil
+	display.remove(leftArrow)
+	leftArrow = nil
+	display.remove(btnPlay)
+	btnPlay = nil
 end
 
 function scene:destroyScene(event)
