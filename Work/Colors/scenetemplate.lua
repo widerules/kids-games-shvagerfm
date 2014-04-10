@@ -19,7 +19,6 @@ local btnGame1, btnGame2, btnGame3, btnGame4, background, title
 local btnGameHeight = _H/4
 local btnGameWidth = 3*_H/4
 
-local total, totalScore, bgscore, coins
 --local bgsound = audio.loadSound( "sounds/bgsound.mp3" )
 
 --local harp = audio.loadSound( "sounds/harp.wav")
@@ -46,23 +45,7 @@ local function goGame4()
 local function exit ()
 	rate.init()
 end
-local function checkTotal()
-   local function dbCheck()
-      local sql = [[SELECT value FROM statistic WHERE name='total';]]
-      for row in db:nrows(sql) do
-         return row.value
-      end
-   end
-   total = dbCheck()
-   if total == nil then
-      local insertTotal = [[INSERT INTO statistic VALUES (NULL, 'total', '0'); ]]
-      db:exec( insertTotal )
-      print("total inserted to 0")
-      total = 0
-   else
-      print("Total is "..total)
-   end
-end
+
 ---------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------
@@ -72,8 +55,7 @@ end
 -- Called when the scene's view does not exist:
 function scene:createScene( event )
 	local group = self.view
-----Checking total from DB
-	checkTotal()
+
 
 	background = display.newImage( "images/background.png", _CENTERX, _CENTERY, _W, _H)
 	group:insert(background)
@@ -137,28 +119,7 @@ function scene:enterScene( event )
 	btnGame4.y = btnGame3.y+ btnGameHeight
 
 	group:insert(btnGame4)
----------------------------------------------------------------
-----Score views
-	---------------------------------------------------------------
-	bgscore = display.newImage("images/bgscore.png", 0, 0, _W/5, _W/15)
-	bgscore.width, bgscore.height = _W/5, _W/20
-	bgscore.x = bgscore.width/2
-	bgscore.y = bgscore.height/2
-	group:insert(bgscore)
 
-	totalScore = display.newText("Score: "..total, 0,0, native.systemFont, _H/24)
-	totalScore.x = 2*totalScore.width/3
-	totalScore.y = bgscore.y
-	group:insert(totalScore)
-
-	coins = display.newImage("images/coins.png", 0, 0, bgscore.height/2, bgscore.height/2)
-	coins.width, coins.height = 2*bgscore.height/3, 2*bgscore.height/3
-	coins.x = bgscore.width - 3*coins.width/4
-	coins.y = bgscore.y
-	group:insert(coins)
-------------------------------------------------------------------------------
---End score views
-------------------------------------------------------------------------------
 	admob.showAd( "interstitial" )
 end
 

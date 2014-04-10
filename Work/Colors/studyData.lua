@@ -14,7 +14,7 @@ data.colors =
 	"green",
 	"indigo",
 	"blue",
-	"purple"	
+	"violet"	
 }
 
 data.textColors = 

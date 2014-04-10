@@ -97,7 +97,7 @@ end
 
 local function backHome()
 
-		storyboard.gotoScene( "scenetemplate", "slideRight", 800 )
+		storyboard.gotoScene( "scenetemplate", "slideRight", 600 )
 		storyboard.removeScene( "scenes.game2" )
 end
 local function playAgain()
@@ -254,14 +254,14 @@ function scene:createScene(event)
 		{
 		    --left = 0,
 		    --top = 0,
-		    defaultFile = "images/home.png",
+		    defaultFile = "images/back.png",
 		    overFile = "images/homehover.png",
 		    id = "home",
 		    onRelease = backHome,
 		    
 		}
-	backBtn.width, backBtn.height = 0.1*constants.W, 0.1*constants.W
-	backBtn.x, backBtn.y = backBtn.width/2, backBtn.height/2
+	backBtn.width, backBtn.height = 0.07*constants.W, 0.07*constants.W
+	backBtn.x, backBtn.y = backBtn.width/3, backBtn.height/3
 	group:insert( backBtn )
 
 	gamesWon = 0
