@@ -15,7 +15,7 @@ local rows = {2, 2, 3, 4}
 local level = 1
 local gameWon = 0
 
-local background
+local background, backBtn
 local butterflies
 local folds = {}
 
@@ -25,6 +25,11 @@ local totalCards
 local star = {}
 local starToScore
 
+local function backHome()
+
+		storyboard.gotoScene( "scenetemplate", "slideRight", 600 )
+		storyboard.removeScene( "scenes.game3" )
+end
 
 local function findIndex(object)
 	local index = 1
@@ -92,7 +97,22 @@ function scene:createScene(event)
 	background.width = constants.W
 	background.height = constants.H
 	group:insert(background)
-    gmanager.initGame()
+    
+    backBtn = widget.newButton
+		{
+		    left = 0,
+		    top = 0,
+		    defaultFile = "images/back.png",
+		    overFile = "images/homehover.png",
+		    id = "home",
+		    onRelease = backHome,
+		    
+		}
+	backBtn.width, backBtn.height = 0.07*constants.W, 0.07*constants.W
+	backBtn.x, backBtn.y = backBtn.width/3, backBtn.height/3
+	group:insert( backBtn )
+
+	gmanager.initGame()
 end
 
 function scene:willEnterScene(event)

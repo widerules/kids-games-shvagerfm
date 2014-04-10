@@ -20,7 +20,11 @@ local colorSound
 
 local background, pallete, canvas
 
+local function backHome()
 
+		storyboard.gotoScene( "scenetemplate", "slideRight", 600 )
+		storyboard.removeScene( "scenes.game3" )
+end
 
 local function onCircleClicked (event)
 	for i = 1, 7, 1 do
@@ -50,6 +54,20 @@ function scene:createScene(event)
 	canvas.height = constants.H*0.8
 	group:insert(canvas)
 
+	backBtn = widget.newButton
+		{
+		    --left = 0,
+		    --top = 0,
+		    defaultFile = "images/back.png",
+		    overFile = "images/homehover.png",
+		    id = "home",
+		    onRelease = backHome,
+		    
+		}
+	backBtn.width, backBtn.height = 0.07*constants.W, 0.07*constants.W
+	backBtn.x, backBtn.y = backBtn.width/3, backBtn.height/3
+	group:insert( backBtn )
+	
 	currentColor = 1
 	for i = 1,7,1 do
 		circles[i] = display.newImage (data.circlesPath..data.colors[i]..data.format, 0, 0)
