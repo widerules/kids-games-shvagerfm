@@ -11,7 +11,6 @@ local index = 1
 local gamePath = "scenes.game"
 
 local resPath = "images/game"
---local bgPath = "/bg"
 local namePath = "/title"
 local imagePath = "/titlepic"
 local difPath = "/complexity"
@@ -125,6 +124,8 @@ end
 function scene:enterScene (event)
 	local group = self.view
 	
+	index = event.params.ind
+
 	titlePic = display.newImage(resPath .. index .. imagePath .. format, 0, constants.CENTERY, constants.W/2, 3*constants.W/8)
 	titlePic.x = 0.7*titlePic.width
 	group:insert(titlePic)
