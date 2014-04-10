@@ -25,28 +25,28 @@ local btnPlay, leftArrow, rightArrow
 local function goNextGame()
 	if index <= _GAMEAMOUNT then
 		index = index + 1
-
+		
 		local options =
 		{
     		effect = "slideLeft",
     		time = 800,
     		params = { ind = index }
 		}
-		storyboard.gotoScene("scenes.gametitle2", options)
+		storyboard.gotoScene("scenes.gametitle", options)
 	end 
 end
 
 local function goPreviousGame()
 	if index > 1 then
 		index = index - 1
-
+		
 		local options =
 		{
     		effect = "slideRight",
     		time = 800,
     		params = { ind = index }
 		}
-		storyboard.gotoScene("scenes.gametitle2", options)
+		storyboard.gotoScene("scenes.gametitle", options)
 	else
         storyboard.gotoScene("scenetemplate", "slideRight", 800)
         storyboard.removeScene("scenes.gametitle")
