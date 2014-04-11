@@ -53,6 +53,17 @@ local function goPreviousGame()
 	end
 end
 
+local function animButtons(target)
+	local function transIn() 
+		transition.to( target, {time = 1500, alpha = 1, onComplete = animButtons} )
+	end
+	local transout = transition.to( target, {time = 1500, alpha = 0.3, onComplete = transIn} )
+	end
+
+local function animPlay()
+	transition.to(btnPlay, {time = 300, xScale = 2.2, yScale = 2.2, transition = easing.continuousLoop})
+end
+
 local function startDrag(event)
 	local swipeLength = math.abs(event.x - event.xStart) 
 	print(event.phase, swipeLength)
@@ -149,6 +160,10 @@ function scene:enterScene (event)
 	btnPlay.alpha = 0
 	transition.to(btnPlay, {time = 200, alpha = 1})
 	group:insert(btnPlay)
+
+animButtons(rightArrow)
+        animButtons(leftArrow)
+        animPlay()
 end
 
 function scene:exitScene(event)
