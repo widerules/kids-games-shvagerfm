@@ -18,7 +18,7 @@ local butterfly
 local colorName
 local colorSound
 
-local background, pallete, canvas
+local background, pallete, canvas, backBtn
 
 local function backHome()
 
@@ -56,13 +56,10 @@ function scene:createScene(event)
 
 	backBtn = widget.newButton
 		{
-		    --left = 0,
-		    --top = 0,
 		    defaultFile = "images/back.png",
-		    overFile = "images/homehover.png",
+		    overFile = "images/back.png",
 		    id = "home",
-		    onRelease = backHome,
-		    
+		    onRelease = backHome		    
 		}
 	backBtn.width, backBtn.height = 0.07*constants.W, 0.07*constants.W
 	backBtn.x, backBtn.y = backBtn.width/3, backBtn.height/3

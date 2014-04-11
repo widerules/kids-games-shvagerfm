@@ -94,13 +94,13 @@ function scene:createScene(event)
 	background = display.newImage("images/background1.png", constants.CENTERX, constants.CENTERY)
 	group:insert(background)
 
-
+	group:addEventListener( "touch", startDrag )
 	
 end
 
 function scene:enterScene (event)
 	local group = self.view
-	group:addEventListener( "touch", startDrag )
+	
 	
 	index = event.params.ind
 
