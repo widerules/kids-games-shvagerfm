@@ -5,6 +5,8 @@
 -----------------------------------------------------------------------------------------
 local storyboard = require("storyboard")
 -- Your code here
+_GAME = nil
+
 local function onKeyEvent( event )
 
    local phase = event.phase
