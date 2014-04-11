@@ -24,6 +24,7 @@ local totalCards
 
 local star = {}
 local starToScore
+local items = {}
 
 local function backHome()
 
