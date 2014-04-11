@@ -51,7 +51,16 @@ local function goPreviousGame()
         storyboard.removeScene("scenes.gametitle")
 	end
 end
+local function animButtons(target)
+	local function transIn() 
+		transition.to( target, {time = 1500, alpha = 1, onComplete = animButtons} )
+	end
+	local transout = transition.to( target, {time = 1500, alpha = 0.3, onComplete = transIn} )
+	end
 
+local function animPlay()
+	transition.to(btnPlay, {time = 300, xScale = 2.2, yScale = 2.2, transition = easing.continuousLoop})
+end
 local function startDrag(event)
 	local swipeLength = math.abs(event.x - event.xStart) 
 	print(event.phase, swipeLength)
@@ -83,12 +92,12 @@ function scene:createScene(event)
 	group:insert(background)
 
 
-	group:addEventListener( "touch", startDrag )
+	
 end
 
 function scene:enterScene (event)
 	local group = self.view
-	
+	group:addEventListener( "touch", startDrag )
 	index = event.params.ind
 
 	titlePic = display.newImage(resPath .. index .. imagePath .. format, 0, constants.CENTERY, constants.W/2, 3*constants.W/8)
@@ -149,6 +158,10 @@ function scene:enterScene (event)
 	btnPlay.alpha = 0
 	transition.to(btnPlay, {time = 200, alpha = 1})
 	group:insert(btnPlay)
+
+	animButtons(rightArrow)
+        animButtons(leftArrow)
+        animPlay()
 end
 
 
