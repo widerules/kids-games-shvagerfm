@@ -7,6 +7,8 @@ local gmanager = require("utils.gmanager")
 
 local scene = storyboard.newScene()
 
+local _GAME = 3
+
 local _FONTSIZE = constants.H / 13
 local _MAXLEVEL = 4
 
@@ -27,8 +29,13 @@ local starToScore
 local items = {}
 
 local function backHome()
-
-		storyboard.gotoScene( "scenetemplate", "slideRight", 600 )
+		local options =
+		{
+    		effect = "slideRight",
+    		time = 800,
+    		params = { ind = _GAME }
+		}
+		storyboard.gotoScene( "scenes.gametitle", options)
 		storyboard.removeScene( "scenes.game3" )
 end
 
@@ -49,7 +56,7 @@ local function onFoldClicked (event)
 	local function compare ()
 
 		if previous ~= nil then
-			
+			print ("second press")
 			if previous.butterflyType == event.target.butterflyType then
 				
 				--previous:removeEventListener( "tap", onFoldClicked )
@@ -82,7 +89,9 @@ local function onFoldClicked (event)
 				transition.to(previous, {time = 500, xScale = 1, alpha = 1, transition = easing.outBack})
 			end
 			previous = nil
+			print ("previous is nil")
 		else
+			print ("first press")
 			local soundName = audio.loadSound( "sounds/"..event.target.butterflyType..".mp3" )
 			audio.play(soundName)
 			previous = event.target
@@ -117,14 +126,15 @@ function scene:createScene(event)
 end
 
 function scene:willEnterScene(event)
-	butterflies = table.copy (data.butterflies)
-	totalCards = cardAmount[level]
+
 end
 
 function scene:enterScene (event)
 	local group = self.view
 
 	previous = nil
+	butterflies = table.copy (data.butterflies)
+	totalCards = cardAmount[level]
 
 	local sheetData = {
 		width = 512,

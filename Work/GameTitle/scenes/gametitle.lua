@@ -22,7 +22,7 @@ local background, title, titlePic, complexity
 local btnPlay, leftArrow, rightArrow
 
 local function goNextGame()
-	if index <= _GAMEAMOUNT then
+	if index < _GAMEAMOUNT then
 		index = index + 1
 
 		local options =
@@ -101,7 +101,7 @@ end
 function scene:enterScene (event)
 	local group = self.view
 	
-	
+
 	index = event.params.ind
 
 	titlePic = display.newImage(resPath .. index .. imagePath .. format, 0, constants.CENTERY, constants.W/2, 3*constants.W/8)
