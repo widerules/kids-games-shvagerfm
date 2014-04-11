@@ -61,7 +61,10 @@ local function animButtons(target)
 	end
 
 local function animPlay()
-	transition.to(btnPlay, {time = 300, xScale = 2.2, yScale = 2.2, transition = easing.continuousLoop})
+	local function toNormal()
+		transition.to(btnPlay, {time = 150, xScale = 1, yScale = 1})
+	end
+	transition.to(btnPlay, {time = 150, xScale = 2.2, yScale = 2.2, onComplete = toNormal })
 end
 
 local function startDrag(event)
@@ -100,6 +103,7 @@ end
 function scene:enterScene (event)
 	local group = self.view
 	
+	print(event.params.ind)
 	index = event.params.ind
 
 	titlePic = display.newImage(resPath .. index .. imagePath .. format, 0, constants.CENTERY, constants.W/2, 3*constants.W/8)
@@ -153,7 +157,7 @@ function scene:enterScene (event)
 			defaultFile = "images/btnPlay.png",
 			overFile = "images/btnPlayOver.png",
 			id = "button_1",
-			onRelease = play,
+			onRelease = startGame,
 		}
 	btnPlay.x = 0.7*constants.W
 	btnPlay.y = constants.CENTERY
