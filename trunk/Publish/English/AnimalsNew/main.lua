@@ -14,6 +14,7 @@ _CENTERX = display.contentCenterX
 _CENTERY = display.contentCenterY
 _W = display.contentWidth
 _H = display.contentHeight
+_GAME = nil
 -- load scenetemplate.lua
 
 local function exit ()
@@ -34,7 +35,13 @@ local function onKeyEvent( event )
             exit()
        
          else
-            storyboard.gotoScene( lastScene )
+            local options =
+               {
+                  effect = "slideRight",
+                  time = 800,
+                  params = { ind = _GAME }
+               }
+            storyboard.gotoScene( lastScene, options )
             storyboard.removeAll( )
          end
    end

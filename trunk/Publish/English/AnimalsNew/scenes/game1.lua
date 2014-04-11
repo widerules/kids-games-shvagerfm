@@ -21,7 +21,7 @@ local _WOODENHEIGHT = 0.9*_H;				--storing wooden board's height
 --I divided scene into two parts - for image and buttons and for "wooden board" 
 local _RIGHTCENTERX = _CENTERX + 0.35*_W;	--center for wooden board 
 local _LEFTCENTERX = _CENTERX - 0.15*_W;	--center for image
-
+_GAME = 1
 local index = 1;	--index of current animal
 local needPlayAudio = true
 
@@ -64,7 +64,13 @@ end;
 
 local function onHomeButtonClicked( event )
 	--TO DO:
-	storyboard.gotoScene("scenetemplate", "slideRight", 800)
+	local options =
+		{
+    		effect = "slideRight",
+    		time = 800,
+    		params = { ind = 1 }
+		}
+	storyboard.gotoScene("scenes.gametitle", options)
 	storyboard.removeScene("scenes/game1")
 
 end;
@@ -165,10 +171,20 @@ function scene:enterScene(event)
 end;
 
 function scene:exitScene(event)
+	if animalName ~= nil then
 	animalName:removeSelf();
+	end
+	if animalsDescriptions ~= nil then
 	animalDescription:removeSelf();
+	end
+	if animalImage ~= nil then
 	animalImage:removeSelf();
+end
+	if foodImage ~= nil then
 	foodImage:removeSelf();
+	end
+	audio.stop()
+	transition.cancel( )
 end;
 
 function scene:destroyScene(event)

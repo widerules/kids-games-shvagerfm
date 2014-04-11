@@ -181,6 +181,7 @@ function scene:exitScene(event)
 	leftArrow = nil
 	display.remove(btnPlay)
 	btnPlay = nil
+	--index = nil
 end
 
 function scene:destroyScene(event)
