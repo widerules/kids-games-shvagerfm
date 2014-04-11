@@ -11,6 +11,7 @@ local gmanager = require("utils.gmanager")
 local taskText = "Look for "
 local message = "Well done !"
 
+local _GAME = 2
 local _FONTSIZE = constants.H/7
 
 local gamesWon
@@ -97,7 +98,13 @@ end
 
 local function backHome()
 
-		storyboard.gotoScene( "scenetemplate", "slideRight", 600 )
+		local options =
+		{
+    		effect = "slideRight",
+    		time = 800,
+    		params = { ind = _GAME }
+		}
+		storyboard.gotoScene( "scenes.gametitle", options)
 		storyboard.removeScene( "scenes.game2" )
 end
 local function playAgain()
@@ -197,7 +204,10 @@ local function onItemTapped (event)
                     level = level + 1
                     animScore()
                 else
-                    gmanager.nextGame()
+
+                	storyboard.gotoScene("scenes.game3", "slideRight", 800)
+                	storyboard.removeScene("scenes.game2")
+                    --gmanager.nextGame()
                     --showPopUp()
                 end
                 wellDone()

@@ -9,6 +9,7 @@ local gmanager = require("utils.gmanager")
 local scene = storyboard.newScene()
 
 -------------------------------------constants
+local _GAME = 4
 local _STARSIZE = constants.H/6
 local _FRICTION = 0.7
 local _FONTSIZE = constants.H / 15
@@ -24,6 +25,17 @@ local score, record					--score variables
 local starGroup, informationGroup 	--group for falling stars and for information such as type of the star and score
 local scoreLabel 					--for showing score during the game
 local background, informationBackground  --for showing main background, and panel with information
+
+local function backHome()
+		local options =
+		{
+    		effect = "slideRight",
+    		time = 800,
+    		params = { ind = _GAME }
+		}
+		storyboard.gotoScene( "scenes.gametitle", options)
+		storyboard.removeScene( "scenes.game4" )
+end
 
 --this function called each time when user touch star
 local function onStarTouched(event)
@@ -61,6 +73,19 @@ function scene:createScene(event)
  	informationGroup = display.newGroup( )
  	group:insert(informationGroup)
     gmanager.initGame()
+
+    backBtn = widget.newButton
+	{
+	    left = 0,
+	    top = 0,
+	    defaultFile = "images/back.png",
+	    overFile = "images/homehover.png",
+	    id = "home",
+	    onRelease = backHome	    
+	}
+	backBtn.width, backBtn.height = 0.07*constants.W, 0.07*constants.W
+	backBtn.x, backBtn.y = backBtn.width/3, backBtn.height/3
+	group:insert( backBtn )
 end
 
 function scene:willEnterScene(event)

@@ -7,6 +7,8 @@ local gmanager = require("utils.gmanager")
 
 local scene = storyboard.newScene()
 
+local _GAME = 1
+
 local _CIRCLESSIZE = constants.H/6
 local _FONTSIZE = constants.H / 5;
 
@@ -21,9 +23,14 @@ local colorSound
 local background, pallete, canvas, backBtn
 
 local function backHome()
-
-		storyboard.gotoScene( "scenetemplate", "slideRight", 600 )
-		storyboard.removeScene( "scenes.game3" )
+		local options =
+		{
+    		effect = "slideRight",
+    		time = 800,
+    		params = { ind = _GAME }
+		}
+		storyboard.gotoScene( "scenes.gametitle", options)
+		storyboard.removeScene( "scenes.game1" )
 end
 
 local function onCircleClicked (event)
