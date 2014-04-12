@@ -62,7 +62,7 @@ local function animPlay()
 	local function toNormal()
 		transition.to(btnPlay, {time = 150, xScale = 1, yScale = 1})
 	end
-	transition.to(btnPlay, {time = 150, xScale = 2.2, yScale = 2.2, onComplete = toNormal })
+	transition.to(btnPlay, {time = 150, xScale = 1.2, yScale = 1.2, onComplete = toNormal })
 end
 local function startDrag(event)
 	local swipeLength = math.abs(event.x - event.xStart) 

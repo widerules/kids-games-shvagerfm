@@ -165,7 +165,7 @@ function scene:enterScene (event)
 	transition.to(btnPlay, {time = 200, alpha = 1})
 	group:insert(btnPlay)
 
-animButtons(rightArrow)
+		animButtons(rightArrow)
         animButtons(leftArrow)
         animPlay()
 end
