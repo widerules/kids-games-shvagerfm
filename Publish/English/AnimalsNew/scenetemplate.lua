@@ -7,14 +7,19 @@ local scene = storyboard.newScene()
 function scene:createScene(event)
 	local group = self.view
 
+	local background = display.newImage ("images/bgmain.png", constants.CENTERX, constants.CENTERY)
+	background.width = constants.W
+	background.height = constants.H
+	group:insert(background)
+
 	btnPlay = widget.newButton
 		{
 			width = constants.W/3,
 			height = constants.W/6,
 			x = constants.CENTERX,
 			y = constants.CENTERY,
-			defaultFile = "images/button.png",
-			overFile = "images/pbutton.png",
+			defaultFile = "images/homeplay.png",
+			overFile = "images/homeplayover.png",
 			onRelease = function ()
 				storyboard.gotoScene("scenes.gametitle", {params = {ind = 1}})
 			end
