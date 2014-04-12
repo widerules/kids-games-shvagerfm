@@ -6,6 +6,8 @@ local constants = require( "constants")
 
 local scene = storyboard.newScene( )
 
+_GAME = 2
+
 local _ANIMALSPATH = "images/"
 local _FOODPATH = "images/"
 local _FORMAT = ".png"
