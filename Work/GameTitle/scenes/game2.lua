@@ -272,8 +272,8 @@ function scene:createScene(event)
 	group:insert( backBtn )
 
 	gamesWon = 0
-	level = 8
-
+	level = 1
+	
     gmanager.initGame()
 end
 
