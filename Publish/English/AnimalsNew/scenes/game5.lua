@@ -1,8 +1,4 @@
 
-require "sqlite3"
-local path = system.pathForFile( "animalskids.sqlite", system.DocumentsDirectory )
-local db = sqlite3.open( path )
-
 local storyboard = require("storyboard")
 local constants = require("constants")
 local data = require("searchData")
@@ -33,7 +29,7 @@ local counter
 
 local soundName, soundTitle
 local star = {}
-
+local starToScore
 ---------------------------------------------------------------------------------
 -- functions
 --------------------------
@@ -82,57 +78,35 @@ function spawnExplosionToTable(spawnX, spawnY)
     local destroySpawneExplosion = timer.performWithDelay (explosionTime, removeExplosionSpawn(explosionTable[i]))
 end
 -----------------------------------------------------------
----------------------------------------
------check totals & update 
----------------------------------------
-local function checkTotal()
-   local function dbCheck()
-      local sql = [[SELECT value FROM statistic WHERE name='total';]]
-      for row in db:nrows(sql) do
-         return row.value
-      end
-   end
-   total = dbCheck()
-   if total == nil then
-      local insertTotal = [[INSERT INTO statistic VALUES (NULL, 'total', '0'); ]]
-      db:exec( insertTotal )
-      print("total inserted to 0")
-      total = 0
-   else
-      print("Total is "..total)
-   end
-end
-local function updateScore()
-	total = total + 5
-	local tablesetup = [[UPDATE statistic SET value = ']]..total..[[' WHERE name = 'total']]
-	db:exec(tablesetup)
 
-	totalScore.text = "Score: "..total
+local function backHome()
+		--TO DO:
+	local options =
+		{
+    		effect = "slideRight",
+    		time = 800,
+    		params = { ind = 5 }
+		}
+	storyboard.gotoScene("scenes.gametitle", options)
+	storyboard.removeScene("scenes.game5")
 end
-
 
 ----animation update score
 local function animScore()
 	local function listener()
-		updateScore()
-		coinsToScore:removeSelf( )
+		starToScore:removeSelf( )
+        starToScore = nil
 	end
-	coinsToScore = display.newImage( "images/coins.png", constants.CENTERX, constants.CENTERY, _H/8, _H/8)
-	coinsToScore.xScale, coinsToScore.yScale = 0.1, 0.1
+	starToScore = display.newImage( "images/starfull.png", constants.CENTERX, constants.CENTERY, constants.H/8, constants.H/8)
+	starToScore.xScale, starToScore.yScale = 0.1, 0.1
+	
 	local function trans1()
-	 	transition.to(coinsToScore, {time = 200, xScale = 1, yScale = 1, x = coins.x, y= coins.y, onComplete = listener})
+	 	transition.to(starToScore, {time = 200, xScale = 1, yScale = 1, x = star[level].x, y= star[level].y, onComplete = listener})
 	end
 	spawnExplosionToTable(constants.CENTERX, constants.CENTERY)
-	transition.to(coinsToScore, {time = 300, xScale = 2, yScale = 2, transition = easing.outBack, onComplete = trans1})
+	transition.to(starToScore, {time = 300, xScale = 2, yScale = 2, transition = easing.outBack, onComplete = trans1})
 end
-----------------------------------------
--- end totals f-ns
------------------------------------------
-local function backHome()
 
-		storyboard.gotoScene( "scenetemplate", "slideRight", 800 )
-		storyboard.removeScene( "scenes.game2" )
-end
 local function playAgain()
 	level = 1
 	popupBg:removeSelf( )
@@ -227,11 +201,14 @@ local function onItemTapped (event)
 			if gamesWon>2 then
 				gamesWon = 0
 				animScore()
-				if level<8 then
+				if level < 8 then
 					level = level + 1
+					timer.performWithDelay( 700, reloadFunc )
+				else
+					showPopUp()
 				end
 				wellDone()
-				timer.performWithDelay( 700, reloadFunc )
+				
 			else
 				reloadFunc()
 			end
@@ -274,8 +251,7 @@ end
 
 function scene:createScene(event)
 	local group = self.view
-----Checking total from DB
-	checkTotal()
+
 
 	background = display.newImage("images/background2.png", constants.CENTERX, constants.CENTERY)
 	background.width = constants.W
@@ -295,32 +271,9 @@ function scene:createScene(event)
 	backBtn.width, backBtn.height = 0.1*constants.W, 0.1*constants.W
 	backBtn.x, backBtn.y = backBtn.width/2, backBtn.height/2
 	group:insert( backBtn )
----------------------------------------------------------------
-----Score views
----------------------------------------------------------------
-	bgscore = display.newImage("images/bgscore.png", 0, 0, _W/4, _W/12)
-	bgscore.width, bgscore.height = _W/5, _W/20
-	bgscore.x = constants.W - bgscore.width/2
-	bgscore.y = bgscore.height/2
-	group:insert(bgscore)
-	
-	
-	coins = display.newImage("images/coins.png", 0, 0, bgscore.height/2, bgscore.height/2)
-	coins.width, coins.height = 2*bgscore.height/3, 2*bgscore.height/3
-	coins.x = bgscore.x + 0.5*bgscore.width - 3*coins.width/4
-	coins.y = bgscore.y
-	group:insert(coins)
 
-	totalScore = display.newText("Score: "..total, 0,0, native.systemFont, _H/24)
-	totalScore.x = bgscore.x - totalScore.width/4
-	totalScore.y = bgscore.y
-	group:insert(totalScore)
-
-------------------------------------------------------------------------------
---End score views
-------------------------------------------------------------------------------
 	gamesWon = 0
-	level = 1
+	level = 7
 end
 
 function scene:willEnterScene(event)

@@ -1,7 +1,4 @@
---"including libs"
-require "sqlite3"
-local path = system.pathForFile( "animalskids.sqlite", system.DocumentsDirectory )
-local db = sqlite3.open( path )
+
 local storyboard = require("storyboard");
 local widget = require("widget");
 local native = require ("native");
@@ -71,7 +68,7 @@ local function onHomeButtonClicked( event )
     		params = { ind = 1 }
 		}
 	storyboard.gotoScene("scenes.gametitle", options)
-	storyboard.removeScene("scenes/game1")
+	storyboard.removeScene("scenes.game1")
 
 end;
 
