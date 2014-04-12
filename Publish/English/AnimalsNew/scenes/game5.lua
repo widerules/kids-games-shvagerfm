@@ -273,7 +273,7 @@ function scene:createScene(event)
 	group:insert( backBtn )
 
 	gamesWon = 0
-	level = 7
+	level = 1
 end
 
 function scene:willEnterScene(event)
