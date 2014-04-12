@@ -19,18 +19,29 @@ local function onKeyEvent( event )
          print( "previous scene", lastScene )
          
          if ( currentScene == "scenetemplate") then
-            --exit()
+            exit()
        
+         elseif (currentScene == "scenes.gametitle" or currentScene == "scenes.gametitle2") then
+           
+               local options =
+                  {
+                     effect = "slideRight",
+                     time = 800,
+                  }
+               transition.cancel( )
+               storyboard.gotoScene( "scenetemplate", options )
+               storyboard.removeAll( )
          else
-            transition.cancel( )
             local options =
                {
                   effect = "slideRight",
                   time = 800,
                   params = { ind = _GAME }
                }
+            transition.cancel( )
             storyboard.gotoScene( lastScene, options )
             storyboard.removeAll( )
+
          end
    end
    if ( keyName == "volumeUp" and phase == "down" ) then
