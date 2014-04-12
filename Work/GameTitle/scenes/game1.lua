@@ -7,7 +7,7 @@ local gmanager = require("utils.gmanager")
 
 local scene = storyboard.newScene()
 
-local _GAME = 1
+_GAME = 1
 
 local _CIRCLESSIZE = constants.H/6
 local _FONTSIZE = constants.H / 5;

@@ -6,7 +6,7 @@ local scene = storyboard.newScene()
 
 local _GAMEAMOUNT = 4
 
-local index = 1
+local indexGame = 1
 
 local gamePath = "scenes.game"
 
@@ -22,28 +22,28 @@ local background, title, titlePic, complexity
 local btnPlay, leftArrow, rightArrow
 
 local function goNextGame()
-	if index < _GAMEAMOUNT then
-		index = index + 1
+	if indexGame < _GAMEAMOUNT then
+		indexGame = indexGame + 1
 
 		local options =
 		{
     		effect = "slideLeft",
     		time = 800,
-    		params = { ind = index }
+    		params = { ind = indexGame }
 		}
 		storyboard.gotoScene("scenes.gametitle2", options)
 	end 
 end
 
 local function goPreviousGame()
-	if index > 1 then
-		index = index - 1
+	if indexGame > 1 then
+		indexGame = indexGame - 1
 
 		local options =
 		{
     		effect = "slideRight",
     		time = 800,
-    		params = { ind = index }
+    		params = { ind = indexGame }
 		}
 		storyboard.gotoScene("scenes.gametitle2", options)
 	else
@@ -82,14 +82,14 @@ local function startDrag(event)
 end
 
 local function startGame(event)
-	    storyboard.gotoScene(gamePath .. index, "slideRight", 800)
+	    storyboard.gotoScene(gamePath .. indexGame, "slideRight", 800)
         storyboard.removeScene("scenes.gametitle")
 end
 
 function scene:createScene(event)
 	local group = self.view
 
-	index = event.params.ind
+	indexGame = event.params.ind
 
 	background = display.newImage("images/background1.png", constants.CENTERX, constants.CENTERY)
 	group:insert(background)
@@ -102,16 +102,16 @@ function scene:enterScene (event)
 	local group = self.view
 	
 
-	index = event.params.ind
+	indexGame = event.params.ind
 
-	titlePic = display.newImage(resPath .. index .. imagePath .. format, 0, constants.CENTERY, constants.W/2, 3*constants.W/8)
+	titlePic = display.newImage(resPath .. indexGame .. imagePath .. format, 0, constants.CENTERY, constants.W/2, 3*constants.W/8)
 	titlePic.x = 0.7*titlePic.width
 	titlePic.alpha = 0
 	transition.to(titlePic, {time = 200, alpha = 1})
 	group:insert(titlePic)
 
 	
-	title = display.newImage(resPath .. index .. namePath .. format,  0, 0, constants.W/4, constants.W/12)
+	title = display.newImage(resPath .. indexGame .. namePath .. format,  0, 0, constants.W/4, constants.W/12)
 	title.y = title.height
 	title.x = constants.W - title.width
 	title.alpha = 0
@@ -132,7 +132,7 @@ function scene:enterScene (event)
 	transition.to(leftArrow, {time = 200, alpha = 1})
 	group:insert(leftArrow)
 
-	if index < _GAMEAMOUNT then
+	if indexGame < _GAMEAMOUNT then
 		rightArrow = widget.newButton
 			{
 				width = constants.W/12,

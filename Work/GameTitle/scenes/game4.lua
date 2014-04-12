@@ -9,7 +9,7 @@ local gmanager = require("utils.gmanager")
 local scene = storyboard.newScene()
 
 -------------------------------------constants
-local _GAME = 4
+_GAME = 4
 local _STARSIZE = constants.H/6
 local _FRICTION = 0.7
 local _FONTSIZE = constants.H / 15

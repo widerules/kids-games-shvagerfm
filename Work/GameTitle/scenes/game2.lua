@@ -11,7 +11,7 @@ local gmanager = require("utils.gmanager")
 local taskText = "Look for "
 local message = "Well done !"
 
-local _GAME = 2
+_GAME = 2
 local _FONTSIZE = constants.H/7
 
 local gamesWon

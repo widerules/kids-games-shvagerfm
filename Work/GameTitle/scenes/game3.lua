@@ -7,7 +7,7 @@ local gmanager = require("utils.gmanager")
 
 local scene = storyboard.newScene()
 
-local _GAME = 3
+_GAME = 3
 
 local _FONTSIZE = constants.H / 13
 local _MAXLEVEL = 4
