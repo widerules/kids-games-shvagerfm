@@ -4,6 +4,8 @@ local constants = require("constants")
 local data = require("shapesData")
 local popup = require("utils.popupReload")
 
+_GAME = 3
+
 local scene = storyboard.newScene()
 
 local _WELLDONETEXT = "Well done !"

@@ -48,7 +48,7 @@ local function onNextButtonClicked( event )
 	if index > table.maxn(data.animalsNames) then
 		index = 1;
 	end;
-
+	animalDescription:removeSelf( )
 	storyboard.reloadScene(); 
 end;
 
@@ -58,7 +58,7 @@ local function onPreviousButtonClicked( event )
 	if index < 1 then
 		index = table.maxn(data.animalsNames);
 	end;
-
+	animalDescription:removeSelf( )
 	storyboard.reloadScene( );
 end;
 

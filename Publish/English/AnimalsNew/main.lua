@@ -34,6 +34,34 @@ local function onKeyEvent( event )
          if ( currentScene == "scenetemplate") then
             exit()
        
+         elseif (currentScene == "scenes.gametitle" or currentScene == "scenes.gametitle2") then
+            if indexGame == 1 then
+               local options =
+                  {
+                     effect = "slideRight",
+                     time = 800,
+                  }
+               storyboard.gotoScene( "scenetemplate", options )
+               storyboard.removeAll( )
+            elseif currentScene == "scenes.gametitle2" then
+               local options =
+                  {
+                     effect = "slideRight",
+                     time = 800,
+                     params = { ind = indexGame - 1 }
+                  }
+               storyboard.gotoScene(  "scenes.gametitle", options )
+               storyboard.removeAll( )
+            else 
+               local options =
+                  {
+                     effect = "slideRight",
+                     time = 800,
+                     params = { ind = indexGame - 1 }
+                  }
+               storyboard.gotoScene(  "scenes.gametitle2", options )
+               storyboard.removeAll( )
+            end
          else
             local options =
                {
@@ -43,6 +71,7 @@ local function onKeyEvent( event )
                }
             storyboard.gotoScene( lastScene, options )
             storyboard.removeAll( )
+
          end
    end
    if ( keyName == "volumeUp" and phase == "down" ) then
