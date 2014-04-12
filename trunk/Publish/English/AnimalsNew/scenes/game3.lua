@@ -38,6 +38,19 @@ local starToScore
 local level, onPlaces
 local background, barBackground, plate, wellDoneLabel, homeBtn
 
+local function onHomeButtonClicked( event )
+	--TO DO:
+	local options =
+		{
+    		effect = "slideRight",
+    		time = 800,
+    		params = { ind = 3 }
+		}
+	storyboard.gotoScene("scenes.gametitle", options)
+	storyboard.removeScene("scenes.game3")
+
+end;
+
 local function animScaleBack (item)
 	item.xScale = 1
 	item.yScale = 1
@@ -78,10 +91,6 @@ local function animScore()
 	transition.to(starToScore, {time = 300, xScale = 2, yScale = 2, transition = easing.outBack, onComplete = trans1})
 end
 
-local function onHomeButtonClicked () 
-	storyboard.gotoScene("scenetemplate", "slideRight", 800)
-   	storyboard.removeScene("scenes.game3")
-end
 
 local function onAnimalDrag(event)
 	local t = event.target

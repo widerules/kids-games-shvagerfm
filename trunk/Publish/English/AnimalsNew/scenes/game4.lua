@@ -103,10 +103,18 @@ local function onNextButtonClicked()
 	storyboard.reloadScene( )
 end
 
-local function onHomeButtonClicked()
-	storyboard.gotoScene("scenetemplate", "slideRight", 800)
-	-- storyboard.removeScene("scenes.game3")
-end
+local function onHomeButtonClicked( event )
+	--TO DO:
+	local options =
+		{
+    		effect = "slideRight",
+    		time = 800,
+    		params = { ind = 4 }
+		}
+	storyboard.gotoScene("scenes.gametitle", options)
+	storyboard.removeScene("scenes.game4")
+
+end;
 
 local function showPopUp()
 	popupBg = display.newImage( "images/popupbg.png", constants.CENTERX, constants.CENTERY )
