@@ -35,7 +35,7 @@ local function onKeyEvent( event )
             exit()
        
          elseif (currentScene == "scenes.gametitle" or currentScene == "scenes.gametitle2") then
-            if indexGame == 1 then
+           
                local options =
                   {
                      effect = "slideRight",
@@ -43,25 +43,6 @@ local function onKeyEvent( event )
                   }
                storyboard.gotoScene( "scenetemplate", options )
                storyboard.removeAll( )
-            elseif currentScene == "scenes.gametitle2" then
-               local options =
-                  {
-                     effect = "slideRight",
-                     time = 800,
-                     params = { ind = indexGame - 1 }
-                  }
-               storyboard.gotoScene(  "scenes.gametitle", options )
-               storyboard.removeAll( )
-            else 
-               local options =
-                  {
-                     effect = "slideRight",
-                     time = 800,
-                     params = { ind = indexGame - 1 }
-                  }
-               storyboard.gotoScene(  "scenes.gametitle2", options )
-               storyboard.removeAll( )
-            end
          else
             local options =
                {
