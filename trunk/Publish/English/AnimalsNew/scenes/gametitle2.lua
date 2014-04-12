@@ -6,7 +6,7 @@ local scene = storyboard.newScene()
 
 local _GAMEAMOUNT = 5
 
-
+local indexGame = 1
 
 local gamePath = "scenes.game"
 
@@ -23,7 +23,7 @@ local background, title, titlePic, complexity
 local btnPlay, leftArrow, rightArrow
 
 local function goNextGame()
-	if indexGame <= _GAMEAMOUNT then
+	if indexGame < _GAMEAMOUNT then
 		indexGame = indexGame + 1
 		
 		local options =
