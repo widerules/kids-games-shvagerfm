@@ -24,6 +24,7 @@ local images = {}
 local imageSize, spacingX, spacingY
 local itemType, searchAmount
 local taskLabel
+local labelTimer = 0
 
 local background, backBtn, homeBtn, nextBtn, popupBg, popupText
 local counter
@@ -203,15 +204,11 @@ local function onItemTapped (event)
                 if level<8 then
                     level = level + 1
                     animScore()
+                    wellDone()
+					timer.performWithDelay( 700, reloadFunc )
                 else
-
-                	storyboard.gotoScene("scenes.game3", "slideRight", 800)
-                	storyboard.removeScene("scenes.game2")
-                    --gmanager.nextGame()
-                    --showPopUp()
+                    gmanager.nextGame()
                 end
-                wellDone()
-				timer.performWithDelay( 700, reloadFunc )
             else
                 reloadFunc()
             end
@@ -317,7 +314,7 @@ function scene:enterScene(event)
 	taskLabel.yScale = 0.3
 	taskLabel:setFillColor( 0,0,0 )
 	group:insert(taskLabel)
-	transition.to(taskLabel, {time = 500, xScale = 1, yScale = 1, onComplete = function() timer.performWithDelay(1000, hideLabel) end})
+	transition.to(taskLabel, {time = 500, xScale = 1, yScale = 1, onComplete = function() labelTimer = timer.performWithDelay(1000, hideLabel) end})
 
 	---stars
 	for i=1, 8 do
@@ -358,6 +355,10 @@ function scene:exitScene(event)
 		homeBtn:removeSelf();
 		popupBg = nil
 	end;
+
+	if labelTimer ~= 0 then
+		timer.cancel( labelTimer )
+	end
 	transition.cancel( )
 	audio.stop()
 
