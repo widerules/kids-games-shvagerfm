@@ -7,6 +7,8 @@ local explosion = require("utils.explosion")
 
 local scene = storyboard.newScene()
 
+_GAME = 4
+
 -------------------------------------constants
 local _INFOSTARSIZE = constants.H/6
 local _FRICTION = 0.7
@@ -44,8 +46,14 @@ local function onReloadButtonClicked()
 end
 
 local function onHomeButtonClicked () 
-	storyboard.gotoScene("scenetemplate", "slideRight", 800)
-   	storyboard.removeScene("scenes.game4")
+		local options =
+		{
+    		effect = "slideRight",
+    		time = 800,
+    		params = { ind = _GAME }
+		}
+		storyboard.gotoScene( "scenes.gametitle", options)
+		storyboard.removeScene( "scenes.game4" )
 end
 
 local function showPopUp (message)
@@ -80,7 +88,7 @@ local function showPopUp (message)
         x = popupBg.x,
         y = popupBg.y + _BTNSIZE,
         defaultFile = "images/reload.png",
-        overFile = "images/reload.png",
+        overFile = "images/reloadhover.png",
         onRelease = onReloadButtonClicked
     }
     --if current level is not max - show next button

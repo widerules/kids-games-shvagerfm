@@ -1,9 +1,17 @@
 local data = {}
 
-data.totalGameLoops = 50 	--total amount of stars, wich will be created
-data.delay = 200			--pause between star generation
+local _BIGSIZE	= 4
+local _MIDSIZE	= 6
+local _SMALLSIZE = 7
 
-data.starPath = "images/stars/"
+local _FASTSPEED = 9
+local _MIDSPEED  = 6
+local _SLOWSPEED = 3
+
+data.itemPath = 
+{
+	"images/stars/"
+}
 data.format = ".png"
 
 data.colors = 
@@ -15,6 +23,45 @@ data.colors =
 	"violet",
 	"red",
 	"yellow"		
+}
+
+data.difficults =
+{
+	{
+		colors = 2,
+		size = _BIGSIZE,				--smaller value of size var means bigger size on the display
+		speed = _SLOWSPEED
+	},
+	{	
+		colors = 3,	
+		size = _BIGSIZE,
+		speed = _SLOWSPEED
+	},
+	{
+		colors = 3,
+		size = _BIGSIZE,
+		speed = _MIDSPEED
+	},
+	{
+		colors = 4,
+		size = _MIDSIZE,
+		speed = _MIDSPEED
+	},
+	{
+		colors = 5,
+		size = _MIDSIZE,
+		speed = _MIDSPEED
+	},
+	{
+		colors = 6,
+		size = _SMALLSIZE,
+		speed = _MIDSPEED
+	},
+	{
+		colors = 7,
+		size = _SMALLSIZE,
+		speed = _FASTSPEED
+	}
 }
 
 return data
