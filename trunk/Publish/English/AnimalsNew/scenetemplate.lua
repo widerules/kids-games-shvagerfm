@@ -26,7 +26,7 @@ function scene:createScene(event)
 
 		}
 	group:insert(btnPlay)
-	btnMore = widget.newButton
+	local btnMore = widget.newButton
 		{
 			width = constants.W/4,
 			height = constants.W/10,
