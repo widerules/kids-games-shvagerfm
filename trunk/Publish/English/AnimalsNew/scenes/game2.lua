@@ -21,6 +21,7 @@ local _DELTA = 0.1*constants.H;
 local _PANECENTERX
 local _BARCENTERX
 
+
 local indexes = {}
 local positions = {}
 local foodPositions = {}
@@ -29,7 +30,7 @@ local foodPictures = {}
 
 local animalSound;
 
-local background;
+local background, homeBtn
 local rightBar;
 local pane;
 local starToScore
@@ -85,6 +86,18 @@ local function spawnExplosionToTable(spawnX, spawnY)
     local destroySpawneExplosion = timer.performWithDelay (explosionTime, removeExplosionSpawn(explosionTable[i]))
 end
 
+local function backHome( event )
+    --TO DO:
+    local options =
+        {
+            effect = "slideRight",
+            time = 800,
+            params = { ind = 2 }
+        }
+    storyboard.gotoScene("scenes.gametitle", options)
+    storyboard.removeScene("scenes.game2")
+
+end;
 
 ----animation update score
 local function animScore()
@@ -282,6 +295,22 @@ function scene:createScene(event)
 
                 }       
         }
+
+    backBtn = widget.newButton
+        {
+            height = 0.07*constants.W,
+            width = 0.07*constants.W,
+            left = 0,
+            top = 0,
+            defaultFile = "images/home.png",
+            overFile = "images/homehover.png",
+            id = "home",
+            onRelease = backHome,
+            
+        }
+    --backBtn.width, backBtn.height = 0.08*constants.W, 0.08*constants.W
+    --backBtn.x, backBtn.y = backBtn.width/2, backBtn.height/2
+    group:insert( backBtn )
 
 end
 

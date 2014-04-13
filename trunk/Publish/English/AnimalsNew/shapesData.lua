@@ -18,7 +18,7 @@ data.animals =
 	"deer",
 	"dog",
 	"duck",
-	"elefant",
+	"elephant",
 	"fox",
 	"hippo",
 	"lion",

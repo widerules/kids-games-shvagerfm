@@ -12,7 +12,7 @@ local _CENTERX = display.contentCenterX;	--storing horizontal center
 local _CENTERY = display.contentCenterY;	--storing verticall center
 local _IMAGEWIDTH = 0.35*_W;					--storing image's width
 local _IMAGEHEIGHT = 0.35*_W;				--storing image's height
-local _BTNSIZE = 0.1*_W;					--storing buttons' size
+local _BTNSIZE = 0.07*_W;					--storing buttons' size
 local _WOODENWIDTH = 0.33*_W;				--storing wooden board's width
 local _WOODENHEIGHT = 0.9*_H;				--storing wooden board's height
 --I divided scene into two parts - for image and buttons and for "wooden board" 
@@ -45,7 +45,10 @@ local function onNextButtonClicked( event )
 	if index > table.maxn(data.animalsNames) then
 		index = 1;
 	end;
+	if animalDescription ~=nil then
 	animalDescription:removeSelf( )
+	animalDescription = nil
+	end
 	storyboard.reloadScene(); 
 end;
 
@@ -101,8 +104,8 @@ function scene:createScene(event)
 		y = _CENTERY,
 		defaultFile = "images/next.png",
 		overFile = "images/next.png", --here should be some new file ?
-		width = _BTNSIZE,
-		height = _BTNSIZE
+		width = 1.2*_BTNSIZE,
+		height = 1.2*_BTNSIZE
 	};
 	nextButton:addEventListener( "tap", onNextButtonClicked );
 	group:insert(nextButton);
@@ -113,16 +116,18 @@ function scene:createScene(event)
 		y = _CENTERY,
 		defaultFile = "images/prev.png",
 		overFile = "images/prev.png",
-		width = _BTNSIZE,
-		height = _BTNSIZE
+		width = 1.2*_BTNSIZE,
+		height = 1.2*_BTNSIZE
 	}
 	previousButton:addEventListener( "tap", onPreviousButtonClicked );
 	group:insert(previousButton);
 
 	homeButton = widget.newButton 
 	{
-		x = _BTNSIZE/2,
-		y = _BTNSIZE/2,
+		height = _BTNSIZE,
+        width = _BTNSIZE,
+        left = 0,
+		top = 0,
 		defaultFile = "images/home.png",
 		overFile = "images/homehover.png",
 		width = _BTNSIZE,
@@ -142,10 +147,12 @@ function scene:enterScene(event)
 	animalName.anchorY = 0;
 	group:insert(animalName);
 
+	if data.animalsDescriptions[index] ~= nil then
 	animalDescription = display.newEmbossedText(data.animalsDescriptions[index], woodenLayer.x, 0, 0.85*_WOODENWIDTH, 0.5*_WOODENHEIGHT, "Arial", _H/24);	
 	animalDescription.y = animalName.y + 3*animalDescription.height/4;
 	animalDescription:setFillColor(0,0,0);
 	group:insert(animalDescription);	
+	end
 
 	animalImage = display.newImage( data.animalsImages[index], _LEFTCENTERX, _CENTERY );
 	animalImage.height = _IMAGEHEIGHT;
@@ -153,11 +160,13 @@ function scene:enterScene(event)
 	animalImage:addEventListener( "tap", onAnimalClicked );
 	group:insert(animalImage);
 
+	if data.foodsImages[index] ~= nil then
 	foodImage = display.newImage (data.foodsImages[index], woodenLayer.x, _CENTERY+_WOODENHEIGHT/2);
 	foodImage.anchorY = 1;
 	foodImage.height = _IMAGEHEIGHT/2;
 	foodImage.width = _IMAGEWIDTH/2;
 	group:insert (foodImage);
+	end
 
 	animalSound = audio.loadSound( data.animalsSounds[index])
 
@@ -179,6 +188,7 @@ function scene:exitScene(event)
 end
 	if foodImage ~= nil then
 	foodImage:removeSelf();
+	foodImage = nil
 	end
 	audio.stop()
 	transition.cancel( )
