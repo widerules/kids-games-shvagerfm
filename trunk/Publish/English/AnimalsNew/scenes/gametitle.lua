@@ -22,7 +22,7 @@ local background, title, titlePic, complexity
 local btnPlay, leftArrow, rightArrow
 
 local function goNextGame()
-	if indexGame <= _GAMEAMOUNT then
+	if indexGame < _GAMEAMOUNT then
 		indexGame = indexGame + 1
 
 		local options =
