@@ -62,14 +62,16 @@ function scene:createScene(event)
 	group:insert(canvas)
 
 	backBtn = widget.newButton
-		{
+		{	height = 0.05*constants.W,
+			width = 0.05*constants.W,
+			top = 0,
+			left = 0,
 		    defaultFile = "images/back.png",
 		    overFile = "images/back.png",
 		    id = "home",
 		    onRelease = backHome		    
 		}
-	backBtn.width, backBtn.height = 0.07*constants.W, 0.07*constants.W
-	backBtn.x, backBtn.y = backBtn.width/3, backBtn.height/3
+
 	group:insert( backBtn )
 	
 	currentColor = 1
