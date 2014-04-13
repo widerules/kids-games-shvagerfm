@@ -260,16 +260,19 @@ function scene:createScene(event)
 	
 	backBtn = widget.newButton
 		{
-		    --left = 0,
-		    --top = 0,
+		    
+		     height = 0.07*constants.W,
+            width = 0.07*constants.W,
+            left = 0,
+		    top = 0,
 		    defaultFile = "images/home.png",
 		    overFile = "images/homehover.png",
 		    id = "home",
 		    onRelease = backHome,
 		    
 		}
-	backBtn.width, backBtn.height = 0.1*constants.W, 0.1*constants.W
-	backBtn.x, backBtn.y = backBtn.width/2, backBtn.height/2
+	--backBtn.width, backBtn.height = 0.1*constants.W, 0.1*constants.W
+	--backBtn.x, backBtn.y = backBtn.width/2, backBtn.height/2
 	group:insert( backBtn )
 
 	gamesWon = 0
@@ -285,6 +288,7 @@ end
 
 function scene:enterScene(event)
 		local group = self.view
+		
 	counter = 1
 	generateItems()
 	for i = 1, itemsCount[level]/rows[level] do

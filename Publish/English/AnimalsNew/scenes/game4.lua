@@ -117,6 +117,8 @@ local function onHomeButtonClicked( event )
 end;
 
 local function showPopUp()
+	local soundWell = audio.loadSound( "sounds/welldone.mp3")
+	audio.play( soundWell )
 	popupBg = display.newImage( "images/popupbg.png", constants.CENTERX, constants.CENTERY )
 	popupBg.height = 0.7*constants.H
 	popupBg.width = 0.7*constants.W

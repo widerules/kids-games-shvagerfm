@@ -32,6 +32,7 @@ local animalsImages = {}
 local shadows = {}
 local shadowsImages = {}
 local stars = {}
+local animalSound;
 
 local starToScore
 
@@ -94,6 +95,8 @@ end
 
 local function onAnimalDrag(event)
 	local t = event.target
+	local name = tostring(t.type)
+	animalSound = audio.loadSound("sounds/"..name..".mp3")
 	local phase = event.phase
 	animScaleOnDrag(t)
 	if "began" == phase then 
@@ -125,6 +128,7 @@ local function onAnimalDrag(event)
 						onPlaces = onPlaces - 1
 						animOnPutOn(t)
 						animOnPutOnShape(shadowsImages[i][j])
+						audio.play( animalSound )
 						shadowsImages[i][j].isUsed = true
 						t:removeEventListener( "touch", onAnimalDrag )
 					else 
@@ -240,8 +244,8 @@ function scene:createScene(event)
 
 	homeBtn = widget.newButton
     {
-    	width = _BUTTONSIZE,
-        height = _BUTTONSIZE,
+    	height = 0.07*constants.W,
+        width = 0.07*constants.W,
         x = _BUTTONSIZE/2,
         y = _BUTTONSIZE/2,
         defaultFile = "images/home.png",
@@ -262,7 +266,8 @@ end
 
 function scene:enterScene (event)
 	local group = self.view
-
+	soundStart = audio.loadSound( "sounds/place.mp3" )
+		audio.play(soundStart)
 
 	_ITEMSIZE = barBackground.height*0.95	
 	_SPACINGANIMALS = (constants.W-_ITEMSIZE*itemAmount[level])/(itemAmount[level]+1)
