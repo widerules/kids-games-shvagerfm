@@ -26,6 +26,21 @@ function scene:createScene(event)
 
 		}
 	group:insert(btnPlay)
+	btnMore = widget.newButton
+		{
+			width = constants.W/4,
+			height = constants.W/10,
+			x = constants.CENTERX,
+			y = constants.CENTERY,
+			defaultFile = "images/moregames.png",
+			overFile = "images/moregamesover.png",
+			onRelease = function ()
+				storyboard.gotoScene("scenes.gametitle", {params = {ind = 1}})
+			end
+
+		}
+		btnMore.y = constants.CENTERY + 1.5*btnMore.height
+		group:insert(btnMore)
 end
 
 function scene:enterScene (event)
