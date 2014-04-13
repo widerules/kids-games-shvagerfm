@@ -4,7 +4,7 @@ local constants = require("constants")
 
 local scene = storyboard.newScene()
 
-local _GAMEAMOUNT = 3
+local _GAMEAMOUNT = 4
 
 local indexGame = 1
 
