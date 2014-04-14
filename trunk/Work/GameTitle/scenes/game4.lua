@@ -25,6 +25,7 @@ local scoreText = "Score: "
 local timerID, index, loopNumber 	--index for randomly choosing one type of stars, loopNumber to dedicate end of the star generating
 local starType, starTypeImage 		--storing type of the star, showing this type 
 local score, record, generated					--score variables
+local starTimerID = {}
 
 local rateStars = {}
 local starGroup, informationGroup 	--group for falling stars and for information such as type of the star and score
@@ -146,7 +147,7 @@ local function showPopUp (message)
 		    	rateStars[i].yScale = 0.7
 		    	transition.to(rateStars[i], {time = 500, xScale = 1, yScale = 1, transition = easing.outBack})
 	    	end
-    		timer.performWithDelay( i*600, addStar )
+    		starTimerID[i] = timer.performWithDelay( i*600, addStar )
     	end
     else
     	--SOUND_PLACE negative end of the game (score == 0)
@@ -301,6 +302,12 @@ end
 
 function scene:exitScene(event)
 	timer.cancel(timerID)
+	for i = 1, #starTimerID do 
+		if starTimerID[i] ~= nil then
+			timer.cancel(starTimerID[i])
+		end
+	end
+
 	physics.stop()
 	transition.cancel()
 
