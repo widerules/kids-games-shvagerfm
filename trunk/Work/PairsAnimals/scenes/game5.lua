@@ -22,6 +22,11 @@ local folds = {}
 local previous
 local totalCards
 
+local star = {}
+local starToScore
+local items = {}
+
+
 local function findIndex(object)
 	local index = 1
 	for i = 1, #folds do
@@ -165,6 +170,22 @@ function scene:enterScene (event)
 		group:insert(folds[i])		
 	end
 
+	---stars
+	for i=1, _MAXLEVEL do
+		if i < level then
+			star[i] = display.newImage("images/starfull.png", 0, 0, constants.H/20, constants.H/12)
+		else
+			star[i] = display.newImage("images/star.png", 0, 0, constants.H/20, constants.H/12)
+		end
+		star[i].width, star[i].height = constants.H/16, constants.H/16
+		star[i].x = constants.W - star[i].width/2
+		if i == 1 then
+			star[i].y = constants.H - star[i].height/2
+		else
+			star[i].y = star[i-1].y - star[i].height
+		end
+		group:insert(star[i])
+	end
 end
 
 function scene:exitScene(event)
@@ -183,6 +204,11 @@ function scene:exitScene(event)
 			end
 			
 		end
+	end
+
+	for i = 1, #star do
+		display.remove (star[i])
+		star[i] = nil
 	end
 end
 
