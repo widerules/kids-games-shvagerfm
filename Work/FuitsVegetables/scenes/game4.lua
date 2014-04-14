@@ -123,7 +123,8 @@ local function showPopUp (message)
     --of score more than 0, start giving golden stars
     if score > 0 then
     	--SOUND_PLACE positive end of the game
-
+    	local wellDone = audio.loadSound("sounds/welldone.mp3")
+    	audio.play(wellDone)
     	--calculating actual rating
     	local rate = math.round(3/math.floor(generated/score))
     	if rate < 3 then 
@@ -182,7 +183,8 @@ local function onStarTouched(event)
 	--if user touched star of correct type
 	if event.target.starType == starType then
 		--SOUND_PLACE Correct item selected sound
-
+		local correct = audio.loadSound( "sounds/harp.wav")
+		audio.play(correct)
 		--remove event listener from this star
 		event.target:removeEventListener("touch", onStarTouched) 
 
@@ -211,6 +213,8 @@ function scene:createScene(event)
  	group:insert(informationGroup)
 
  	level = 1
+ 	local startSound = audio.loadSound( "sounds/catch.mp3" )
+ 	audio.play(startSound)
 end
 
 function scene:willEnterScene(event)
