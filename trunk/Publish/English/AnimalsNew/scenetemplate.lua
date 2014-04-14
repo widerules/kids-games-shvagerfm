@@ -35,7 +35,7 @@ function scene:createScene(event)
 			defaultFile = "images/moregames.png",
 			overFile = "images/moregamesover.png",
 			onRelease = function ()
-				storyboard.gotoScene("scenes.gametitle", {params = {ind = 1}})
+				storyboard.gotoScene("scenes.more_games", {params = {ind = 1}})
 			end
 
 		}
