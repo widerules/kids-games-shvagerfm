@@ -29,7 +29,7 @@ local function onKeyEvent( event )
                exit()
           
             else
-
+               transition.cancel( )
                storyboard.gotoScene( "scenetemplate" )
                storyboard.removeAll( )
             end

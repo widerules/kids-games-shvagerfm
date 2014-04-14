@@ -70,7 +70,7 @@ local function gameFour()
 	storyboard.removeScene("scenetemplate")
 end 
 local function gameFive()
-	storyboard.gotoScene( "scenes.game3", "slideLeft", 100 )
+	storyboard.gotoScene( "scenes.game3new", "slideLeft", 100 )
 	storyboard.removeScene("scenetemplate")
 end 
 
@@ -302,10 +302,23 @@ function scene:exitScene( event )
 
 	if sun ~= nil then
 		sun:removeEventListener("touch",  sun)
+		sun = nil
 	end
+	if kidsAnimals ~= nil then
 	kidsAnimals:removeEventListener("tap", getAnimalsForKids )
+	kidsAnimals:removeSelf( )
+	kidsAnimals = nil
+	end
+	if mikki ~=nil then
 	mikki:removeEventListener( "touch", sayMikki )
+	mikki:removeSelf( )
+	mikki = nil
+	end
+	if minni ~=nil then
 	minni:removeEventListener( "touch", sayMinni )
+	minni:removeSelf( )
+	minni = nil
+	end
 end
 
 
