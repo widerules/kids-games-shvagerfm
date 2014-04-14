@@ -108,7 +108,7 @@ local function onHomeButtonClicked( event )
 	local options =
 		{
     		effect = "slideRight",
-    		time = 800,
+    		time = 400,
     		params = { ind = 4 }
 		}
 	storyboard.gotoScene("scenes.gametitle", options)

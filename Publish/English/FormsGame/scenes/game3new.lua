@@ -369,6 +369,7 @@ function scene:exitScene(event)
 	audio.stop()
 	if starToScore ~= nil then
 		starToScore:removeSelf()
+		starToScore = nil
 	end
 
 	while #shapes > 0 do

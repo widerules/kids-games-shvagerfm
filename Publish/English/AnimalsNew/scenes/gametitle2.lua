@@ -29,7 +29,7 @@ local function goNextGame()
 		local options =
 		{
     		effect = "slideLeft",
-    		time = 800,
+    		time = 500,
     		params = { ind = indexGame }
 		}
 		storyboard.gotoScene("scenes.gametitle", options)
@@ -43,12 +43,12 @@ local function goPreviousGame()
 		local options =
 		{
     		effect = "slideRight",
-    		time = 800,
+    		time = 500,
     		params = { ind = indexGame }
 		}
 		storyboard.gotoScene("scenes.gametitle", options)
 	else
-        storyboard.gotoScene("scenetemplate", "slideRight", 800)
+        storyboard.gotoScene("scenetemplate", "slideRight", 400)
         storyboard.removeScene("scenes.gametitle")
 	end
 end
