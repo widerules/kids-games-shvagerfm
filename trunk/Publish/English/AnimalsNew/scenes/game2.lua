@@ -91,7 +91,7 @@ local function backHome( event )
     local options =
         {
             effect = "slideRight",
-            time = 800,
+            time = 500,
             params = { ind = 2 }
         }
     storyboard.gotoScene("scenes.gametitle", options)

@@ -14,7 +14,7 @@ _CENTERX = display.contentCenterX
 _CENTERY = display.contentCenterY
 _W = display.contentWidth
 _H = display.contentHeight
-_GAME = nil
+_GAME = 1
 -- load scenetemplate.lua
 
 local function exit ()

@@ -44,7 +44,7 @@ local function onHomeButtonClicked( event )
 	local options =
 		{
     		effect = "slideRight",
-    		time = 800,
+    		time = 500,
     		params = { ind = 3 }
 		}
 	storyboard.gotoScene("scenes.gametitle", options)
@@ -163,7 +163,7 @@ local function onAnimalDrag(event)
 				wellDoneLabel = display.newEmbossedText( _WELLDONETEXT, constants.CENTERX, constants.CENTERY, native.systemFont, 2*_FONTSIZE )
 				transition.to (wellDoneLabel, 
 					{
-						time = 1000,
+						time = 300,
 						y = 0,
 						alpha = 0,
 						xScale = 0.1,
@@ -253,6 +253,8 @@ function scene:createScene(event)
         onRelease = onHomeButtonClicked
     }
     group:insert(homeBtn)
+    soundStart = audio.loadSound( "sounds/place.mp3" )
+		audio.play(soundStart)
 end
 
 function scene:willEnterScene(event)	
@@ -266,8 +268,7 @@ end
 
 function scene:enterScene (event)
 	local group = self.view
-	soundStart = audio.loadSound( "sounds/place.mp3" )
-		audio.play(soundStart)
+	
 
 	_ITEMSIZE = barBackground.height*0.95	
 	_SPACINGANIMALS = (constants.W-_ITEMSIZE*itemAmount[level])/(itemAmount[level]+1)
@@ -331,8 +332,10 @@ function scene:exitScene(event)
 
 	for i = 1, #shadowsImages do
 		for j = 1, #shadowsImages[i] do
+			if shadowsImages[i][j] ~= nil then
 			display.remove (shadowsImages[i][j])
-			shadowsImages[i][j] = nil			
+			shadowsImages[i][j] = nil	
+			end		
 		end
 	end
 
