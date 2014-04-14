@@ -17,7 +17,7 @@ local _FONTSIZE = constants.H / 7
 local _BTNSIZE = 0.1*constants.W
 
 local gamesWon = 0
-local level = 5
+local level = 1
 local itemsCount = {2, 3, 4, 6, 9, 12, 16, 20}
 local rows =       {1, 1, 2, 2, 3, 3, 4, 4}
 local items = {}
@@ -141,7 +141,7 @@ function scene:createScene(event)
 	group:insert(homeButton)
 	
 	gamesWon = 0
-	level = 8
+	level = 1
 end
 
 function scene:willEnterScene(event)
@@ -203,7 +203,7 @@ function scene:enterScene(event)
 		else
 	star[i] = display.newImage("images/star.png", 0, 0, constants.H/8, constants.H/8)
 	end
-	star[i].x = constants.W - star[i].width
+	star[i].x = constants.W - star[i].width/2
 	if i == 1 then
 		star[i].y = constants.H - star[i].height/2
 	else

@@ -29,7 +29,7 @@ local function goNextGame()
 		local options =
 		{
     		effect = "slideLeft",
-    		time = 800,
+    		time = 300,
     		params = { ind = indexGame }
 		}
 		storyboard.gotoScene("scenes.gametitle", options)
@@ -43,7 +43,7 @@ local function goPreviousGame()
 		local options =
 		{
     		effect = "slideRight",
-    		time = 800,
+    		time = 300,
     		params = { ind = indexGame }
 		}
 		storyboard.gotoScene("scenes.gametitle", options)
@@ -64,7 +64,7 @@ local function animPlay()
 	local function toNormal()
 		transition.to(btnPlay, {time = 150, xScale = 1, yScale = 1})
 	end
-	transition.to(btnPlay, {time = 150, xScale = 2.2, yScale = 2.2, onComplete = toNormal })
+	transition.to(btnPlay, {time = 150, xScale = 1.2, yScale = 1.2, onComplete = toNormal })
 end
 
 local function startDrag(event)
@@ -85,7 +85,7 @@ local function startDrag(event)
 end
 
 local function startGame(event)
-	    storyboard.gotoScene(gamePath .. indexGame, "slideRight", 800)
+	    storyboard.gotoScene(gamePath .. indexGame, "slideRight", 300)
         storyboard.removeScene("scenes.gametitle")
 end
 

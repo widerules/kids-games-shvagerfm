@@ -3,6 +3,7 @@ local widget = require("widget")
 local constants = require("constants")
 local data = require("data.trainData")
 local popup = require ("utils.popupTrain")
+local explosion = require("utils.explosion")
 local scene = storyboard.newScene()
 
 _GAME = 3
@@ -14,7 +15,7 @@ local _SPACINGY = constants.H/15
 local _BASKETSIZE = 0.4*constants.H
 local _ITEMSIZE = 0.3*constants.H
 local _SPEED = 10000  -- less - faster
-local _DELTA = 0.15*constants.H;
+local _DELTA = _BASKETSIZE;
 local _SCORETOUP = 5
 
 -----------------------------------------------texts
@@ -45,6 +46,18 @@ local function onHomeButtonTapped (event)
 	--storyboard.removeScene ("scenes.game1")
 	toTitle()
 end
+
+local function wellDone()
+				local soundName
+					local tempsound = math.random()
+					if tempsound < 0.5 then 
+					soundName = audio.loadSound( "sounds/good.mp3" )
+					else
+						soundName = audio.loadSound( "sounds/welldone.mp3" )
+					end
+
+						audio.play( soundName )
+				end
 
 --make item bigger on touch
 local function scaleOnDrag (target)
@@ -108,6 +121,7 @@ local function onElementTouched (event)
 				score = score + 1
 				scoreLabel.text = _SCORETEXT..score
 				flag = true
+				
 			else
 				transition.to(t,{time = 300, x = constants.CENTERX, y = constants.H+ _ITEMSIZE, alpha = 0, onComplete = decLifes, onCancel = onTransitionCanceled})
 			end
@@ -124,6 +138,8 @@ local function onElementTouched (event)
 		if flag == true then
 			
 			--SOUND_PLACE : correct basket
+			wellDone()
+				explosion.spawnExplosion(event.target.x, event.target.y)
 			--firework
 
 			if score >= level*_SCORETOUP and _SPEED > 4500 then			
@@ -152,6 +168,8 @@ local function onElementTouched (event)
 		else
 
 			--SOUND_PLACE : uncorrect basket
+			local inCorrect = audio.loadSound( "sounds/no.mp3")
+			audio.play(inCorrect)
 
 		end		
 	end
@@ -246,6 +264,8 @@ function scene:createScene(event)
 		onRelease = onHomeButtonTapped
 	}
 	group:insert(homeButton)
+	local startSound = audio.loadSound( "sounds/place.mp3" )
+ 	audio.play(startSound)
 end
 
 function scene:enterScene (event)
