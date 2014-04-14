@@ -25,21 +25,21 @@ function scene:createScene(event)
 		}
 		btnPlay.y = constants.CENTERY - 0.5*btnPlay.height
 	group:insert(btnPlay)
-	local btnMore = widget.newButton
-		{
-			width = constants.W/3,
-			height = constants.W/6,
-			x = constants.CENTERX - constants.W/6,
-			y = constants.CENTERY ,
-			defaultFile = "images/moregames.png",
-			overFile = "images/moregamesover.png",
-			onRelease = function ()
-				storyboard.gotoScene("scenes.gametitle", {params = {ind = 1}})
-			end
+	--local btnMore = widget.newButton
+	--	{
+	--		width = constants.W/3,
+	--		height = constants.W/6,
+	--		x = constants.CENTERX - constants.W/6,
+	--		y = constants.CENTERY ,
+	--		defaultFile = "images/moregames.png",
+	--		overFile = "images/moregamesover.png",
+	--		onRelease = function ()
+	--			storyboard.gotoScene("scenes.gametitle", {params = {ind = 1}})
+	--		end
 
-		}
-		btnMore.y = constants.CENTERY + 1.2*btnMore.height
-		group:insert(btnMore)
+	--	}
+	--	btnMore.y = constants.CENTERY + 1.2*btnMore.height
+	--	group:insert(btnMore)
 end
 
 function scene:enterScene (event)

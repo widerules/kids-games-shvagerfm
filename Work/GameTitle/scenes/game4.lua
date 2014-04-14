@@ -57,7 +57,7 @@ local function onHomeButtonClicked ()
 end
 
 local function showPopUp (message)
-    
+
     --setting up popup layout
     popupBg = display.newImage( "images/popupbg.png", constants.CENTERX, constants.CENTERY );
     popupBg.height = 0.9*constants.H;
@@ -123,7 +123,8 @@ local function showPopUp (message)
     --of score more than 0, start giving golden stars
     if score > 0 then
     	--SOUND_PLACE positive end of the game
-
+    	local wellDone = audio.loadSound("sounds/welldone.mp3")
+    	audio.play( wellDone )
     	--calculating actual rating
     	local rate = math.round(3/math.floor(generated/score))
     	if rate < 3 then 
@@ -150,6 +151,7 @@ local function showPopUp (message)
     else
     	--SOUND_PLACE negative end of the game (score == 0)
     	popupText.text = "Loose"
+    	
     end	
 
 end
@@ -234,6 +236,8 @@ end
 function scene:enterScene (event)
 	local group = self.view	
 
+
+
 	local function startFalling()
 		local function listener()
 		timerID = timer.performWithDelay( _GENERATIONDELAY, 
@@ -280,6 +284,8 @@ function scene:enterScene (event)
 	starTypeImage.y = constants.CENTERY
 	informationGroup:insert(starTypeImage)
 	--SOUND_PLACE Start game
+	local soundStart = audio.loadSound("sounds/catch"..data.colors[colors[index]]..".mp3")
+	audio.play( soundStart )
 	transition.to( starTypeImage, {time = 1000, rotation = 370, alpha = 1, xScale = 3, yScale = 3, transition= easing.outBack, onComplete = startFalling} )
 
 	scoreLabel = display.newEmbossedText( scoreText..0, 0, informationBackground.y, native.systemFont, _FONTSIZE )
