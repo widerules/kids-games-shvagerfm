@@ -1,5 +1,9 @@
 local data = {};
 
+data.formPath = "images/"
+data.shapesPath = "images/s"
+data.format = ".png"
+
 data.shapes = 
 {
 	"square",
