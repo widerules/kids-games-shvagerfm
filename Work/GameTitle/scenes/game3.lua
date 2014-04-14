@@ -262,17 +262,16 @@ function scene:enterScene (event)
 		if i < level then
 			star[i] = display.newImage("images/starfull.png", 0, 0, constants.H/20, constants.H/12)
 		else
-	star[i] = display.newImage("images/star.png", 0, 0, constants.H/20, constants.H/12)
-	end
-	star[i].width, star[i].height = constants.H/16, constants.H/16
-	star[i].x = constants.W - star[i].width/2
-	if i == 1 then
-		star[i].y = constants.H - star[i].height/2
-	else
-		star[i].y = star[i-1].y - star[i].height
-	end
-	group:insert(star[i])
-
+			star[i] = display.newImage("images/star.png", 0, 0, constants.H/20, constants.H/12)
+		end
+		star[i].width, star[i].height = constants.H/16, constants.H/16
+		star[i].x = constants.W - star[i].width/2
+		if i == 1 then
+			star[i].y = constants.H - star[i].height/2
+		else
+			star[i].y = star[i-1].y - star[i].height
+		end
+		group:insert(star[i])
 	end
 
 end
