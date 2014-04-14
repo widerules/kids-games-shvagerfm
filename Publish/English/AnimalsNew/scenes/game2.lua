@@ -355,21 +355,20 @@ function scene:exitScene(event)
         end
 
         while (table.maxn(animalsPictures) > 0) do
-                animalsPictures[#animalsPictures]:removeSelf()
+            display.remove( animalsPictures[#animalsPictures] )
                 table.remove(animalsPictures)
         end
 
         while (table.maxn(foodPictures) > 0) do
-                foodPictures[#foodPictures]:removeSelf()                
+            display.remove( foodPictures[#foodPictures] )              
                 table.remove(foodPictures)
         end
 
         if popupBg ~= nil then
-                popupBg:removeSelf();
-                popupText:removeSelf();
-                nextBtn:removeSelf();
-                homeBtn:removeSelf();
-                popupBg = nil
+            display.remove(popupBg)
+            display.remove(popupText)
+            display.remove( nextBtn )
+            display.remove( homeBtn )
         end;
 end
 
