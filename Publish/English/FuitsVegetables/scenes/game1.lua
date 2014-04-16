@@ -25,7 +25,7 @@ local function toTitle()
 	local options = 
 	{
 		effect = "slideLeft",
-		time = 800,
+		time = 400,
 		params = {ind = _GAME}
 	}
 	storyboard.gotoScene("scenes.gametitle", options)
@@ -164,7 +164,7 @@ function scene:enterScene(event)
 		soundName = audio.loadSound( "sounds/"..data.vegetables[index]..".mp3" )
 		audio.play( soundName )
 		image = display.newImage (data.pathToVegetables..data.vegetables[index]..data.format, constants.CENTERX, constants.CENTERY)
-		image.widht = _IMAGESIZE
+		image.width = _IMAGESIZE
 		image.height = _IMAGESIZE
 		image.xScale, image.yScale = 0.3, 0.3
 		transition.to( image, {time = 500, xScale = 1, yScale=1, transition=easing.outBack} )
@@ -179,7 +179,7 @@ function scene:enterScene(event)
 		soundName = audio.loadSound( "sounds/"..data.fruits[index]..".mp3" )
 		audio.play( soundName )
 		image = display.newImage (data.pathToFruits..data.fruits[index]..data.format, constants.CENTERX, constants.CENTERY)
-		image.widht = _IMAGESIZE
+		image.width = _IMAGESIZE
 		image.height = _IMAGESIZE
 		image.xScale, image.yScale = 0.3, 0.3
 		transition.to( image, {time = 500, xScale = 1, yScale=1, transition=easing.outBack} )
