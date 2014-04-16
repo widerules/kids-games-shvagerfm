@@ -32,16 +32,18 @@ if ( ("back" == keyName or "deleteBack" == keyName) and phase == "up" ) then
                local options =
                   {
                      effect = "slideRight",
-                     time = 800,
+                     time = 400,
                   }
                transition.cancel( )
                storyboard.gotoScene( "scenetemplate", options )
                storyboard.removeAll( )
+         elseif (currentScene == "scenes.game3") then
+
          else
             local options =
                {
                   effect = "slideRight",
-                  time = 800,
+                  time = 400,
                   params = { ind = _GAME }
                }
             transition.cancel( )

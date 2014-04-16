@@ -105,6 +105,8 @@ function scene:enterScene (event)
 	indexGame = event.params.ind
 
 	titlePic = display.newImage(resPath .. indexGame .. imagePath .. format, 0, constants.CENTERY, constants.W/2, 3*constants.W/8)
+	titlePic.width = constants.W/2
+	titlePic.height = 3*constants.W/8
 	titlePic.x = 0.7*titlePic.width
 	titlePic.alpha = 0
 	transition.to(titlePic, {time = 200, alpha = 1})
@@ -112,6 +114,8 @@ function scene:enterScene (event)
 
 	
 	title = display.newImage(resPath .. indexGame .. namePath .. format,  0, 0, constants.W/4, constants.W/12)
+	title.width = constants.W/3
+	title.height = constants.W/12
 	title.y = title.height
 	title.x = constants.W - title.width
 	title.alpha = 0
