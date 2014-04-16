@@ -1,10 +1,11 @@
+_GAME = 4
 local storyboard = require( "storyboard")
 local widget = require("widget")
---local timer = require( "timer")
+
 local data = require("itemsData")
 local constants = require( "constants")
 
-_GAME = 4
+
 
 local scene = storyboard.newScene()
 
