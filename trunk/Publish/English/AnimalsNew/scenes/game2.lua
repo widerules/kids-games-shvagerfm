@@ -1,3 +1,4 @@
+_GAME = 2
 
 local storyboard = require( "storyboard")
 local widget = require( "widget")
@@ -6,7 +7,7 @@ local constants = require( "constants")
 
 local scene = storyboard.newScene( )
 
-_GAME = 2
+
 
 local _ANIMALSPATH = "images/"
 local _FOODPATH = "images/"
@@ -153,7 +154,7 @@ end
 
 local function onHomeButtonClicked(event)
         --TODO: go to home screen
-        storyboard.gotoScene("scenetemplate", "slideRight", 800)
+        storyboard.gotoScene("scenetemplate", "slideRight", 400)
         storyboard.removeScene("scenes.game2")
 end
 

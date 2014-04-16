@@ -4,8 +4,9 @@ local constants = require("constants")
 
 local scene = storyboard.newScene()
 local bg
-local count = 214
-local width = (constants.W - 37) / 3
+
+local width = 0.3*constants.W
+local count = constants.W/6
 local gameTitles = {
     colors = "com.shvagerfm.colorsgame",
     shapes = "com.shvagerfm.formsgame",
@@ -25,7 +26,8 @@ local addTitle = function(game)
     local image = display.newImage("images/titles/" .. game .. ".png", count, constants.CENTERY)
     image.game = game
     image.width = width
-    count = count + image.width + 10
+    --image.height = width
+    count = count + constants.W/3
     image:addEventListener("tap", gotoGame)
     return image
 end

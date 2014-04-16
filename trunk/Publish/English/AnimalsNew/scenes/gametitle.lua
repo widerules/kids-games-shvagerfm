@@ -1,6 +1,7 @@
 local storyboard = require ("storyboard")
 local widget = require("widget")
 local constants = require("constants")
+local admob = require( "utils.admob" )
 
 local scene = storyboard.newScene()
 
@@ -79,6 +80,7 @@ local function startDrag(event)
 end
 
 local function startGame(event)
+		
 	    storyboard.gotoScene(gamePath .. indexGame, "slideLeft", 400)
         storyboard.removeScene("scenes.gametitle")
 end
@@ -92,13 +94,13 @@ function scene:createScene(event)
 	group:insert(background)
 	group:addEventListener( "touch", startDrag )
 
-
+	admob.init()
 	
 end
 
 function scene:enterScene (event)
 	local group = self.view
-	
+	admob.showAd( "interstitial" )
 	indexGame = event.params.ind
 
 	titlePic = display.newImage(resPath .. indexGame .. imagePath .. format, 0, constants.CENTERY, constants.W/2, 3*constants.W/8)

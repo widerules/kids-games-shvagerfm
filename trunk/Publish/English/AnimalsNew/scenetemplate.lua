@@ -1,6 +1,7 @@
 local storyboard = require ("storyboard")
 local widget = require("widget")
 local constants = require("constants")
+local admob = require( "utils.admob" )
 
 local scene = storyboard.newScene()
 
@@ -26,24 +27,26 @@ function scene:createScene(event)
 
 		}
 	group:insert(btnPlay)
-	local btnMore = widget.newButton
-		{
-			width = constants.W/4,
-			height = constants.W/10,
-			x = constants.CENTERX,
-			y = constants.CENTERY,
-			defaultFile = "images/moregames.png",
-			overFile = "images/moregamesover.png",
-			onRelease = function ()
-				storyboard.gotoScene("scenes.more_games", {params = {ind = 1}})
-			end
+	--local btnMore = widget.newButton
+	--	{
+	--		width = constants.W/4,
+	--		height = constants.W/10,
+	--		x = constants.CENTERX,
+	--		y = constants.CENTERY,
+	--		defaultFile = "images/moregames.png",
+	--		overFile = "images/moregamesover.png",
+	--		onRelease = function ()
+	--			storyboard.gotoScene("scenes.more_games", {params = {ind = 1}})
+	--		end
 
-		}
-		btnMore.y = constants.CENTERY + 1.5*btnMore.height
-		group:insert(btnMore)
+	--	}
+	--	btnMore.y = constants.CENTERY + 1.5*btnMore.height
+	--	group:insert(btnMore)
+		admob.init()
 end
 
 function scene:enterScene (event)
+	admob.showAd( "interstitial" )
 end
 
 function scene:exitScene(event)
