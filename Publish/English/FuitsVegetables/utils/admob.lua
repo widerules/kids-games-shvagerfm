@@ -9,7 +9,7 @@ local ads = require ( "ads" )
 
 -- Your application ID in admob
 
-admob.appID = "ca-app-pub-8763317495638154/6195451628"
+admob.appID = "ca-app-pub-8763317495638154/5805061629"
 
 admob.init = function ()
 	if admob.appID then
@@ -18,7 +18,7 @@ admob.init = function ()
 end
 
 admob.showAd = function( adType )
-	if admob.countBeforeShowAds == 4 then
+	if admob.countBeforeShowAds == 5 then
     	ads.show( adType, { x=0, y=0 } )
     	admob.countBeforeShowAds = 0
     else
