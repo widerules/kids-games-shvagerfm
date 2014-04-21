@@ -1,6 +1,7 @@
 local storyboard = require ("storyboard")
 local widget = require("widget")
 local constants = require("constants")
+local admob = require( "utils.admob" )
 
 local scene = storyboard.newScene()
 
@@ -41,9 +42,11 @@ function scene:createScene(event)
 	--	}
 	--	btnMore.y = constants.CENTERY + 1.2*btnMore.height
 	--	group:insert(btnMore)
+	admob.init()
 end
 
 function scene:enterScene (event)
+	admob.showAd( "interstitial" )
 end
 
 function scene:exitScene(event)
