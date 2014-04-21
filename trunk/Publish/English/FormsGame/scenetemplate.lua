@@ -49,8 +49,7 @@ else
 end
 -------------------------------
 local function getAnimalsForKids()
-	print("lin to app")
-	system.openURL( "market://details?id=com.shvagerfm.AnimalsForKids" )
+				storyboard.gotoScene("scenes.more_games")
 end
 local function gameFirst()
 	storyboard.gotoScene( "scenes.game1", "slideLeft", 100 )
@@ -244,7 +243,7 @@ function scene:enterScene( event )
 	-----------------------------------------------------------------------------
 
 	kidsAnimals = display.newImage( "images/animals.png", centerX, centerY, _H/6, _H/6)
-	kidsAnimals.width = _H/4
+	kidsAnimals.width = 0.3*_H
 	kidsAnimals.height = kidsAnimals.width
 	kidsAnimals.x = _W - kidsAnimals.width
 	kidsAnimals.y = kidsAnimals.height
