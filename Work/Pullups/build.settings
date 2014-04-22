@@ -1,0 +1,53 @@
+-- Supported values for orientation:
+-- portrait, portraitUpsideDown, landscapeLeft, landscapeRight
+
+settings = {
+	
+	orientation = {
+		default = "portrait",
+		supported = {"portrait"}
+	},
+	
+	iphone = {
+		plist = {
+			UIStatusBarHidden = false,
+			UIPrerenderedIcon = true, -- set to false for "shine" overlay
+			--UIApplicationExitsOnSuspend = true, -- uncomment to quit app on suspend
+
+            --[[
+            -- iOS app URL schemes:
+            CFBundleURLTypes =
+            {
+                {
+                    CFBundleURLSchemes =
+                    {
+                        "fbXXXXXXXXXXXXXX", -- example scheme for facebook
+                        "coronasdkapp", -- example second scheme
+                    }
+                }
+            }
+            --]]
+		}
+	},
+	-- enable the admob plugin
+	plugins =
+	{
+		["CoronaProvider.ads.admob"] =
+		{
+			-- required
+			publisherId = "com.coronalabs",
+		},
+	},	
+	
+	--[[
+	-- Android permissions
+	versionCode = "12",
+	usesPermissions = {
+  		"android.permission.INTERNET",
+  		"android.permission.WRITE_EXTERNAL_STORAGE",
+  		"android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.READ_PHONE_STATE",
+  	},
+
+	]]--
+}
