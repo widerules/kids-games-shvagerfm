@@ -24,8 +24,8 @@ local centerX = display.contentCenterX
 local centerY = display.contentCenterY
 local _W = display.contentWidth
 local _H = display.contentHeight
-local bWidth = _W/3
-local bHeight = bWidth/3
+local bWidth = _W * 0.4
+local bHeight = bWidth * 0.28
 
 
 --local bgsound = audio.loadSound( "sounds/bgsound.wav" )
@@ -135,7 +135,7 @@ function scene:createScene( event )
 		    defaultFile = "images/button.png",
 		    overFile = "images/pbutton.png",
 		    id = "button_1",
-		    label = "Learn shapes",
+		    label = "Aprenda formas",
 		    labelColor = { default={ 0, 0, 0 }, over={ 0, 0, 0, 0.9 } },
 		    fontSize = _H/14,
 		    emboss = true,
@@ -152,7 +152,7 @@ function scene:createScene( event )
 		    defaultFile = "images/button.png",
 		    overFile = "images/pbutton.png",
 		    id = "button_2",
-		    label = "Find",
+		    label = "Encontrar formas",
 		    labelColor = { default={ 0,0,0 }, over={ 0, 0, 0, 0.9 } },
 		    fontSize = _H/14,
 		    emboss = true,
@@ -171,7 +171,7 @@ function scene:createScene( event )
 		    defaultFile = "images/button.png",
 		    overFile = "images/pbutton.png",
 		    id = "button_3",
-		    label = "Find pairs",
+		    label = "Encontrar los pares",
 		    labelColor = { default={ 0, 0, 0 }, over={ 0, 0, 0, 0.9 } },
 		    fontSize = _H/14,
 		    emboss = true,
@@ -189,7 +189,7 @@ function scene:createScene( event )
 		    defaultFile = "images/button.png",
 		    overFile = "images/pbutton.png",
 		    id = "button_3",
-		    label = "Memory pairs",
+		    label = "Pares de memoria",
 		    labelColor = { default={ 0, 0, 0 }, over={ 0, 0, 0, 0.9 } },
 		    fontSize = _H/14,
 		    emboss = true,
@@ -208,7 +208,7 @@ function scene:createScene( event )
 		    defaultFile = "images/button.png",
 		    overFile = "images/pbutton.png",
 		    id = "button_3",
-		    label = "Place shapes",
+		    label = "Coloque las formas",
 		    labelColor = { default={ 0, 0, 0 }, over={ 0, 0, 0, 0.9 } },
 		    fontSize = _H/14,
 		    emboss = true,
@@ -250,7 +250,7 @@ function scene:enterScene( event )
 	group:insert( kidsAnimals )
 	kidsAnimals:addEventListener("tap", getAnimalsForKids )
 
-	moreGames = display.newEmbossedText( "More games", 0, 0, native.systemFont, _H/20 )
+	moreGames = display.newEmbossedText( "Más juegos", 0, 0, native.systemFont, _H/20 )
 	moreGames.y = _H/16
 	moreGames.x = kidsAnimals.x
 	moreGames:setFillColor( 1, 0.6, 0 )
