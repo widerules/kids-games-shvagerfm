@@ -20,7 +20,7 @@ local function onKeyEvent( event )
    local keyName = event.keyName
    print( event.phase, event.keyName )
 
-   if ( "back" == keyName and phase == "up" ) then
+   if ( ("back" == keyName or "deleteBack" == keyName) and phase == "up" ) then
     local currentScene = storyboard.getCurrentSceneName()
      local lastScene = storyboard.getPrevious()
             print( "previous scene", lastScene )
@@ -29,7 +29,9 @@ local function onKeyEvent( event )
                exit()
           
             else
+               transition.cancel( )
                storyboard.gotoScene( "scenetemplate" )
+               storyboard.removeAll( )
             end
    
    end

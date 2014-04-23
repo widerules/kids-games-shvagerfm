@@ -1,6 +1,6 @@
 require "sqlite3"
 
-local path = system.pathForFile( "formsgamesp.sqlite", system.DocumentsDirectory )
+local path = system.pathForFile( "formsgame.sqlite", system.DocumentsDirectory )
 local db = sqlite3.open( path )
 
 local M = {}
@@ -8,7 +8,7 @@ local M = {}
 M.rateIt = function ()
 	local options =
 	{	
-		androidAppPackageName = "com.shvagerfm.formsgamesp",
+		androidAppPackageName = "com.shvagerfm.formsgame",
 		supportedAndroidStores = { "google" }
 	}
 	native.showPopup("rateApp", options)

@@ -19,42 +19,57 @@ local admob = require( "admob" )
 -- 
 ---------------------------------------------------------------------------------
 --variables
-local background, btnOne, btnTwo, btnThree, mikki, minni, sun, kidsAnimals, moreGames
+local background, btnOne, btnTwo, btnThree, btnFour, btnFive, mikki, minni, sun, kidsAnimals, moreGames
 local centerX = display.contentCenterX
 local centerY = display.contentCenterY
 local _W = display.contentWidth
 local _H = display.contentHeight
-local bWidth = _W/2
-local bHeight = bWidth/3
+local bWidth = _W * 0.4
+local bHeight = bWidth * 0.28
 
 
-local bgsound = audio.loadSound( "sounds/bgsound.wav" )
+--local bgsound = audio.loadSound( "sounds/bgsound.wav" )
 ---------------------------------------------------------------------------------
 -- BEGINNING OF YOUR IMPLEMENTATION
 ---------------------------------------------------------------------------------
 -- functions
 -----------------------------
 
+local function soundOffOn()
+	if _SOUNDON == true then
+	_SOUNDON = false
+	print(_SOUNDON)
+	audio.pause( bgsound )
+
+else
+	_SOUNDON = true
+	print(_SOUNDON)
+	audio.resume( bgsound )
+	end
+end
 -------------------------------
 local function getAnimalsForKids()
-	print("lin to app")
-	system.openURL( "market://details?id=com.shvagerfm.AnimalsForKids" )
+				storyboard.gotoScene("scenes.more_games")
 end
 local function gameFirst()
-	storyboard.gotoScene( "scenes.gamefirst", "slideLeft", 500 )
+	storyboard.gotoScene( "scenes.game1", "slideLeft", 100 )
 	storyboard.removeScene("scenetemplate")
 end 
 local function gameSecond()
-	storyboard.gotoScene( "scenes.gamesecond", "slideLeft", 500 )
+	storyboard.gotoScene( "scenes.game2", "slideLeft", 100 )
 	storyboard.removeScene("scenetemplate")
 
 end 
 local function gameThree()	
-	storyboard.gotoScene( "scenes.gamelast", "crossFade", 300 )
+	storyboard.gotoScene( "scenes.gamelast", "crossFade", 100 )
 	storyboard.removeScene("scenetemplate")
 end 
 local function gameFour()
-	storyboard.gotoScene( "scenes.game3", "slideLeft", 500 )
+	storyboard.gotoScene( "scenes.game4", "slideLeft", 100 )
+	storyboard.removeScene("scenetemplate")
+end 
+local function gameFive()
+	storyboard.gotoScene( "scenes.game3new", "slideLeft", 100 )
 	storyboard.removeScene("scenetemplate")
 end 
 
@@ -63,6 +78,19 @@ function moveBack()
 end
 function moveForward()
 transition.to( sun, {rotation = 20, time = 3000, transition = easing.inOutCubic, onComplete = moveBack})
+end
+
+local function sayMikki(event)
+	if event.phase == "ended" or event.phase == "cancelled" then
+	local soundMikki = audio.loadSound( "sounds/mikkie1.mp3")
+	audio.play( soundMikki )
+	end
+end
+local function sayMinni(event)
+	if event.phase == "ended" or event.phase == "cancelled" then
+	local soundMinni = audio.loadSound( "sounds/minnie1.mp3")
+	audio.play( soundMinni )
+end
 end
 local function sunMoving(self, event)
 	if event.phase == "ended" or event.phase == "cancelled" then
@@ -94,10 +122,12 @@ function scene:createScene( event )
 	mikki.width = _W/6
 	mikki.height = _H/2
 	group:insert( mikki )
+	mikki:addEventListener("touch", sayMikki )
 	minni = display.newImage("images/mini.png", 5*_W/6, 3*centerY/2, _W/10, _H/10)
 	minni.width = _W/6
 	minni.height = _H/2
 	group:insert( minni )
+	minni:addEventListener("touch", sayMinni )
 	btnOne = widget.newButton
 		{
 		    width = bWidth,
@@ -105,9 +135,9 @@ function scene:createScene( event )
 		    defaultFile = "images/button.png",
 		    overFile = "images/pbutton.png",
 		    id = "button_1",
-		    label = "Aprenda formas ",
+		    label = "Aprenda formas",
 		    labelColor = { default={ 0, 0, 0 }, over={ 0, 0, 0, 0.9 } },
-		    fontSize = _H/12,
+		    fontSize = _H/14,
 		    emboss = true,
 		    onRelease = gameFirst,
 		    
@@ -122,13 +152,14 @@ function scene:createScene( event )
 		    defaultFile = "images/button.png",
 		    overFile = "images/pbutton.png",
 		    id = "button_2",
-		    label = "Encontrar formas ",
+		    label = "Encontrar formas",
 		    labelColor = { default={ 0,0,0 }, over={ 0, 0, 0, 0.9 } },
-		    fontSize = _H/12,
+		    fontSize = _H/14,
 		    emboss = true,
 		    onRelease = gameSecond,
 		    
 		}
+	btnTwo.y = btnOne.y + bHeight
 	btnTwo.x = centerX
 	
 
@@ -140,13 +171,14 @@ function scene:createScene( event )
 		    defaultFile = "images/button.png",
 		    overFile = "images/pbutton.png",
 		    id = "button_3",
-		    label = "Encontrar los pares ",
+		    label = "Encontrar los pares",
 		    labelColor = { default={ 0, 0, 0 }, over={ 0, 0, 0, 0.9 } },
-		    fontSize = _H/12,
+		    fontSize = _H/14,
 		    emboss = true,
 		    onRelease = gameThree,
 		    
 		}
+	btnThree.y = btnTwo.y + bHeight
 	btnThree.x = centerX
 
 	btnFour = widget.newButton
@@ -157,21 +189,41 @@ function scene:createScene( event )
 		    defaultFile = "images/button.png",
 		    overFile = "images/pbutton.png",
 		    id = "button_3",
-		    label = "Coloque las formas ",
+		    label = "Pares de memoria",
 		    labelColor = { default={ 0, 0, 0 }, over={ 0, 0, 0, 0.9 } },
-		    fontSize = _H/12,
+		    fontSize = _H/14,
 		    emboss = true,
 		    onRelease = gameFour,
 		    
 		}
 	btnFour.x = centerX
-	
+	btnFour.y = btnThree.y + bHeight
+	admob.init()
+
+	btnFive = widget.newButton
+		{
+			top = 3*_H/4,
+		    width = bWidth,
+		    height = bHeight,
+		    defaultFile = "images/button.png",
+		    overFile = "images/pbutton.png",
+		    id = "button_3",
+		    label = "Coloque las formas",
+		    labelColor = { default={ 0, 0, 0 }, over={ 0, 0, 0, 0.9 } },
+		    fontSize = _H/14,
+		    emboss = true,
+		    onRelease = gameFive,
+		    
+		}
+	btnFive.x = centerX
+	btnFive.y = btnFour.y + bHeight
 	admob.init()
 	
 	group:insert( btnOne)
 	group:insert( btnTwo)
 	group:insert( btnThree)
 	group:insert( btnFour)	
+	group:insert(btnFive)
 end
 
 
@@ -191,7 +243,7 @@ function scene:enterScene( event )
 	-----------------------------------------------------------------------------
 
 	kidsAnimals = display.newImage( "images/animals.png", centerX, centerY, _H/6, _H/6)
-	kidsAnimals.width = _H/4
+	kidsAnimals.width = 0.3*_H
 	kidsAnimals.height = kidsAnimals.width
 	kidsAnimals.x = _W - kidsAnimals.width
 	kidsAnimals.y = kidsAnimals.height
@@ -244,12 +296,29 @@ function scene:exitScene( event )
 	local group = self.view
 	audio.stop()
 	audio.dispose( bgsound )
+	transition.cancel( )
 	bgsound = nil
 
-	if (sun) then
+	if sun ~= nil then
 		sun:removeEventListener("touch",  sun)
+        sun:removeSelf()
+		sun = nil
 	end
-	
+	if kidsAnimals ~= nil then
+	kidsAnimals:removeEventListener("tap", getAnimalsForKids )
+	kidsAnimals:removeSelf( )
+	kidsAnimals = nil
+	end
+	if mikki ~=nil then
+	mikki:removeEventListener( "touch", sayMikki )
+	mikki:removeSelf( )
+	mikki = nil
+	end
+	if minni ~=nil then
+	minni:removeEventListener( "touch", sayMinni )
+	minni:removeSelf( )
+	minni = nil
+	end
 end
 
 

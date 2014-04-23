@@ -24,7 +24,7 @@ local centerY = display.contentCenterY
 local amount = 12
 local shapes = {"square", "triangle", "rhombus", "oval", "rectangle",  "round", "heart", "star"}
 local items, backBtn
-local find = audio.loadSound("sounds/fpairs.mp3")
+local find
 local magicSound = audio.loadSound("sounds/magic.mp3")
 local shapeSound
 local selected
@@ -41,6 +41,9 @@ local _W = display.contentWidth
 local _H = display.contentHeight
 local _FONTSIZE = constants.H / 15;
 
+local explosionTime        = 2000                    -- Time defined from EXP Gen 3 tool
+local resources            = "_resources"   
+local explosionSheetInfo    = require(resources..".".."Explosion")
 ---------------------------------------------------------------------------------
 -- BEGINNING OF YOUR IMPLEMENTATION
 ---------------------------------------------------------------------------------
@@ -110,8 +113,8 @@ local function showPopUp()
 	popupBg.height = 0.7*constants.H;
 	popupBg.width = 0.7*constants.W;
 
-	popupText = display.newText("¡Bien hecho!", popupBg.x, 0, native.systemFont, 2*_FONTSIZE);
-	popupText.y = popupBg.y-popupBg.height+2*popupText.width/3;
+	popupText = display.newText("¡Bravo!", popupBg.x, 0, native.systemFont, 2*_FONTSIZE);
+	popupText.y = popupBg.y - popupBg.height/4;
 
 	homeBtn = widget.newButton
 	{
@@ -169,6 +172,7 @@ end
 
 local function onItemTap( event )
 	print( "Tap event on: " .. event.target.id )
+	event.target:removeEventListener( "tap", onItemTap )
 	if selected ~= nil then
 		if selected.id == event.target.id then 
 			print ("same figure")
@@ -195,8 +199,11 @@ local function onItemTap( event )
 			end
 		else
 			-- cancel transition
+			event.target:addEventListener( "tap", onItemTap )
+			selected:addEventListener( "tap", onItemTap )
 			cancelAll(selected)
 			selected = nil
+
 		end
 	else
 		selected = event.target
@@ -211,6 +218,7 @@ end
 function scene:createScene( event )
 	local group = self.view
 	print('createScene')
+	find = audio.loadSound("sounds/fpairs.mp3")
 	audio.play(find)
 	background = display.newImage( "images/background3.png", centerX, centerY, _W, _H)
 	group:insert( background )
@@ -320,9 +328,9 @@ function scene:enterScene( event )
 
 			temp.x = j * itemW - itemW / 2 + _W / 8
 			temp.y = i * itemH - itemH / 2
-
+			temp.xScale, temp.yScale = 0.3, 0.3
 			temp:addEventListener( "tap", onItemTap )
-
+			
 			table.insert(items, temp)
 		end
 	end
@@ -341,10 +349,8 @@ function scene:enterScene( event )
 	
 	group:insert( backBtn )
 	for i=1, #items do
-		items[i].xScale = 0.1
-		items[i].yScale = 0.1
+		transition.to( items[i], {time = 500, xScale = 1, yScale=1, transition=easing.outBack} )
 		group:insert( items[i] )
-		transition.to(items[i], {xScale = 1, yScale=1, time=300, transition=easing.outBack})
 	end
 
 
@@ -354,15 +360,18 @@ end
 -- Called when scene is about to move offscreen:
 function scene:exitScene( event )
 	local group = self.view
+	transition.cancel( )
+	audio.stop()
 	storyboard.purgeAll()
 	print ("exitScene")
-	
+	if items ~=nil then
 	for i=1, #items do
-		if items[i] then
+		if items[i] ~= nil then
 			items[i]:removeSelf()
+			items[i] = nil
 		end
 	end
-
+	end
 	if popupBg ~= nil then
 		popupBg:removeSelf()
 		popupText:removeSelf()

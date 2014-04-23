@@ -25,7 +25,7 @@ local _H = display.contentHeight
 local left, center, right, square
 local sSquare = audio.loadSound("sounds/square.mp3")
 local sRectangle = audio.loadSound("sounds/rectangle.mp3")
-local sRound = audio.loadSound("sounds/round.mp3")
+local sRound = audio.loadSound("sounds/circle.mp3")
 local sOval = audio.loadSound("sounds/oval.mp3")
 local sTriangle = audio.loadSound("sounds/triangle.mp3")
 local sStar = audio.loadSound("sounds/star.mp3")
@@ -42,6 +42,7 @@ local function backHome()
 		storyboard.gotoScene( "scenetemplate", "slideRight", 800 )
 
 end
+
 
 local function scaling()
 	shape.width = _W/3

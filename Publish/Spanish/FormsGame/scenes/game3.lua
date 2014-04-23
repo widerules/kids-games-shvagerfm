@@ -46,7 +46,7 @@ local function generateIndexes()
 		local flag = false;
 		while (flag == false) do
 			flag = true;
-			local tmp = math.random(1, table.maxn(data.animals));		
+			local tmp = math.random(1, table.maxn(data.shapes));		
 			for j = 1, table.maxn (indexes), 1 do
 				if (indexes[j] == tmp) then
 					flag = false;					
@@ -100,7 +100,7 @@ local function showPopUp()
 	popupBg.height = 0.7*constants.H;
 	popupBg.width = 0.7*constants.W;
 
-	popupText = display.newText("¡Bien hecho", popupBg.x, 0, native.systemFont, 2*_FONTSIZE);
+	popupText = display.newText("Well done !", popupBg.x, 0, native.systemFont, 2*_FONTSIZE);
 	popupText.y = popupBg.y-popupBg.height+2*popupText.width/3;
 
 	homeBtn = widget.newButton
@@ -239,19 +239,19 @@ function scene:enterScene(event)
 	generateIndexes();
 
 	local imageY = _IMAGESIZE/2;--+0.05*constants.H;
-	animalsPictures[1] = display.newImage(_ANIMALSPATH..data.animals[indexes[1]].._FORMAT,0, imageY);
+	animalsPictures[1] = display.newImage(_ANIMALSPATH..data.shapes[indexes[1]].._FORMAT,0, imageY);
 	animalsPictures[1].height = _IMAGESIZE;
 	animalsPictures[1].width = _IMAGESIZE;
-	animalsPictures[1].name = data.animals[indexes[1]]
+	animalsPictures[1].name = data.shapes[indexes[1]]
 	animalsPictures[1]:addEventListener( "touch", onAnimalDrag );
 	group:insert(animalsPictures[1]);
 
 	for i = 2, 5, 1 do
 		imageY = animalsPictures[i-1].y + _IMAGESIZE;-- + 0.05*constants.H;
-		animalsPictures[i] = display.newImage (_ANIMALSPATH..data.animals[indexes[i]].._FORMAT, 0, imageY);
+		animalsPictures[i] = display.newImage (_ANIMALSPATH..data.shapes[indexes[i]].._FORMAT, 0, imageY);
 		animalsPictures[i].height = _IMAGESIZE;
 		animalsPictures[i].width = _IMAGESIZE;
-		animalsPictures[i].name = data.animals[indexes[i]]
+		animalsPictures[i].name = data.shapes[indexes[i]]
 		animalsPictures[i]:addEventListener( "touch", onAnimalDrag );
 		group:insert(animalsPictures[i]); 
 	end;
@@ -265,7 +265,7 @@ function scene:enterScene(event)
 	for i = 1,5,1 do 
 		local randPos = math.random (1, table.maxn(tmpPos.x));
 		
-		shapesPictures[i] = display.newImage (_SHAPESPATH..data.animals[indexes[i]].._FORMAT,0,0);
+		shapesPictures[i] = display.newImage (_SHAPESPATH..data.shapes[indexes[i]].._FORMAT,0,0);
 		shapesPictures[i].height = _IMAGESIZE*1.5;
 		shapesPictures[i].width = _IMAGESIZE*1.5;	
 		shapesPictures[i].x = tmpPos.x[randPos];
@@ -283,12 +283,16 @@ end
 
 
 function scene:exitScene(event)
+	transition.cancel( )
 	for i = 1, table.maxn(animalsPictures), 1 do 
-		if animalsPictures[i] then
+		if animalsPictures[i] ~= nil then
 		animalsPictures[i]:removeSelf( );
+		animalsPictures[i] = nil
 	end
-	if shapesPictures[i] then
+	
+	if shapesPictures[i] ~= nil then
 		shapesPictures[i]:removeSelf();
+		shapesPictures[i] = nil
 	end
 
 	end;
