@@ -46,7 +46,7 @@ local function onNextButtonClicked( event )
 		index = 1;
 	end;
 	if animalDescription ~=nil then
-	animalDescription:removeSelf( )
+	display.remove(animalDescription)
 	animalDescription = nil
 	end
 	storyboard.reloadScene(); 
@@ -58,7 +58,7 @@ local function onPreviousButtonClicked( event )
 	if index < 1 then
 		index = table.maxn(data.animalsNames);
 	end;
-	animalDescription:removeSelf( )
+	display.remove(animalDescription)
 	storyboard.reloadScene( );
 end;
 
@@ -178,16 +178,16 @@ end;
 
 function scene:exitScene(event)
 	if animalName ~= nil then
-	animalName:removeSelf();
+	display.remove(animalName)
 	end
 	if animalsDescriptions ~= nil then
-	animalDescription:removeSelf();
+	display.remove(animalDescription);
 	end
 	if animalImage ~= nil then
-	animalImage:removeSelf();
+	display.remove(animalImage);
 end
 	if foodImage ~= nil then
-	foodImage:removeSelf();
+	display.remove(foodImage);
 	foodImage = nil
 	end
 	audio.stop()
