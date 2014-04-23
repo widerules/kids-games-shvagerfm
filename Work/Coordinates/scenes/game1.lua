@@ -1,9 +1,16 @@
+
+require "sqlite3"
+local path = system.pathForFile( "puzzle.sqlite", system.DocumentsDirectory )
+local db = sqlite3.open( path )
 local storyboard = require ("storyboard")
 local widget = require ("widget")
 local constants = require ("constants")
 
 local scene = storyboard.newScene()
 
+--local maxId = "SELECT MAX(figure_id) AS max_id FROM coordinates"
+
+local imagePath = "images/star/"
 local mainShape, background
 local mainWidth, mainHeight
 local xLabel, yLabel
@@ -46,6 +53,33 @@ local function onDrag (event)
 	end
 end
 
+local function getNextId()
+	local sql = [[SELECT MAX(figure_id) AS max_id FROM coordinates;]]
+
+	for row in db:nrows(sql) do
+		if row.max_id == nil then 
+			return 1
+		else
+			local nextId = row.max_id + 1
+			return nextId
+		end
+	end	
+
+end
+
+local function onSaveButtonTapped ()
+	local figureId = getNextId()
+
+	local sql = [[INSERT INTO figures VALUES (]] .. figureId .. [[,]] .. path .. [[);]]
+	db:exec(sql)
+
+	for i = 1, #parts do
+		--print (i .. " " .. figureId .. " " .. parts[i].kx .. " " .. parts[i].ky)
+		sql = [[INSERT INTO coordinates VALUES (]] .. i .. [[,]] .. figureId .. [[,]] .. parts[i].kx .. [[,]] .. parts[i].ky .. [[);]]
+		db:exec(sql)
+	end
+end
+
 function scene:createScene(event)
 	local group = self.view
 
@@ -77,7 +111,7 @@ function scene:createScene(event)
         y = constants.H/14,
         defaultFile = "images/reload.png",
         overFile = "images/reload.png",
-        onRelease = onReloadButtonClicked
+        onRelease = onSaveButtonTapped
     }
 
     firstEnter = true
@@ -86,6 +120,8 @@ end
 function scene:enterScene(event)
 	local group = self.view	
 	
+
+
 	if firstEnter == true then
 		local j = 1
 		local k = 1
