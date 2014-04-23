@@ -307,7 +307,7 @@ function scene:enterScene(event)
 	end
 
 	local function hideLabel()
-		transition.fadeOut( taskLabel, {time = 500} )
+		transition.to( taskLabel, {time = 300, alpha = 0} )
 	end
 
 	taskLabel = display.newEmbossedText( taskText..itemType, constants.CENTERX, constants.CENTERY, native.systemFont, _FONTSIZE )	

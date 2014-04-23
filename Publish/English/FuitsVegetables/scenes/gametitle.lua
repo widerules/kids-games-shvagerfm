@@ -5,7 +5,7 @@ local admob = require( "utils.admob" )
 
 local scene = storyboard.newScene()
 
-local _GAMEAMOUNT = 4
+local _GAMEAMOUNT = 5
 
 local indexGame = 1
 

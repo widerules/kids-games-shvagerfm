@@ -12,8 +12,13 @@ data.shapes =
 	"oval",
 	"rhombus",
 	"triangle",
+	"trapezoid",
+	"pentagon",
+	"hexagon",
 	"star",
-	"heart"
+	"heart",
+	"semicircle",
+	"parallelogram"
 }
 
 return data;

@@ -11,6 +11,11 @@ data.colors =
 	"oval",
 	"rhombus",
 	"triangle",
+	"trapezoid",
+	"pentagon",
+	"hexagon",
+	"semicircle",
+	"parallelogram",
 	"star",
 	"heart"
 }
