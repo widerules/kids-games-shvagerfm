@@ -65,7 +65,7 @@ local function gameThree()
 	storyboard.removeScene("scenetemplate")
 end 
 local function gameFour()
-	storyboard.gotoScene( "scenes.game4", "slideLeft", 100 )
+	storyboard.gotoScene( "scenes.game5", "slideLeft", 100 )
 	storyboard.removeScene("scenetemplate")
 end 
 local function gameFive()
@@ -208,7 +208,7 @@ function scene:createScene( event )
 		    defaultFile = "images/button.png",
 		    overFile = "images/pbutton.png",
 		    id = "button_3",
-		    label = "Place shapes",
+		    label = "Shadows",
 		    labelColor = { default={ 0, 0, 0 }, over={ 0, 0, 0, 0.9 } },
 		    fontSize = _H/14,
 		    emboss = true,

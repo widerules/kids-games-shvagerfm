@@ -1,18 +1,24 @@
-local data = {}
+local data = {};
 
+data.animalsPath = "images/"
+data.format = ".png"
 data.foldPath = "images/fold.png"
-data.butterfliesPath = "images/shapes.png"
-data.butterflies = 
+data.animals = 
 {
 	"square",
 	"triangle",
 	"rhombus",
 	"oval",
 	"rectangle",
+	"trapezoid",
+	"pentagon",
+	"hexagon",
 	"circle",
+	"semicircle",
+	"parallelogram",
 	"heart",
 	"star"
 }
-data.amount = 12
+
 
 return data

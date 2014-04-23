@@ -219,7 +219,7 @@ local function onAnimalDrag(event)
 						onComplete = function ()
 							display.remove (wellDoneLabel)
 							wellDoneLabel = nil	
-							timer.performWithDelay( 300, function () storyboard.reloadScene() end)						
+							timer.performWithDelay( 1000, function () storyboard.reloadScene() end)						
 						end
 					})
 			end

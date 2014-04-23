@@ -4,7 +4,7 @@ local constants = require("constants")
 local admob = require( "utils.admob" )
 local scene = storyboard.newScene()
 
-local _GAMEAMOUNT = 5
+local _GAMEAMOUNT = 6
 
 local indexGame = 1
 
