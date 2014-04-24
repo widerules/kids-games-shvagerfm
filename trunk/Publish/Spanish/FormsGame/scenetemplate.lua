@@ -28,7 +28,7 @@ local bWidth = _W * 0.4
 local bHeight = bWidth * 0.28
 
 
---local bgsound = audio.loadSound( "sounds/bgsound.wav" )
+local bgsound = audio.loadSound( "sounds/bgsound.wav" )
 ---------------------------------------------------------------------------------
 -- BEGINNING OF YOUR IMPLEMENTATION
 ---------------------------------------------------------------------------------
@@ -242,19 +242,19 @@ function scene:enterScene( event )
 	
 	-----------------------------------------------------------------------------
 
-	kidsAnimals = display.newImage( "images/animals.png", centerX, centerY, _H/6, _H/6)
-	kidsAnimals.width = 0.3*_H
-	kidsAnimals.height = kidsAnimals.width
-	kidsAnimals.x = _W - kidsAnimals.width
-	kidsAnimals.y = kidsAnimals.height
-	group:insert( kidsAnimals )
-	kidsAnimals:addEventListener("tap", getAnimalsForKids )
+--	kidsAnimals = display.newImage( "images/animals.png", centerX, centerY, _H/6, _H/6)
+--	kidsAnimals.width = 0.3*_H
+--	kidsAnimals.height = kidsAnimals.width
+--	kidsAnimals.x = _W - kidsAnimals.width
+--	kidsAnimals.y = kidsAnimals.height
+--	group:insert( kidsAnimals )
+--	kidsAnimals:addEventListener("tap", getAnimalsForKids )
 
-	moreGames = display.newEmbossedText( "Más juegos", 0, 0, native.systemFont, _H/20 )
-	moreGames.y = _H/16
-	moreGames.x = kidsAnimals.x
-	moreGames:setFillColor( 1, 0.6, 0 )
-	group:insert(moreGames)
+--	moreGames = display.newEmbossedText( "Más juegos", 0, 0, native.systemFont, _H/20 )
+--	moreGames.y = _H/16
+--	moreGames.x = kidsAnimals.x
+--	moreGames:setFillColor( 1, 0.6, 0 )
+--	group:insert(moreGames)
 	
 
 	local sheetData = {
