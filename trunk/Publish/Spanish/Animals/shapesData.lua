@@ -12,7 +12,7 @@ data.animals =
 	"bird",
 	"camel",
 	"cat",
-	"chiсken",
+	"chicken",
 	"koala",
 	"crocodile",
 	"deer",
