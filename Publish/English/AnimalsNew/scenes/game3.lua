@@ -80,7 +80,7 @@ end
 ----animation update score
 local function animScore()
 	local function listener()
-		starToScore:removeSelf( )
+		display.remove( starToScore )
         starToScore = nil
 	end
 	starToScore = display.newImage( "images/starfull.png", constants.CENTERX, constants.CENTERY, constants.H/8, constants.H/8)

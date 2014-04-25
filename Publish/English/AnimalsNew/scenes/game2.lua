@@ -103,7 +103,7 @@ end;
 ----animation update score
 local function animScore()
     local function listener()
-        starToScore:removeSelf( )
+        display.remove( starToScore )
         starToScore = nil
     end
     starToScore = display.newImage( "images/starfull.png", constants.CENTERX, constants.CENTERY, constants.H/8, constants.H/8)
@@ -365,12 +365,12 @@ function scene:exitScene(event)
                 table.remove(foodPictures)
         end
 
-        if popupBg ~= nil then
+
             display.remove(popupBg)
             display.remove(popupText)
             display.remove( nextBtn )
             display.remove( homeBtn )
-        end;
+
 end
 
 function scene:destroyScene(event)
