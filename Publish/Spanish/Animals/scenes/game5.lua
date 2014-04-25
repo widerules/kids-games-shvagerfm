@@ -95,7 +95,7 @@ end
 ----animation update score
 local function animScore()
 	local function listener()
-		starToScore:removeSelf( )
+		display.remove(starToScore)
         starToScore = nil
 	end
 	starToScore = display.newImage( "images/starfull.png", constants.CENTERX, constants.CENTERY, constants.H/8, constants.H/8)
@@ -110,10 +110,11 @@ end
 
 local function playAgain()
 	level = 1
-	popupBg:removeSelf( )
-	popupText:removeSelf( )
-	homeBtn:removeSelf( )
-	nextBtn:removeSelf( )
+	display.remove( popupBg )
+	display.remove( popupText )
+	display.remove( homeBtn )
+	display.remove( nextBtn )
+
 
 	storyboard.reloadScene()
 end
@@ -344,20 +345,20 @@ function scene:exitScene(event)
 		for j = 1, #images[i] do
 			if images[i][j] ~= nil then
 			print ("level "..level.." i "..i.." j "..j)
-			images[i][j]:removeSelf()
+			display.remove( images[i][j] )
 			images[i][j] = nil
 			end
 		end
 	end	
 	if taskLabel ~= nil then
-	taskLabel:removeSelf()
+		display.remove( taskLabel )
 	taskLabel = nil
 	end
 	if popupBg ~= nil then
-		popupBg:removeSelf();
-		popupText:removeSelf();
-		nextBtn:removeSelf();
-		homeBtn:removeSelf();
+		display.remove( popupBg )
+	display.remove( popupText )
+	display.remove( homeBtn )
+	display.remove( nextBtn )
 		popupBg = nil
 	end;
 	transition.cancel( )

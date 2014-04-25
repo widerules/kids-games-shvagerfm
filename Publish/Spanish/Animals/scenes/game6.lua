@@ -260,7 +260,8 @@ end
 function scene:exitScene(event)
 	for i=1, #items do
 		if items[i] then
-			items[i]:removeSelf()
+			display.remove( items[i] )
+
 			items[i] = nil
 		end
 	end
@@ -268,7 +269,8 @@ function scene:exitScene(event)
 	if folds ~= nil then
 		for i = 1, #folds do
 			if folds[i] ~= nil then
-				folds[i]:removeSelf()
+				display.remove( folds[i] )
+		
 				folds[i] = nil
 			end
 			
