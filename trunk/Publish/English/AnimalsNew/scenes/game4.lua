@@ -275,7 +275,7 @@ end
 local function onRainFinished(event)
 	if (event.phase == "ended") then
 		if (rain~=nil) then
-			rain:removeSelf( )
+			display.remove( rain )
 			rain = nil
 		end
 		audio.pause( rainSound )
@@ -403,30 +403,30 @@ function scene:exitScene(event)
 	transition.cancel()
 	
 	if (rain~=nil) then
-		rain:removeSelf( )
+		display.remove( rain )
 		rain = nil
 	end
 
 	while (table.maxn(hogs)>0) do
-        hogs[#hogs]:removeSelf()
+		display.remove( hogs[#hogs] )
         table.remove( hogs )
 	end
 
 	while (table.maxn(mushrooms)>0) do
-        mushrooms[#mushrooms]:removeSelf()
+		display.remove( mushrooms[#mushrooms] )
         table.remove(mushrooms)
 	end
 
 	while (table.maxn(berries)>0) do
-        berries[#berries]:removeSelf()
+		display.remove( berries[#berries] )
         table.remove(berries)
 	end
 
 	if (popupBg ~= nil) then
-        popupBg:removeSelf()
-        nextBtn:removeSelf()
-        homeBtn:removeSelf()
-        popupText:removeSelf()
+		display.remove( popupBg )
+		display.remove( nextBtn )
+		display.remove( homeBtn )
+		display.remove( popupText )
         popupBg = nil
         nextBtn = nil
         homeBtn = nil
@@ -434,12 +434,12 @@ function scene:exitScene(event)
 	end
 
 	if (sun ~= nil) then
-        sun:removeSelf()
+		display.remove( sun )
         sun = nil
 	end
 
 	if (cloud ~= nil) then
-        cloud:removeSelf( )
+		display.remove( cloud )
         cloud = nil
 	end
 end

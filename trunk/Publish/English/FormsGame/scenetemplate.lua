@@ -300,22 +300,22 @@ function scene:exitScene( event )
 	bgsound = nil
 
 	if sun ~= nil then
-		sun:removeEventListener("touch",  sun)
+		display.remove( sun )
 		sun = nil
 	end
 	if kidsAnimals ~= nil then
 	kidsAnimals:removeEventListener("tap", getAnimalsForKids )
-	kidsAnimals:removeSelf( )
+	display.remove( kidsAnimals )
 	kidsAnimals = nil
 	end
 	if mikki ~=nil then
 	mikki:removeEventListener( "touch", sayMikki )
-	mikki:removeSelf( )
+	display.remove( mikki )
 	mikki = nil
 	end
 	if minni ~=nil then
 	minni:removeEventListener( "touch", sayMinni )
-	minni:removeSelf( )
+	display.remove( minni )
 	minni = nil
 	end
 end
