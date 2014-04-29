@@ -40,6 +40,9 @@ end
 function scene:createScene(event)
     local group = self.view
     bg = display.newImage("images/titles/moregamesbg.png", constants.CENTERX, constants.CENTERY, constants.W, constants.H)
+    bg.width = constants.W
+    bg.height = constants.H
+    
     group:insert(bg)
     
     gameImages.colors = addTitle('colors')

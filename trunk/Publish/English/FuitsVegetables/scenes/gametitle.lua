@@ -1,7 +1,7 @@
 local storyboard = require ("storyboard")
 local widget = require("widget")
 local constants = require("constants")
-local admob = require( "utils.admob" )
+
 
 local scene = storyboard.newScene()
 
@@ -29,7 +29,7 @@ local function goNextGame()
 		local options =
 		{
     		effect = "slideLeft",
-    		time = 300,
+    		time = 600,
     		params = { ind = indexGame }
 		}
 		storyboard.gotoScene("scenes.gametitle2", options)
@@ -43,7 +43,7 @@ local function goPreviousGame()
 		local options =
 		{
     		effect = "slideRight",
-    		time = 300,
+    		time = 600,
     		params = { ind = indexGame }
 		}
 		storyboard.gotoScene("scenes.gametitle2", options)
@@ -96,13 +96,12 @@ function scene:createScene(event)
 	group:insert(background)
 
 	group:addEventListener( "touch", startDrag )
-	admob.init()
+
 end
 
 function scene:enterScene (event)
 	local group = self.view
-	
-	admob.showAd( "interstitial" )
+
 
 	indexGame = event.params.ind
 

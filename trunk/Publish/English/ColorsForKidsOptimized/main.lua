@@ -4,6 +4,10 @@
 --
 -----------------------------------------------------------------------------------------
 local storyboard = require("storyboard")
+local rate = require( "utils.rate" )
+local admob = require( "utils.admob" )
+
+storyboard.disableAutoPurge = true
 -- Your code here
 _GAME = 1
 
@@ -19,7 +23,6 @@ local function onKeyEvent( event )
    if ( ("back" == keyName or "deleteBack" == keyName) and phase == "up" ) then
       local currentScene = storyboard.getCurrentSceneName()
       local lastScene = storyboard.getPrevious()
-         print( "previous scene", lastScene )
          
          if ( currentScene == "scenetemplate") then
             exit()
@@ -29,7 +32,7 @@ local function onKeyEvent( event )
                local options =
                   {
                      effect = "slideRight",
-                     time = 800,
+                     time = 500,
                   }
                transition.cancel( )
                storyboard.gotoScene( "scenetemplate", options )
@@ -38,7 +41,7 @@ local function onKeyEvent( event )
             local options =
                {
                   effect = "slideRight",
-                  time = 800,
+                  time = 500,
                   params = { ind = _GAME }
                }
             transition.cancel( )

@@ -91,7 +91,7 @@ function scene:createScene(event)
 
 	indexGame = event.params.ind
 	--_GAME = index - 1
-	background = display.newImage("images/background1.png", constants.CENTERX, constants.CENTERY)
+	background = display.newImage("images/background1.jpg", constants.CENTERX, constants.CENTERY)
 	group:insert(background)
 	
 	group:addEventListener( "touch", startDrag )

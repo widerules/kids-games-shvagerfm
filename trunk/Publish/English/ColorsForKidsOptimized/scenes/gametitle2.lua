@@ -2,7 +2,6 @@ local storyboard = require ("storyboard")
 local widget = require("widget")
 local constants = require("constants")
 local admob = require( "utils.admob" )
-
 local scene = storyboard.newScene()
 
 local _GAMEAMOUNT = 4
@@ -30,7 +29,7 @@ local function goNextGame()
 		local options =
 		{
     		effect = "slideLeft",
-    		time = 300,
+    		time = 500,
     		params = { ind = indexGame }
 		}
 		storyboard.gotoScene("scenes.gametitle", options)
@@ -44,12 +43,12 @@ local function goPreviousGame()
 		local options =
 		{
     		effect = "slideRight",
-    		time = 300,
+    		time = 500,
     		params = { ind = indexGame }
 		}
 		storyboard.gotoScene("scenes.gametitle", options)
 	else
-        storyboard.gotoScene("scenetemplate", "slideRight", 300)
+        storyboard.gotoScene("scenetemplate", "slideRight", 400)
         storyboard.removeScene("scenes.gametitle")
 	end
 end
@@ -62,10 +61,7 @@ local function animButtons(target)
 	end
 
 local function animPlay()
-	local function toNormal()
-		transition.to(btnPlay, {time = 150, xScale = 1, yScale = 1})
-	end
-	transition.to(btnPlay, {time = 150, xScale = 1.2, yScale = 1.2, onComplete = toNormal })
+	transition.to(btnPlay, {time = 300, xScale = 2.2, yScale = 2.2, transition = easing.continuousLoop})
 end
 
 local function startDrag(event)
@@ -86,7 +82,7 @@ local function startDrag(event)
 end
 
 local function startGame(event)
-	    storyboard.gotoScene(gamePath .. indexGame, "slideRight", 800)
+	    storyboard.gotoScene(gamePath .. indexGame, "slideRight", 400)
         storyboard.removeScene("scenes.gametitle")
 end
 
@@ -94,25 +90,24 @@ function scene:createScene(event)
 	local group = self.view
 
 	indexGame = event.params.ind
-
+	--_GAME = index - 1
 	background = display.newImage("images/background1.jpg", constants.CENTERX, constants.CENTERY)
 	group:insert(background)
 	
 	group:addEventListener( "touch", startDrag )
-	admob.init()
+
+
+	
 end
 
 function scene:enterScene (event)
 	local group = self.view
-	
-	admob.showAd( "interstitial" )
-	print(event.params.ind)
-	indexGame = event.params.ind
 
+	indexGame = event.params.ind
 	titlePic = display.newImage(resPath .. indexGame .. imagePath .. format, 0, constants.CENTERY, constants.W/2, 3*constants.W/8)
 	titlePic.width = constants.W/2
-	titlePic.height = constants.W/3
-	titlePic.x = 0.7*titlePic.width
+	titlePic.height = 3*constants.W/8
+	titlePic.x = 0.6*titlePic.width
 	titlePic.alpha = 0
 	transition.to(titlePic, {time = 200, alpha = 1})
 	group:insert(titlePic)

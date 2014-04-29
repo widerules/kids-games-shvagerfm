@@ -21,31 +21,18 @@ function scene:createScene(event)
 			defaultFile = "images/play.png",
 			overFile = "images/playover.png",
 			onRelease = function ()
+			admob.showAd( "interstitial" )
 				storyboard.gotoScene("scenes.gametitle", {params = {ind = 1}})
 			end
 		}
 		btnPlay.y = constants.CENTERY - 0.5*btnPlay.height
 	group:insert(btnPlay)
-	--local btnMore = widget.newButton
-	--	{
-	--		width = constants.W/3,
-	--		height = constants.W/6,
-	--		x = constants.CENTERX - constants.W/6,
-	--		y = constants.CENTERY ,
-	--		defaultFile = "images/moregames.png",
-	--		overFile = "images/moregamesover.png",
-	--		onRelease = function ()
-	--			storyboard.gotoScene("scenes.gametitle", {params = {ind = 1}})
-	--		end
 
-	--	}
-	--	btnMore.y = constants.CENTERY + 1.2*btnMore.height
-	--	group:insert(btnMore)
 	admob.init()
 end
 
 function scene:enterScene (event)
-	admob.showAd( "interstitial" )
+	
 end
 
 function scene:exitScene(event)

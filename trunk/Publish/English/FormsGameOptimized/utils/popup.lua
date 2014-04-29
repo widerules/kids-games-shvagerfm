@@ -59,13 +59,11 @@ popup.showPopUp = function (message, sceneToGo, sceneToClose)
 end
 
 popup.hidePopUp = function ()
-	if popupBg ~= nil then
-		popupBg:removeSelf( )
-		popupText:removeSelf( )
-		nextBtn:removeSelf()
-		homeBtn:removeSelf( )
-		popupBg = nil
-	end
+	display.remove( popupBg )
+        display.remove( popupText )
+        display.remove( nextBtn )
+        display.remove( homeBtn )
+        popupBg = nil
 end
 
 

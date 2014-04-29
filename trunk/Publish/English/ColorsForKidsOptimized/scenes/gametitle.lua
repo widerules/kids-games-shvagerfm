@@ -29,7 +29,7 @@ local function goNextGame()
 		local options =
 		{
     		effect = "slideLeft",
-    		time = 300,
+    		time = 800,
     		params = { ind = indexGame }
 		}
 		storyboard.gotoScene("scenes.gametitle2", options)
@@ -43,7 +43,7 @@ local function goPreviousGame()
 		local options =
 		{
     		effect = "slideRight",
-    		time = 300,
+    		time = 800,
     		params = { ind = indexGame }
 		}
 		storyboard.gotoScene("scenes.gametitle2", options)
@@ -60,10 +60,7 @@ local function animButtons(target)
 	end
 
 local function animPlay()
-	local function toNormal()
-		transition.to(btnPlay, {time = 150, xScale = 1, yScale = 1})
-	end
-	transition.to(btnPlay, {time = 150, xScale = 1.2, yScale = 1.2, onComplete = toNormal })
+	transition.to(btnPlay, {time = 300, xScale = 2.2, yScale = 2.2, transition = easing.continuousLoop})
 end
 local function startDrag(event)
 	local swipeLength = math.abs(event.x - event.xStart) 
@@ -83,7 +80,8 @@ local function startDrag(event)
 end
 
 local function startGame(event)
-	    storyboard.gotoScene(gamePath .. indexGame, "slideRight", 300)
+		
+	    storyboard.gotoScene(gamePath .. indexGame, "slideLeft", 400)
         storyboard.removeScene("scenes.gametitle")
 end
 
@@ -94,32 +92,27 @@ function scene:createScene(event)
 
 	background = display.newImage("images/background1.jpg", constants.CENTERX, constants.CENTERY)
 	group:insert(background)
-
 	group:addEventListener( "touch", startDrag )
-	admob.init()
+
+
+	
 end
 
 function scene:enterScene (event)
 	local group = self.view
-	
-	admob.showAd( "interstitial" )
-
-	indexGame = event.params.ind
+indexGame = event.params.ind
 
 	titlePic = display.newImage(resPath .. indexGame .. imagePath .. format, 0, constants.CENTERY, constants.W/2, 3*constants.W/8)
-	titlePic.width = constants.W/2
-	titlePic.height = constants.W/3
-	titlePic.x = 0.7*titlePic.width
-	titlePic.alpha = 0
-	transition.to(titlePic, {time = 200, alpha = 1})
+		titlePic.width = constants.W/2
+	titlePic.height = 3*constants.W/8
+	titlePic.x = 0.6*titlePic.width
 	group:insert(titlePic)
 
 	
 	title = display.newImage(resPath .. indexGame .. namePath .. format,  0, 0, constants.W/4, constants.W/12)
 	title.y = title.height
 	title.x = constants.W - title.width
-	title.alpha = 0
-	transition.to(title, {time = 200, alpha = 1})
+
 	group:insert(title)
 
 	leftArrow = widget.newButton
@@ -188,6 +181,7 @@ function scene:exitScene(event)
 	leftArrow = nil
 	display.remove(btnPlay)
 	btnPlay = nil
+	--index = nil
 end
 
 function scene:destroyScene(event)

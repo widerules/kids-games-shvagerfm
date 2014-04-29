@@ -29,7 +29,6 @@ local function onKeyEvent( event )
    if ( ("back" == keyName or "deleteBack" == keyName) and phase == "up" ) then
       local currentScene = storyboard.getCurrentSceneName()
       local lastScene = storyboard.getPrevious()
-         print( "previous scene", lastScene )
          
          if ( currentScene == "scenetemplate") then
             exit()
@@ -39,7 +38,7 @@ local function onKeyEvent( event )
                local options =
                   {
                      effect = "slideRight",
-                     time = 800,
+                     time = 500,
                   }
                storyboard.gotoScene( "scenetemplate", options )
                storyboard.removeAll( )
@@ -47,7 +46,7 @@ local function onKeyEvent( event )
             local options =
                {
                   effect = "slideRight",
-                  time = 800,
+                  time = 500,
                   params = { ind = _GAME }
                }
             storyboard.gotoScene( lastScene, options )

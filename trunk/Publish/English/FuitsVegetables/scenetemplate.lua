@@ -22,6 +22,7 @@ function scene:createScene(event)
 			defaultFile = "images/play.png",
 			overFile = "images/playover.png",
 			onRelease = function ()
+				admob.showAd( "interstitial" )
 				storyboard.gotoScene("scenes.gametitle", {params = {ind = 1}})
 			end
 
@@ -46,7 +47,7 @@ function scene:createScene(event)
 end
 
 function scene:enterScene (event)
-	admob.showAd( "interstitial" )
+	
 end
 
 function scene:exitScene(event)
