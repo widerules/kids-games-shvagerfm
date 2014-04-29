@@ -29,10 +29,17 @@ settings = {
             --]]
 		}
 	},
-	
+	plugins =
+	{
+		["CoronaProvider.ads.admob"] =
+		{
+			-- required
+			publisherId = "com.coronalabs",
+		},
+	},	
 	--[[
 	-- Android permissions
-	versionCode = "13",
+	versionCode = "14",
 	androidPermissions = {
   		"android.permission.INTERNET",
   		"android.permission.ACCESS_NETWORK_STATE",

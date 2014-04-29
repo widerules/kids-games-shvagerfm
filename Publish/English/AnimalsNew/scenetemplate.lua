@@ -8,7 +8,7 @@ local scene = storyboard.newScene()
 function scene:createScene(event)
 	local group = self.view
 
-	local background = display.newImage ("images/bgmain.png", constants.CENTERX, constants.CENTERY)
+	local background = display.newImage ("images/bgmain.jpg", constants.CENTERX, constants.CENTERY)
 	background.width = constants.W
 	background.height = constants.H
 	group:insert(background)
