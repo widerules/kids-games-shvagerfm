@@ -27,6 +27,8 @@ local counter
 local soundName, soundTitle
 local star = {}
 local starToScore
+local starSound = audio.loadSound( "sounds/start.mp3" )
+
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 -- functions
@@ -90,6 +92,7 @@ local function animScore()
         starToScore = nil
         storyboard.reloadScene()
 	end
+	audio.play( starSound )
 	starToScore = display.newImage( "images/starfull.png", constants.CENTERX, constants.CENTERY, constants.H/8, constants.H/8)
 	starToScore.xScale, starToScore.yScale = 0.1, 0.1
 	
@@ -328,25 +331,28 @@ function scene:exitScene(event)
 	for i = 1, #images do
 		for j = 1, #images[i] do
 			if images[i][j] ~= nil then
-			print ("level "..level.." i "..i.." j "..j)
-			images[i][j]:removeSelf()
+				display.remove( images[i][j] )
 			images[i][j] = nil
 			end
 		end
 	end	
 end
 	if taskLabel ~= nil then
-	taskLabel:removeSelf()
+		display.remove( taskLabel )
+	taskLabel = nil
 	end
 	if popupBg ~= nil then
-		popupBg:removeSelf();
-		popupText:removeSelf();
-		nextBtn:removeSelf();
-		homeBtn:removeSelf();
+		display.remove( popupBg )
+		display.remove( popupText )
+		display.remove( nextBtn )
+		display.remove( homeBtn )
 		popupBg = nil
+		popupText = nil
+		nextBtn = nil
+		homeBtn = nil
 	end;
 	if starToScore ~= nil then
-		starToScore:removeSelf()
+		display.remove( starToScore )
 		starToScore = nil
 	end
 	transition.cancel( )

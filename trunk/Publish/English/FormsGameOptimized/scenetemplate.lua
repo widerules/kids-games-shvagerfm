@@ -1,22 +1,11 @@
 ----------------------------------------------------------------------------------
---
 -- scenetemplate.lua
---
 ----------------------------------------------------------------------------------
 
 local storyboard = require( "storyboard" )
 local scene = storyboard.newScene()
 local widget = require("widget")
 local admob = require( "admob" )
-------------------------------------------
-
-----------------------------------------
--- 
---	NOTE:
---	
---	Code outside of listener functions (below) will only be executed once,
---	unless storyboard.removeScene() is called.
--- 
 ---------------------------------------------------------------------------------
 --variables
 local background, btnOne, btnTwo, btnThree, btnFour, btnFive, mikki, minni, sun, kidsAnimals, moreGames
@@ -24,26 +13,21 @@ local centerX = display.contentCenterX
 local centerY = display.contentCenterY
 local _W = display.contentWidth
 local _H = display.contentHeight
-local bWidth = _W/3
-local bHeight = bWidth/3
+local bWidth = 0.33*_W
+local bHeight = 0.33*bWidth
+local sizeFont = 0.07*_H
+local sizeBtn
 
-
-local bgsound = audio.loadSound( "sounds/bgsound.wav" )
----------------------------------------------------------------------------------
--- BEGINNING OF YOUR IMPLEMENTATION
----------------------------------------------------------------------------------
+local bgsound
 -- functions
 -----------------------------
 
 local function soundOffOn()
 	if _SOUNDON == true then
 	_SOUNDON = false
-	print(_SOUNDON)
 	audio.pause( bgsound )
-
 else
 	_SOUNDON = true
-	print(_SOUNDON)
 	audio.resume( bgsound )
 	end
 end
@@ -97,15 +81,11 @@ local function sunMoving(self, event)
 		
 		if _SOUNDON == true then
 			_SOUNDON = false
-			print(_SOUNDON)
 			audio.stop()
 			sun:pause()
-			print("pause")
 		else
 			_SOUNDON = true
-			print(_SOUNDON)
 			audio.play( bgsound )
-			print("play")
 			sun:play()
 		end
 		return true	-- indicates successful touch
@@ -118,16 +98,7 @@ function scene:createScene( event )
 	background = display.newImage( "images/background.jpg", centerX, centerY, _W, _H)
 	group:insert( background )
 	
-	mikki = display.newImage("images/miki.png", _W/6, 3*centerY/2, _W/10, _H/10)
-	mikki.width = _W/6
-	mikki.height = _H/2
-	group:insert( mikki )
-	mikki:addEventListener("touch", sayMikki )
-	minni = display.newImage("images/mini.png", 5*_W/6, 3*centerY/2, _W/10, _H/10)
-	minni.width = _W/6
-	minni.height = _H/2
-	group:insert( minni )
-	minni:addEventListener("touch", sayMinni )
+	
 	btnOne = widget.newButton
 		{
 		    width = bWidth,
@@ -137,7 +108,7 @@ function scene:createScene( event )
 		    id = "button_1",
 		    label = "Learn shapes",
 		    labelColor = { default={ 0, 0, 0 }, over={ 0, 0, 0, 0.9 } },
-		    fontSize = _H/14,
+		    fontSize = sizeFont,
 		    emboss = true,
 		    onRelease = gameFirst,
 		    
@@ -146,7 +117,7 @@ function scene:createScene( event )
 
 	btnTwo = widget.newButton
 		{	
-			top = _H/4,
+			top = 0.25*_H,
 		    width = bWidth,
 		    height = bHeight,
 		    defaultFile = "images/button.png",
@@ -154,7 +125,7 @@ function scene:createScene( event )
 		    id = "button_2",
 		    label = "Find",
 		    labelColor = { default={ 0,0,0 }, over={ 0, 0, 0, 0.9 } },
-		    fontSize = _H/14,
+		    fontSize = sizeFont,
 		    emboss = true,
 		    onRelease = gameSecond,
 		    
@@ -165,7 +136,7 @@ function scene:createScene( event )
 
 	btnThree = widget.newButton
 		{
-			top = _H/2,
+			top = 0.5*_H,
 		    width = bWidth,
 		    height = bHeight,
 		    defaultFile = "images/button.png",
@@ -173,7 +144,7 @@ function scene:createScene( event )
 		    id = "button_3",
 		    label = "Find pairs",
 		    labelColor = { default={ 0, 0, 0 }, over={ 0, 0, 0, 0.9 } },
-		    fontSize = _H/14,
+		    fontSize = sizeFont,
 		    emboss = true,
 		    onRelease = gameThree,
 		    
@@ -183,7 +154,7 @@ function scene:createScene( event )
 
 	btnFour = widget.newButton
 		{
-			top = 3*_H/4,
+			top = 0.75*_H,
 		    width = bWidth,
 		    height = bHeight,
 		    defaultFile = "images/button.png",
@@ -191,18 +162,18 @@ function scene:createScene( event )
 		    id = "button_3",
 		    label = "Memory pairs",
 		    labelColor = { default={ 0, 0, 0 }, over={ 0, 0, 0, 0.9 } },
-		    fontSize = _H/14,
+		    fontSize = sizeFont,
 		    emboss = true,
 		    onRelease = gameFour,
 		    
 		}
 	btnFour.x = centerX
 	btnFour.y = btnThree.y + bHeight
-	admob.init()
+
 
 	btnFive = widget.newButton
 		{
-			top = 3*_H/4,
+			top = 0.75*_H,
 		    width = bWidth,
 		    height = bHeight,
 		    defaultFile = "images/button.png",
@@ -210,7 +181,7 @@ function scene:createScene( event )
 		    id = "button_3",
 		    label = "Shadows",
 		    labelColor = { default={ 0, 0, 0 }, over={ 0, 0, 0, 0.9 } },
-		    fontSize = _H/14,
+		    fontSize = sizeFont,
 		    emboss = true,
 		    onRelease = gameFive,
 		    
@@ -223,40 +194,39 @@ function scene:createScene( event )
 	group:insert( btnTwo)
 	group:insert( btnThree)
 	group:insert( btnFour)	
-	group:insert(btnFive)
+	group:insert( btnFive)
 end
 
 
 -- Called immediately after scene has moved onscreen:
 function scene:enterScene( event )
 	local group = self.view
-	
+	bgsound = audio.loadSound( "sounds/bgsound.mp3" )
 	admob.showAd( "interstitial" )
 	if _SOUNDON == true then
 	audio.play( bgsound )
 	end
 
-	-----------------------------------------------------------------------------
-		
-	--	INSERT code here (e.g. start timers, load audio, start listeners, etc.)
-	
-	-----------------------------------------------------------------------------
+	mikki = display.newImage("images/miki.png", _W/6, 1.5*centerY, 0.1*_W, 0.1*_H)
+	mikki.width = 0.16*_W
+	mikki.height = 0.5*_H
+	group:insert( mikki )
+	mikki:addEventListener("touch", sayMikki )
+	minni = display.newImage("images/mini.png", 5*_W/6, 1.5*centerY, 0.1*_W, 0.1*_H)
+	minni.width = 0.16*_W
+	minni.height = 0.5*_H
+	group:insert( minni )
+	minni:addEventListener("touch", sayMinni )
 
-	kidsAnimals = display.newImage( "images/animals.png", centerX, centerY, _H/6, _H/6)
+	kidsAnimals = display.newImage( "images/animals.png", centerX, centerY, 0.16*_H, 0.16*_H/6)
 	kidsAnimals.width = 0.3*_H
 	kidsAnimals.height = kidsAnimals.width
 	kidsAnimals.x = _W - kidsAnimals.width
-	kidsAnimals.y = kidsAnimals.height
+	kidsAnimals.y = 0.6*kidsAnimals.height
 	group:insert( kidsAnimals )
 	kidsAnimals:addEventListener("tap", getAnimalsForKids )
 
-	moreGames = display.newEmbossedText( "More games", 0, 0, native.systemFont, _H/20 )
-	moreGames.y = _H/16
-	moreGames.x = kidsAnimals.x
-	moreGames:setFillColor( 1, 0.6, 0 )
-	group:insert(moreGames)
 	
-
 	local sheetData = {
 	width = 300,
 	height = 249,
@@ -270,15 +240,14 @@ function scene:enterScene( event )
 		name = "sunny",
 		start = 1,
 		count = 4,
-		--frames = {1, 2, 3, 4},
 		time = 500,
 		loopCount=0,
 		loopDirection = bounce,
 		}
 	}
 	sun = display.newSprite( shapeSheet, sequenceData)
-	sun.x = sun.width/2
-	sun.y = sun.height/2
+	sun.x = 0.5*sun.width
+	sun.y = 0.5*sun.height
 	sun:setSequence("sunny")
 	if _SOUNDON == true then
 	sun:play()
@@ -290,8 +259,6 @@ function scene:enterScene( event )
 	
 end
 
-
--- Called when scene is about to move offscreen:
 function scene:exitScene( event )
 	local group = self.view
 	audio.stop()
@@ -300,6 +267,7 @@ function scene:exitScene( event )
 	bgsound = nil
 
 	if sun ~= nil then
+		sun:removeEventListener("touch",  sun)
 		display.remove( sun )
 		sun = nil
 	end
@@ -320,36 +288,17 @@ function scene:exitScene( event )
 	end
 end
 
-
--- Called prior to the removal of scene's "view" (display group)
 function scene:destroyScene( event )
 	local group = self.view
 	
-	-----------------------------------------------------------------------------
-	
-	--	INSERT code here (e.g. remove listeners, widgets, save state, etc.)
-	
-	-----------------------------------------------------------------------------
-	
 end
 
-
----------------------------------------------------------------------------------
--- END OF YOUR IMPLEMENTATION
----------------------------------------------------------------------------------
-
--- "createScene" event is dispatched if scene's view does not exist
 scene:addEventListener( "createScene", scene )
 
--- "enterScene" event is dispatched whenever scene transition has finished
 scene:addEventListener( "enterScene", scene )
 
--- "exitScene" event is dispatched before next scene's transition begins
 scene:addEventListener( "exitScene", scene )
 
--- "destroyScene" event is dispatched before view is unloaded, which can be
--- automatically unloaded in low memory situations, or explicitly via a call to
--- storyboard.purgeScene() or storyboard.removeScene().
 scene:addEventListener( "destroyScene", scene )
 
 ---------------------------------------------------------------------------------
