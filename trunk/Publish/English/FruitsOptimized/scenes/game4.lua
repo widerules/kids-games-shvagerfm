@@ -33,7 +33,7 @@ local scoreLabel 					--for showing score during the game
 local background, informationBackground  --for showing main background, and panel with information
 local gameWon, level, colors
 local popupText, popupBg, nextBtn, homeBtn, roloadBtn --pop-up variables
-
+local plopSound = audio.loadSound("sounds/Plopp.mp3")
 -----------------------------------------------------------------------------------------------------------POPUP
 local function onNextButtonClicked() --to load next level - incrementing level var
 	if level < 7 then
@@ -184,7 +184,7 @@ local function onStarTouched(event)
 	--if user touched star of correct type
 	if event.target.starType == starType then
 		--SOUND_PLACE Correct item selected sound
-		local correct = audio.loadSound( "sounds/harp.wav")
+		local correct = audio.loadSound( "sounds/Plopp.mp3")
 		audio.play(correct)
 		--remove event listener from this star
 		event.target:removeEventListener("touch", onStarTouched) 

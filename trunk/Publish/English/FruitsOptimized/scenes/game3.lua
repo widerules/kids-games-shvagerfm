@@ -28,7 +28,8 @@ local background, informationBackground, fruitBasket, vegetableBasket
 local score, level, lifes, currentTimer, itemsGenerated
 local scoreLabel, levelLabel, lifesLabel, levelUpLabel, homeButton
 local fruits, vegetables
-
+local starSound = audio.loadSound( "sounds/start.mp3" )
+local plopSound = audio.loadSound("sounds/Plopp.mp3")
 
 local function toTitle()
 	local options = 
@@ -70,10 +71,11 @@ local function decLifes()
 	if lifes > 0 then 
 		lifes = lifes - 1
 		lifesLabel.text = _LIFETEXT..lifes
-
+		audio.play( plopSound )
 		if lifes < 1 then
 			transition.cancel( )
 			timer.cancel( currentTimer )
+			audio.play( starSound )
 			popup.showPopUp (_SCORETEXT..score, "scenetemplate", "scenes.game3")
 		end
 
