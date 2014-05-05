@@ -6,7 +6,7 @@ local scene = storyboard.newScene()
 local bg
 
 local titleWidth = 0.28*constants.W
-local titleHeight = 7*titleWidth/4
+local titleHeight = 1.75*titleWidth
 local count = 0.2*constants.W
 local gameTitles = {
     colors = "com.shvagerfm.ColorsForKids",
@@ -21,7 +21,6 @@ end
 
 local gotoGame = function(event)
     local id = gameTitles[event.target.game]
-    print("id: ", id)
     if (id) then
         system.openURL( "market://details?id=" .. id )
     end
@@ -53,8 +52,8 @@ function scene:createScene(event)
     group:insert(gameImages.fruits)
     local exitBtn = widget.newButton
         {   
-            width = constants.H/8,
-            height = constants.H/8,
+            width = 0.125*constants.H,
+            height = 0.125*constants.H,
             top = 0,
             defaultFile = "images/exit.png",
             overFile = "images/exit.png",
@@ -62,7 +61,7 @@ function scene:createScene(event)
             onRelease = exit,
             
         }
-    exitBtn.x = constants.W - exitBtn.width/2
+    exitBtn.x = constants.W - 0.5*exitBtn.width
     --exitBtn.y = constants.H/10
     group:insert(exitBtn)
 

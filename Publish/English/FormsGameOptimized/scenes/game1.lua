@@ -11,9 +11,6 @@ local _FONTSIZE = 0.07*constants.H
 
 local index = 1
 
-
---local vegetables, fruits
-
 local background, image, itemName
 local nextButton, previousButton, homeButton
 
@@ -118,18 +115,23 @@ function scene:enterScene(event)
 end
 
 function scene:exitScene(event)
+	image:removeEventListener( "tap",  sayName)
 	transition.cancel( )
-
+	audio.dispose( soundName )
+	soundName = nil
 	display.remove(image)
-
+	image = nil
 	display.remove( itemName )
 	itemName = nil
 end
 
 function scene:destroyScene(event)
-	homeButton:removeSelf( )
-	previousButton:removeSelf( )
-	nextButton:removeSelf( )
+	display.remove(homeButton)
+	homeButton = nil
+	display.remove(previousButton)
+	previousButton = nil
+	display.remove(nextButton)
+	nextButton = nil
 
 end
 

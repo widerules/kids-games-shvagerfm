@@ -34,7 +34,6 @@ admob.adListener = function ( event )
 	
 	local msg = event.response
 	-- just a quick debug message to check what response we got from the library
-	print("Message received from the ads library: ", msg)
 end
 
 return admob

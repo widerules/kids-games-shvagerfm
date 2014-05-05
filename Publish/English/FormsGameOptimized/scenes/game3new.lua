@@ -37,6 +37,8 @@ local level = 1
 local onPlaces
 local background, barBackground, plate, wellDoneLabel, homeBtn
 
+local plopSound = audio.loadSound("sounds/Plopp.mp3")
+
 ---------------------------------------------------------------------------------
 -- functions
 --------------------------
@@ -133,12 +135,15 @@ local function onHomeButtonClicked ()
 end
 
 local function onAnimalDrag(event)
+
 	local t = event.target
 	local phase = event.phase
 	local name = tostring(t.type)
 	shapeSound = audio.loadSound("sounds/"..name..".mp3")
+
 	animScaleOnDrag(t)
 	if "began" == phase then 
+
 		startX = t.x
 		startY = t.y
 
@@ -166,6 +171,7 @@ local function onAnimalDrag(event)
 						t.y = shadowsImages[i][j].y
 						onPlaces = onPlaces - 1
 						animOnPutOn(t)
+						audio.play(plopSound)
 						audio.play( shapeSound )
 						animOnPutOnShape(shadowsImages[i][j])
 						shadowsImages[i][j].isUsed = true
@@ -197,7 +203,7 @@ local function onAnimalDrag(event)
 				if level < _MAXLEVEL then
 					level = level + 1
 				end
-				local soundHarp = audio.loadSound("sounds/harp.wav")
+				local soundHarp = audio.loadSound("sounds/start.mp3")
 				audio.play( soundHarp )				
 			
 				for i = 1, #shadowsImages do
@@ -368,7 +374,7 @@ function scene:exitScene(event)
 	transition.cancel( )
 	audio.stop()
 	if starToScore ~= nil then
-		starToScore:removeSelf()
+		display.remove( starToScore )
 		starToScore = nil
 	end
 
@@ -398,7 +404,7 @@ function scene:exitScene(event)
 	end
 
 	if wellDoneLabel ~= nil then
-		wellDoneLabel:removeSelf( )
+		display.remove(wellDoneLabel)
 		wellDoneLabel = nil
 	end
 	popup.hidePopUp()

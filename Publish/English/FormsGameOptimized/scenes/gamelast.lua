@@ -1,7 +1,4 @@
-----------------------------------------------------------------------------------
---
--- scenetemplate.lua
---
+
 ----------------------------------------------------------------------------------
 
 local storyboard = require( "storyboard" )
@@ -9,13 +6,6 @@ local scene = storyboard.newScene()
 local widget = require( "widget" )
 local native = require( "native" )
 local constants = require("constants")
-----------------------------------------------------------------------------------
--- 
---	NOTE:
---	
---	Code outside of listener functions (below) will only be executed once,
---	unless storyboard.removeScene() is called.
--- 
 ---------------------------------------------------------------------------------
 --variables
 local background, shape
@@ -40,10 +30,8 @@ local nextBtn;
 local _W = display.contentWidth
 local _H = display.contentHeight
 local _FONTSIZE = constants.H / 15;
-
----------------------------------------------------------------------------------
--- BEGINNING OF YOUR IMPLEMENTATION
----------------------------------------------------------------------------------
+local plopSound = audio.loadSound("sounds/Plopp.mp3")
+local starSound = audio.loadSound( "sounds/start.mp3" )
 -- functions
 --------------------------
 explosionTable        = {}                    -- Define a Table to hold the Spawns
@@ -84,10 +72,7 @@ function spawnExplosionToTable(spawnX, spawnY)
             object = nil
         end
     end
-    
-    --Add a timer to the Spawned Explosion.
-    --Explosion are destroyed after all the frames have been played after a determined
-    --amount of time as setup by the Explosion Generator Tool.
+
     local destroySpawneExplosion = timer.performWithDelay (explosionTime, removeExplosionSpawn(explosionTable[i]))
 end
 -----------------------------------------------------------
@@ -138,15 +123,13 @@ local function showPopUp()
 end
 
 stopR = function (self)
-	-- print("stopR called")
 	transition.to(self, {time = 100, rotation = 0 })
 	end
 rLeft = function (self)
-	-- print("left called")
 	toLeftTransition = transition.to(self, {time=600, rotation=-10.0, onComplete=rRight })
 end
 rRight = function (self)
-	-- print("right called")
+
 	toRightTransition = transition.to(self, {time=600, rotation=10.0, onComplete=rLeft })
 end
 
@@ -167,24 +150,22 @@ local function enLarge(self)
 	transition.to(self, {time = 500, xScale = 1.1, yScale = 1.1, onComplete = disApp})
 end
 
-local function onItemTap( event )
-	print( "Tap event on: " .. event.target.id )
+local function onItemTap( event, self )
 	event.target:removeEventListener( "tap", onItemTap )
+	
 	if selected ~= nil then
 		if selected.id == event.target.id then 
-			print ("same figure")
 			cancelAll(selected)
 			selected = nil
 		elseif selected.shapeType == event.target.shapeType then
-			print(selected.shapeType)
 			shapeSound = audio.loadSound( "sounds/"..selected.shapeType..".mp3")
 			audio.play( shapeSound )
-			print ("right choise")
+
 			-- hide pair
 			cancelAll(selected)
 			enLarge(selected)
 			enLarge(event.target)
-			
+			audio.play( starSound )
 			selected = nil
 			totalItems = totalItems - 2
 
@@ -203,6 +184,7 @@ local function onItemTap( event )
 
 		end
 	else
+		audio.play( plopSound )
 		selected = event.target
 		rLeft(event.target)
 	end
@@ -214,23 +196,15 @@ end
 -- Called when the scene's view does not exist:
 function scene:createScene( event )
 	local group = self.view
-	print('createScene')
 	find = audio.loadSound("sounds/fpairs.mp3")
 	audio.play(find)
 	background = display.newImage( "images/background3.jpg", centerX, centerY, _W, _H)
 	group:insert( background )
 end
 
--- Called immediately after scene has moved onscreen:
+
 function scene:enterScene( event )
 	local group = self.view
-	print("enterScene")
-	-----------------------------------------------------------------------------
-		
-	--	INSERT code here (e.g. start timers, load audio, start listeners, etc.)
-	
-	-----------------------------------------------------------------------------
-
 
 	local sheetData = {
 		width = 330,
@@ -342,8 +316,6 @@ function scene:enterScene( event )
 		    onRelease = backHome
 		}
 
-	
-	
 	group:insert( backBtn )
 	for i=1, #items do
 		transition.to( items[i], {time = 500, xScale = 1, yScale=1, transition=easing.outBack} )
@@ -360,71 +332,47 @@ function scene:exitScene( event )
 	transition.cancel( )
 	audio.stop()
 	storyboard.purgeAll()
-	print ("exitScene")
 	if items ~=nil then
 	for i=1, #items do
 		if items[i] ~= nil then
-			items[i]:removeSelf()
+			display.remove( items[i] )
 			items[i] = nil
 		end
 	end
 	end
 	if popupBg ~= nil then
-		popupBg:removeSelf()
-		popupText:removeSelf()
-		nextBtn:removeSelf()
-		homeBtn:removeSelf()
+		display.remove( popupBg )
+		display.remove( popupText )
+		display.remove( nextBtn )
+		display.remove( homeBtn )
 		popupBg = nil
 		popupText = nil
+		nextBtn = nil
+		homeBtn = nil
 	end
-	-----------------------------------------------------------------------------
-	
-	--	INSERT code here (e.g. stop timers, remove listeners, unload sounds, etc.)
-	
-	-----------------------------------------------------------------------------
-	 -- storyboard.removeScene("scenes.gamelast")
+
 end
 
 
 -- Called prior to the removal of scene's "view" (display group)
 function scene:destroyScene( event )
 	local group = self.view
-	print('destroyScene')
-	-----------------------------------------------------------------------------
-	
-	--	INSERT code here (e.g. remove listeners, widgets, save state, etc.)
-	
-	-----------------------------------------------------------------------------
 	
 end
 
 function scene:willEnterScene( event )
-	print('willEnterScene')
 	local group = self.view
 	totalItems = amount
 	shapes = {"square", "triangle", "rhombus", "oval", "rectangle",  "round", "heart", "star"}
 end
 
 
----------------------------------------------------------------------------------
--- END OF YOUR IMPLEMENTATION
----------------------------------------------------------------------------------
 
--- "createScene" event is dispatched if scene's view does not exist
 scene:addEventListener( "createScene", scene )
 scene:addEventListener( "willEnterScene", scene )
--- "enterScene" event is dispatched whenever scene transition has finished
 scene:addEventListener( "enterScene", scene )
-
--- "exitScene" event is dispatched before next scene's transition begins
 scene:addEventListener( "exitScene", scene )
-
--- "destroyScene" event is dispatched before view is unloaded, which can be
--- automatically unloaded in low memory situations, or explicitly via a call to
--- storyboard.purgeScene() or storyboard.removeScene().
 scene:addEventListener( "destroyScene", scene )
-
-
 
 ---------------------------------------------------------------------------------
 

@@ -26,6 +26,8 @@ local star = {}
 local starToScore
 local items = {}
 
+local plopSound = audio.loadSound("sounds/Plopp.mp3")
+local starSound = audio.loadSound( "sounds/start.mp3" )
 ---------------------------------------------------------------------------------
 -- functions
 --------------------------
@@ -92,6 +94,7 @@ local function animScore()
 		starToScore:removeSelf( )
         starToScore = nil
 	end
+	audio.play( starSound )
 	starToScore = display.newImage( "images/starfull.png", constants.CENTERX, constants.CENTERY, constants.H/8, constants.H/8)
 	starToScore.xScale, starToScore.yScale = 0.1, 0.1
 	
@@ -104,11 +107,10 @@ end
 
 local function onFoldClicked (event)
 	event.target:removeEventListener( "tap", onFoldClicked )
-
+	audio.play( plopSound )
 	local function compare ()
 
 		if previous ~= nil then
-			print ("second press")
 			if previous.animalType == event.target.animalType then
 				
 				--previous:removeEventListener( "tap", onFoldClicked )
@@ -142,9 +144,7 @@ local function onFoldClicked (event)
 				transition.to(previous, {time = 500, xScale = 1, alpha = 1, transition = easing.outBack})
 			end
 			previous = nil
-			print ("previous is nil")
 		else
-			print ("first press")
 			local soundName = audio.loadSound( "sounds/"..event.target.animalType..".mp3" )
 			audio.play(soundName)
 			previous = event.target
@@ -190,7 +190,6 @@ function scene:enterScene (event)
 
 	for i=1, #data.animals - cardAmount[level]/2 do
 		local posToRemove = math.random(1, #animals)
-		print(posToRemove)
 		table.remove(animals, posToRemove)
 	end
 
@@ -258,7 +257,7 @@ end
 function scene:exitScene(event)
 	for i=1, #items do
 		if items[i] then
-			items[i]:removeSelf()
+			display.remove( items[i] )
 			items[i] = nil
 		end
 	end
@@ -266,7 +265,7 @@ function scene:exitScene(event)
 	if folds ~= nil then
 		for i = 1, #folds do
 			if folds[i] ~= nil then
-				folds[i]:removeSelf()
+				display.remove( folds[i] )
 				folds[i] = nil
 			end
 			

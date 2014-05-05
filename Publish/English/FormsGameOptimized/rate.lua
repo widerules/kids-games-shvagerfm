@@ -49,7 +49,6 @@ M.init = function ()
 		    end
 		end
 	end
-	print (M.isRated())
 	if (not M.isRated()) then
 		native.showAlert( "Thank You!", "If you like our app  - please rate it", { "OK", "Exit" }, onComplete )
 	else
