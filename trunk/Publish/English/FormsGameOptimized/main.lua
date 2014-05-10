@@ -9,7 +9,8 @@ local rate = require( "rate" )
 _CENTERX = display.contentCenterX
 _CENTERY = display.contentCenterY
 _SOUNDON = true
-storyboard.disableAutoPurge = true
+
+storyboard.purgeOnSceneChange = true
 
 local function exit ()
   rate.init()

@@ -177,6 +177,7 @@ function scene:enterScene(event)
 end;
 
 function scene:exitScene(event)
+	animalImage:removeEventListener( "tap", onAnimalClicked )
 	if animalName ~= nil then
 	display.remove(animalName)
 	end

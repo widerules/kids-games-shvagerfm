@@ -6,7 +6,7 @@
 local storyboard = require("storyboard")
 local rate = require( "utils.rate" )
 local admob = require( "utils.admob" )
-storyboard.disableAutoPurge = true
+storyboard.purgeOnSceneChange = true
 
 _GAME = nil
 
