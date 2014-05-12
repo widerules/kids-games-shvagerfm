@@ -64,7 +64,7 @@ local function animPlay()
 end
 local function startDrag(event)
 	local swipeLength = math.abs(event.x - event.xStart) 
-	
+	print(event.phase, swipeLength)
 	local t = event.target
 	local phase = event.phase
 	if "began" == phase then
@@ -80,8 +80,9 @@ local function startDrag(event)
 end
 
 local function startGame(event)
-	storyboard.gotoScene(gamePath .. indexGame, "slideLeft", 400)
-    storyboard.removeScene("scenes.gametitle")
+		
+	    storyboard.gotoScene(gamePath .. indexGame, "slideLeft", 400)
+        storyboard.removeScene("scenes.gametitle")
 end
 
 function scene:createScene(event)
@@ -103,7 +104,9 @@ function scene:enterScene (event)
 	indexGame = event.params.ind
 
 	titlePic = display.newImage(resPath .. indexGame .. imagePath .. format, 0, constants.CENTERY, constants.W/2, 3*constants.W/8)
-	titlePic.x = 0.7*titlePic.width
+	titlePic.width = constants.W/2
+	titlePic.height = 3*constants.W/8
+	titlePic.x = 0.6*titlePic.width
 	titlePic.alpha = 0
 	transition.to(titlePic, {time = 200, alpha = 1})
 	group:insert(titlePic)
@@ -162,8 +165,8 @@ function scene:enterScene (event)
 	group:insert(btnPlay)
 
 	animButtons(rightArrow)
-    animButtons(leftArrow)
-    animPlay()
+        animButtons(leftArrow)
+        animPlay()
 end
 
 
@@ -182,6 +185,7 @@ function scene:exitScene(event)
 	leftArrow = nil
 	display.remove(btnPlay)
 	btnPlay = nil
+	--index = nil
 end
 
 function scene:destroyScene(event)

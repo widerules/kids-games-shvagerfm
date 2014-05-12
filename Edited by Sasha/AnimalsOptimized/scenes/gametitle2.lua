@@ -11,6 +11,7 @@ local indexGame = 1
 local gamePath = "scenes.game"
 
 local resPath = "images/game"
+--local bgPath = "/bg"
 local namePath = "/title"
 local imagePath = "/titlepic"
 local difPath = "/complexity"
@@ -65,7 +66,7 @@ end
 
 local function startDrag(event)
 	local swipeLength = math.abs(event.x - event.xStart) 
-
+	print(event.phase, swipeLength)
 	local t = event.target
 	local phase = event.phase
 	if "began" == phase then
@@ -81,15 +82,15 @@ local function startDrag(event)
 end
 
 local function startGame(event)
-	storyboard.gotoScene(gamePath .. indexGame, "slideRight", 400)
-    storyboard.removeScene("scenes.gametitle")
+	    storyboard.gotoScene(gamePath .. indexGame, "slideRight", 400)
+        storyboard.removeScene("scenes.gametitle")
 end
 
 function scene:createScene(event)
 	local group = self.view
 
 	indexGame = event.params.ind
-
+	--_GAME = index - 1
 	background = display.newImage("images/background1.jpg", constants.CENTERX, constants.CENTERY)
 	group:insert(background)
 	
@@ -105,7 +106,7 @@ function scene:enterScene (event)
 	titlePic = display.newImage(resPath .. indexGame .. imagePath .. format, 0, constants.CENTERY, constants.W/2, 3*constants.W/8)
 	titlePic.width = constants.W/2
 	titlePic.height = 3*constants.W/8
-	titlePic.x = 0.7*titlePic.width
+	titlePic.x = 0.6*titlePic.width
 	titlePic.alpha = 0
 	transition.to(titlePic, {time = 200, alpha = 1})
 	group:insert(titlePic)
@@ -163,9 +164,9 @@ function scene:enterScene (event)
 	transition.to(btnPlay, {time = 200, alpha = 1})
 	group:insert(btnPlay)
 
-	animButtons(rightArrow)
-    animButtons(leftArrow)
-    animPlay()
+		animButtons(rightArrow)
+        animButtons(leftArrow)
+        animPlay()
 end
 
 function scene:exitScene(event)
