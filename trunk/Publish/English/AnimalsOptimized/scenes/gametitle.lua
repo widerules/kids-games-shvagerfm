@@ -104,7 +104,9 @@ function scene:enterScene (event)
 	indexGame = event.params.ind
 
 	titlePic = display.newImage(resPath .. indexGame .. imagePath .. format, 0, constants.CENTERY, constants.W/2, 3*constants.W/8)
-	titlePic.x = 0.7*titlePic.width
+	titlePic.width = constants.W/2
+	titlePic.height = 3*constants.W/8
+	titlePic.x = 0.6*titlePic.width
 	titlePic.alpha = 0
 	transition.to(titlePic, {time = 200, alpha = 1})
 	group:insert(titlePic)
