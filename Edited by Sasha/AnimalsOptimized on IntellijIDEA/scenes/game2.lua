@@ -141,10 +141,8 @@ local function animScaleBack(self)
 end
 
 local function animOnPutOn(self)
-        local function animFinished()
-                self:toBack()           
-        end
-        transition.scaleTo(self, {xScale = 0, yScale = 0, time = 500, onComplete = animFinished})
+
+        transition.scaleTo(self, {xScale = 0, yScale = 0, time = 500})
 end
 
 local function onHomeButtonClicked(event)
