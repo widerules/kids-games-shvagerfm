@@ -109,4 +109,8 @@ popup.showPopupWithReloadButton = function (message, homeSceneToGo, sceneToClose
 
 end
 
+popup.hidePopup = function()
+    destroyPopup()
+end
+
 return popup

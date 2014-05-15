@@ -1,5 +1,4 @@
 local storyboard = require( "storyboard")
-local widget = require("widget")
 local popup = require("utils.popup")
 
 local data = require("data.itemsData")
@@ -12,7 +11,6 @@ local _HOGPATH = "images/hog.png"
 local _MUSHPATH = "images/grib"
 local _FORMAT = ".png"
 
-local _FONTSIZE = constants.H / 15
 local _IMAGESIZE = 0.2*constants.H
 
 _GAME = 4
@@ -41,9 +39,8 @@ local hogSound
 local timers = {}
 local total, totalScore, bgscore, coins
 local coinsToScore
----------------------------------------------
---explosion
---------------------------------------------------
+
+
 explosionTable        = {}                    -- Define a Table to hold the Spawns
 i                    = 0                        -- Explosion counter in table
 explosionTime        = 416.6667                    -- Time defined from EXP Gen 3 tool
@@ -53,12 +50,7 @@ explosionImageFolder = "images/explosion"
 local explosionSheetInfo    = require(resources..".".."explosion")
 local explosionSheet        = graphics.newImageSheet( explosionImageFolder.."/".."Explosion.png", explosionSheetInfo:getSheet() )
 
---------------------------------------------------
--- Define the animation sequence for the Explosion
--- from the Sprite sheet data
--- Change the sequence below to create IMPLOSIONS 
--- and EXPLOSIONS etc...
---------------------------------------------------
+
 local animationSequenceData = {
   { name = "dbiExplosion",
       frames={
@@ -99,12 +91,11 @@ local function onNextButtonClicked()
 end
 
 local function onHomeButtonClicked( event )
-	--TO DO:
+    popup.hidePopup()
 	local options =
 		{
     		effect = "slideRight",
-    		time = 400,
-    		params = { ind = 4 }
+    		time = 400
 		}
 	storyboard.gotoScene("scenes.gametitle", options)
 	storyboard.removeScene("scenes.game4")

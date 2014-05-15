@@ -63,11 +63,12 @@ function scene:createScene(event)
             overFile = "images/exit.png",
             id = "button_2",
             onRelease = exit,
-            
         }
 		
     exitBtn.x = constants.W - exitBtn.width/2
     group:insert(exitBtn)
+
+    count = 0.2 * constants.W
 end
 
 function scene:enterScene (event)
@@ -76,6 +77,9 @@ end
 
 
 function scene:exitScene(event)
+    display:remove( bg )
+
+    bg = nil
 end
 
 function scene:destroyScene(event)

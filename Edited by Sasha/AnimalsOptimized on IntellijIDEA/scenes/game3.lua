@@ -4,8 +4,6 @@ local constants = require("constants")
 local data = require("data.shapesData")
 local popup = require("utils.popup")
 
-
-
 local scene = storyboard.newScene()
 
 local _WELLDONETEXT = "Well done !"
@@ -21,9 +19,7 @@ local _SHADOWSIZE 		--размер тени
 local _SPACINGANIMALS 	--отступы между животными в нижнем баре
 local _SPACINGSHADOWS	--отступы по горизонтали между тенями
 local _PLATEXZERO 		--левый верхний угол деревянной панели
-local _PLATEYZERO 
-
-_GAME = 3
+local _PLATEYZERO
 
 local itemAmount = 		{1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 8} --items
 local shadowAmount = 	{1, 2, 3, 2, 3, 4, 3, 4, 5, 4, 5, 6, 5, 6, 7, 6, 7, 8, 7, 8, 8}	--shadows
@@ -42,12 +38,11 @@ local level, onPlaces
 local background, barBackground, plate, wellDoneLabel, homeBtn
 
 local function onHomeButtonClicked( event )
-	--TO DO:
+    popup.hidePopup()
 	local options =
 		{
     		effect = "slideRight",
-    		time = 500,
-    		params = { ind = 3 }
+    		time = 500
 		}
 	storyboard.gotoScene("scenes.gametitle", options)
 	storyboard.removeScene("scenes.game3")
@@ -324,10 +319,12 @@ end
 function scene:exitScene(event)
 	while #animals > 0 do
 		table.remove(animals)
-	end
+    end
+
 	while #shadows > 0 do
 		table.remove(shadows)
-	end
+    end
+
 	while #animalsImages > 0 do
 		display.remove(animalsImages[#animalsImages])
 		table.remove (animalsImages, #animalsImages)
@@ -345,7 +342,15 @@ function scene:exitScene(event)
 	while #stars > 0 do
 		display.remove(stars[#stars])
 		table.remove(stars)
-	end
+    end
+
+    display:remove ( homeBtn )
+    display:remove ( background )
+    display:remove ( barBackground )
+
+    --homeBtn = nil
+    --background = nil
+    --barBackground = nil
 
 end
 

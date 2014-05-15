@@ -30,18 +30,16 @@ local counter
 local soundName, soundTitle
 local star = {}
 local starToScore
----------------------------------------------------------------------------------
--- functions
---------------------------
+
+
 explosionTable        = {}                    -- Define a Table to hold the Spawns
 i                    = 0                        -- Explosion counter in table
 explosionTime        = 466.6667                    -- Time defined from EXP Gen 3 tool
 resources            = "utils"
 explosionImageFolder = "images/explosion"
---------------------------------------------------
--- Create and assign a new Image Sheet using the
--- Coordinates file and packed texture.
---------------------------------------------------
+
+
+
 local explosionSheetInfo    = require(resources..".".."explosion")
 local explosionSheet        = graphics.newImageSheet( explosionImageFolder.."/".."Explosion.png", explosionSheetInfo:getSheet() )
 
@@ -80,12 +78,11 @@ end
 -----------------------------------------------------------
 
 local function backHome()
-		--TO DO:
+    popup.hidePopup()
 	local options =
 		{
     		effect = "slideRight",
-    		time = 800,
-    		--params = { ind = 5 }
+    		time = 400
 		}
 	storyboard.gotoScene("scenes.gametitle", options)
 	storyboard.removeScene("scenes.game5")

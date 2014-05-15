@@ -2,7 +2,6 @@ local storyboard = require ("storyboard")
 local widget = require("widget")
 local constants = require("constants")
 local admob = require( "utils.admob" )
-
 local scene = storyboard.newScene()
 
 local _GAMEAMOUNT = 6
@@ -12,7 +11,6 @@ local gamePath = "scenes.game"
 local resPath = "images/game"
 local namePath = "/title"
 local imagePath = "/titlepic"
-local difPath = "/complexity"
 
 local format = ".png"
 
@@ -27,9 +25,9 @@ local function goNextGame()
 		local options =
 		{
     		effect = "slideLeft",
-    		time = 500,
-		}
-		storyboard.gotoScene("scenes.gametitle2", options)
+    		time = 500
+        }
+		storyboard.gotoScene("scenes.gametitle2", options) -- 2
 	end 
 end
 
@@ -40,14 +38,15 @@ local function goPreviousGame()
 		local options =
 		{
     		effect = "slideRight",
-    		time = 500,
-		}
-		storyboard.gotoScene("scenes.gametitle2", options)
+    		time = 500
+        }
+		storyboard.gotoScene("scenes.gametitle2", options) -- 2
 	else
         storyboard.gotoScene("scenetemplate", "slideRight", 800)
         storyboard.removeScene("scenes.gametitle")
 	end
 end
+
 local function animButtons(target)
 	local function transIn() 
 		transition.to( target, {time = 1500, alpha = 1, onComplete = animButtons} )
@@ -58,6 +57,7 @@ local function animButtons(target)
 local function animPlay()
 	transition.to(btnPlay, {time = 300, xScale = 2.2, yScale = 2.2, transition = easing.continuousLoop})
 end
+
 local function startDrag(event)
 	local swipeLength = math.abs(event.x - event.xStart) 
 	
@@ -76,8 +76,7 @@ local function startDrag(event)
 end
 
 local function startGame(event)
-		
-	    storyboard.gotoScene(gamePath .. _GAME, "slideLeft", 400)
+	    storyboard.gotoScene(gamePath .. tostring(_GAME), "slideLeft", 400)
         storyboard.removeScene("scenes.gametitle")
 end
 
@@ -158,8 +157,8 @@ function scene:enterScene (event)
 	group:insert(btnPlay)
 
 	animButtons(rightArrow)
-        animButtons(leftArrow)
-        animPlay()
+    animButtons(leftArrow)
+    animPlay()
 end
 
 
@@ -178,7 +177,6 @@ function scene:exitScene(event)
 	leftArrow = nil
 	display.remove(btnPlay)
 	btnPlay = nil
-	--index = nil
 end
 
 function scene:destroyScene(event)
