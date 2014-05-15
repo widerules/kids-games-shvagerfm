@@ -305,10 +305,19 @@ function scene:exitScene(event)
 	if taskLabel ~= nil then
 		display.remove( taskLabel )
 		taskLabel = nil
-	end
+    end
+
+    display:remove( background )
+    background = nil
 	
 	transition.cancel( )
 	audio.stop()
+
+    audio.dispose ( soundName )
+    audio.dispose ( soundTitle )
+
+    soundName = nil
+    soundTitle = nil
 end
 
 function scene:destroyScene(event)

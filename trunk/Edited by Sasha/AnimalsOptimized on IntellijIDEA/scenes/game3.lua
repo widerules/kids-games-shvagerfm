@@ -348,9 +348,8 @@ function scene:exitScene(event)
     display:remove ( background )
     display:remove ( barBackground )
 
-    --homeBtn = nil
-    --background = nil
-    --barBackground = nil
+    homeBtn = nil
+    background = nil
 
 end
 

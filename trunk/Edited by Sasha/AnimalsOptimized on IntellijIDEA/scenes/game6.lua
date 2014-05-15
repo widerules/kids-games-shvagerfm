@@ -274,7 +274,12 @@ function scene:exitScene(event)
 	for i = 1, #star do
 		display.remove (star[i])
 		star[i] = nil
-	end
+    end
+
+    display:remove( background )
+    background = nil
+
+    audio.stop()
 end
 
 function scene:destroyScene(event)
