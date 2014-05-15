@@ -9,7 +9,6 @@ local _GAMEAMOUNT = 6
 local gamePath = "scenes.game"
 
 local resPath = "images/game"
---local bgPath = "/bg"
 local namePath = "/title"
 local imagePath = "/titlepic"
 local difPath = "/complexity"
@@ -27,7 +26,7 @@ local function goNextGame()
 		local options =
 		{
     		effect = "slideLeft",
-    		time = 500,
+    		time = 500
 		}
 		storyboard.gotoScene("scenes.gametitle", options)
 	end 
@@ -40,12 +39,12 @@ local function goPreviousGame()
 		local options =
 		{
     		effect = "slideRight",
-    		time = 500,
+    		time = 500
 		}
 		storyboard.gotoScene("scenes.gametitle", options)
 	else
         storyboard.gotoScene("scenetemplate", "slideRight", 400)
-        storyboard.removeScene("scenes.gametitle")
+        storyboard.removeScene("scenes.gametitle2")
 	end
 end
 
@@ -78,8 +77,8 @@ local function startDrag(event)
 end
 
 local function startGame(event)
-	    storyboard.gotoScene(gamePath .. _GAME, "slideRight", 400)
-        storyboard.removeScene("scenes.gametitle")
+	    storyboard.gotoScene(gamePath .. tostring(_GAME), "slideRight", 400)
+        storyboard.removeScene("scenes.gametitle2")
 end
 
 function scene:createScene(event)

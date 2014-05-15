@@ -10,45 +10,35 @@ local _ANIMALSPATH = "images/"
 local _FOODPATH = "images/"
 local _FORMAT = ".png"
 
-local _FONTSIZE = constants.H / 15;
 local _IMAGESIZE = 0.4*constants.H;
 local _FOODSIZE = 0.7*_IMAGESIZE;
 local _SPACING = 0.1*constants.H;
 local _DELTA = 0.5*_IMAGESIZE;
 
-local _PANECENTERX
 local _BARCENTERX
-
-_GAME = 2
 
 local indexes = {}
 local positions = {}
-local foodPositions = {}
 local animalsPictures = {}
 local foodPictures = {}
 
 local animalSound;
 
-local background, homeBtn
+local background, backBtn
 local rightBar;
 local pane;
 local starToScore
-local counter = 0
 
-explosionTable        = {}                    -- Define a Table to hold the Spawns
-i                    = 0                        -- Explosion counter in table
-explosionTime        = 416.6667                    -- Time defined from EXP Gen 3 tool
-resources            = "utils"            -- Path to external resource files
-explosionImageFolder = "images/explosion"
+local explosionTable        = {}                    -- Define a Table to hold the Spawns
+local i                    = 0                        -- Explosion counter in table
+local explosionTime        = 416.6667                    -- Time defined from EXP Gen 3 tool
+local resources            = "utils"            -- Path to external resource files
+local explosionImageFolder = "images/explosion"
+
 local explosionSheetInfo    = require(resources..".".."explosion")
 local explosionSheet        = graphics.newImageSheet( explosionImageFolder.."/".."Explosion.png", explosionSheetInfo:getSheet() )
 
---------------------------------------------------
--- Define the animation sequence for the Explosion
--- from the Sprite sheet data
--- Change the sequence below to create IMPLOSIONS 
--- and EXPLOSIONS etc...
---------------------------------------------------
+
 local animationSequenceData = {
   { name = "dbiExplosion",
       frames={
@@ -84,11 +74,11 @@ local function spawnExplosionToTable(spawnX, spawnY)
 end
 
 local function backHome( event )
-    --TO DO:
+    popup.hidePopup()
     local options =
         {
             effect = "slideRight",
-            time = 500,
+            time = 500
         }
     storyboard.gotoScene("scenes.gametitle", options)
     storyboard.removeScene("scenes.game2")
@@ -145,18 +135,12 @@ local function animOnPutOn(self)
         transition.scaleTo(self, {xScale = 0, yScale = 0, time = 500})
 end
 
-local function onHomeButtonClicked(event)
-        --TODO: go to home screen
-        storyboard.gotoScene("scenetemplate", "slideRight", 400)
-        storyboard.removeScene("scenes.game2")
-end
-
 local function onNextButtonClicked(event)
         storyboard.reloadScene( )
 end
 
 local function onFoodDrag (event)
-local t = event.target
+    local t = event.target
         local phase = event.phase
         animScaleOnDrag(t)
 
@@ -238,8 +222,6 @@ function scene:createScene(event)
         pane.width = 0.7*constants.W
         pane.x = pane.width/2+0.05*constants.W
         group:insert(pane)
-
-        _PANECENTERX = pane.x
 
         positions = 
         {
@@ -324,8 +306,15 @@ function scene:exitScene(event)
                 table.remove(foodPictures)
         end
 
-            display.remove( nextBtn )
-            display.remove( homeBtn )
+        display:remove( background )
+        display:remove( rightBar )
+        display:remove( pane )
+        display:remove( backBtn )
+
+        background = nil
+        rightBar = nil
+        pane = nil
+        backBtn = nil
 
 end
 

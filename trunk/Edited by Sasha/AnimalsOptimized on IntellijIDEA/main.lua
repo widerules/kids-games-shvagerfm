@@ -1,4 +1,5 @@
 local storyboard = require "storyboard"
+local constants = require ( "constants" )
 local rate = require( "utils.rate" )
 local admob = require( "utils.admob" )
 
@@ -23,11 +24,11 @@ local function onKeyEvent( event )
             exit()
        
          elseif (currentScene == "scenes.gametitle" or currentScene == "scenes.gametitle2") then
-           
+
                local options =
                   {
                      effect = "slideRight",
-                     time = 500,
+                     time = 500
                   }
                storyboard.gotoScene( "scenetemplate", options )
                storyboard.removeAll( )
@@ -35,8 +36,7 @@ local function onKeyEvent( event )
             local options =
                {
                   effect = "slideRight",
-                  time = 500,
-                  params = { ind = _GAME }
+                  time = 500
                }
             storyboard.gotoScene( lastScene, options )
             storyboard.removeAll( )

@@ -5,6 +5,8 @@ local admob = require( "utils.admob" )
 
 local scene = storyboard.newScene()
 
+_GAME = 1
+
 function scene:createScene(event)
 	local group = self.view
 
@@ -22,11 +24,12 @@ function scene:createScene(event)
 			defaultFile = "images/homeplay.png",
 			overFile = "images/homeplayover.png",
 			onRelease = function ()
-				storyboard.gotoScene("scenes.gametitle", {params = {ind = 1}})
+				storyboard.gotoScene( "scenes.gametitle" )
 			end
 
 		}
 	group:insert(btnPlay)
+
 	local btnMore = widget.newButton
 		{
 			width = constants.W/4,
@@ -36,7 +39,7 @@ function scene:createScene(event)
 			defaultFile = "images/moregames.png",
 			overFile = "images/moregamesover.png",
 			onRelease = function ()
-				storyboard.gotoScene("scenes.more_games", {params = {ind = 1}})
+				storyboard.gotoScene( "scenes.more_games" )
 			end
 
 		}
