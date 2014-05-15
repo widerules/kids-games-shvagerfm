@@ -179,7 +179,7 @@ function scene:enterScene(event)
 end;
 
 function scene:exitScene(event)
-	--animalImage:removeEventListener( "tap", onAnimalClicked )
+	animalImage:removeEventListener( "tap", onAnimalClicked )
 	
 	if animalName ~= nil then
 		display.remove(animalName)
@@ -199,6 +199,8 @@ function scene:exitScene(event)
 	end
 	
 	audio.stop()
+    audio.dispose ( animalSound )
+    animalSound = nil
 	transition.cancel( )
 end;
 

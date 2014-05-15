@@ -338,12 +338,16 @@ end
 function scene:exitScene(event)
 	
 	audio.stop()
+
 	audio.dispose( rainSound )
 	rainSound = nil
+
 	audio.dispose(soundHarp)
 	soundHarp = nil
+
 	audio.dispose(birdSound)
 	birdSound = nil
+
 	audio.dispose(hogSound)
 	hogSound = nil
 
@@ -382,7 +386,7 @@ function scene:exitScene(event)
 	if (cloud ~= nil) then
 		display.remove( cloud )
         cloud = nil
-	end
+    end
 end
 
 function scene:destroyScene(event)

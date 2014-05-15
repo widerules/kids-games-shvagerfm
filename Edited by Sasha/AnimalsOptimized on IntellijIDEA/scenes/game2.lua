@@ -131,8 +131,10 @@ local function animScaleBack(self)
 end
 
 local function animOnPutOn(self)
-
-        transition.scaleTo(self, {xScale = 0, yScale = 0, time = 500})
+        local function animFinished()
+                self:toBack()           
+        end
+        transition.scaleTo(self, {xScale = 0, yScale = 0, time = 500, onComplete = animFinished})
 end
 
 local function onNextButtonClicked(event)
@@ -316,6 +318,13 @@ function scene:exitScene(event)
         pane = nil
         backBtn = nil
 
+    audio.stop()
+
+    audio.dispose( animalSound )
+    audio.dispose( soundHarp )
+
+    animalSound = nil
+    soundHarp = nil
 end
 
 function scene:destroyScene(event)
