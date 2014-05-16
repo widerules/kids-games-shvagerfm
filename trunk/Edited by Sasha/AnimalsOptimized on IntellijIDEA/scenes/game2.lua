@@ -196,7 +196,7 @@ local function onFoodDrag (event)
 
                 if onPlaces == 3 then
                 		audio.play( soundHarp )
-                        timer.performWithDelay( 800, popup.showPopupWithReloadButton("You won !", "scenes.gametitle", "scenes.game2"), 1)
+                        timer.performWithDelay( 800, popup.showPopupWithNextButton("You won !", "scenes.gametitle", "scenes.game2"), 1)
                 end
 
         end
@@ -304,8 +304,9 @@ function scene:exitScene(event)
         end
 
         while (table.maxn(foodPictures) > 0) do
-            display.remove( foodPictures[#foodPictures] )              
-                table.remove(foodPictures)
+            display.remove( foodPictures[#foodPictures] )
+            foodPictures[1]:removeEventListener( "touch", onFoodDrag )
+            table.remove(foodPictures)
         end
 
         display:remove( background )
@@ -321,10 +322,8 @@ function scene:exitScene(event)
     audio.stop()
 
     audio.dispose( animalSound )
-    audio.dispose( soundHarp )
 
     animalSound = nil
-    soundHarp = nil
 end
 
 function scene:destroyScene(event)

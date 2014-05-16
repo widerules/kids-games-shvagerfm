@@ -107,9 +107,9 @@ function scene:createScene(event)
 		defaultFile = "images/next.png",
 		overFile = "images/next.png", --here should be some new file ?
 		width = 1.2*_BTNSIZE,
-		height = 1.2*_BTNSIZE
+		height = 1.2*_BTNSIZE,
+        onRelease = onNextButtonClicked
 	};
-	nextButton:addEventListener( "tap", onNextButtonClicked );
 	group:insert(nextButton);
 
 	previousButton = widget.newButton
@@ -119,9 +119,9 @@ function scene:createScene(event)
 		defaultFile = "images/prev.png",
 		overFile = "images/prev.png",
 		width = 1.2*_BTNSIZE,
-		height = 1.2*_BTNSIZE
+		height = 1.2*_BTNSIZE,
+        onRelease = onPreviousButtonClicked
 	}
-	previousButton:addEventListener( "tap", onPreviousButtonClicked );
 	group:insert(previousButton);
 
 	homeButton = widget.newButton 
@@ -133,9 +133,10 @@ function scene:createScene(event)
 		defaultFile = "images/home.png",
 		overFile = "images/homehover.png",
 		width = _BTNSIZE,
-		height = _BTNSIZE
+		height = _BTNSIZE,
+        onRelease = onHomeButtonClicked
 	}
-	homeButton:addEventListener("tap", onHomeButtonClicked);
+	--homeButton:addEventListener("tap", onHomeButtonClicked);
 	group:insert (homeButton);	
 
 end;

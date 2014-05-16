@@ -78,10 +78,7 @@ local function spawnExplosionToTable(spawnX, spawnY)
             object = nil
         end
     end
-    
-    --Add a timer to the Spawned Explosion.
-    --Explosion are destroyed after all the frames have been played after a determined
-    --amount of time as setup by the Explosion Generator Tool.
+
     local destroySpawneExplosion = timer.performWithDelay (explosionTime, removeExplosionSpawn(explosionTable[i]))
 end
 
