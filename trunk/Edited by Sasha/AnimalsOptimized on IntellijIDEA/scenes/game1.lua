@@ -4,6 +4,7 @@ local native = require ("native");
 local data = require("data.data");
 local constants = require("constants")
 
+
 local scene = storyboard.newScene();
 
 local _IMAGEWIDTH = 0.35 * constants.W;
@@ -35,7 +36,6 @@ local animalDescription;	--Text, for animal rhyme
 local animalImage;			--Image, for animal picture
 local foodImage;			--Image, for food picture
 local animalSound			--Sound of the animal
-
 
 local function onNextButtonClicked( event )
 	index = index + 1;	--move to the next animal

@@ -2,6 +2,7 @@ local storyboard = require("storyboard")
 local constants = require("constants")
 local data = require("data.searchData")
 local popup = require("utils.popup")
+local memoryViewer = require ("utils.memoryViewer")
 
 local scene = storyboard.newScene()
 local widget = require("widget")
@@ -32,11 +33,11 @@ local star = {}
 local starToScore
 
 
-explosionTable        = {}                    -- Define a Table to hold the Spawns
-i                    = 0                        -- Explosion counter in table
-explosionTime        = 466.6667                    -- Time defined from EXP Gen 3 tool
-resources            = "utils"
-explosionImageFolder = "images/explosion"
+local explosionTable        = {}                    -- Define a Table to hold the Spawns
+local i                    = 0                        -- Explosion counter in table
+local explosionTime        = 466.6667                    -- Time defined from EXP Gen 3 tool
+local resources            = "utils"
+local explosionImageFolder = "images/explosion"
 
 
 
@@ -65,7 +66,7 @@ function spawnExplosionToTable(spawnX, spawnY)
     
     local function removeExplosionSpawn( object )
         return function()
-            object:removeSelf()
+            display.remove( object )
             object = nil
         end
     end
@@ -73,7 +74,7 @@ function spawnExplosionToTable(spawnX, spawnY)
     --Add a timer to the Spawned Explosion.
     --Explosion are destroyed after all the frames have been played after a determined
     --amount of time as setup by the Explosion Generator Tool.
-    local destroySpawneExplosion = timer.performWithDelay (explosionTime, removeExplosionSpawn(explosionTable[i]))
+    timer.performWithDelay (explosionTime, removeExplosionSpawn(explosionTable[i]))
 end
 -----------------------------------------------------------
 
@@ -85,7 +86,7 @@ local function backHome()
     		time = 400
 		}
 	storyboard.gotoScene("scenes.gametitle", options)
-	storyboard.removeScene("scenes.game5")
+	storyboard.purgeScene("scenes.game5")
 end
 
 local function animScore()
@@ -203,7 +204,10 @@ local function onItemTapped (event)
 end
 
 function scene:createScene(event)
+    --print ("1 st line of createScene: "..system.getInfo( "textureMemoryUsed" ) / 1000000)
 	local group = self.view
+
+
 
 	background = display.newImage("images/background2.jpg", constants.CENTERX, constants.CENTERY)
 	background.width = constants.W
@@ -226,16 +230,21 @@ function scene:createScene(event)
 
 	gamesWon = 0
 	level = 1
+
+    --print ("end of createScene: "..system.getInfo( "textureMemoryUsed" ) / 1000000)
 end
 
 function scene:willEnterScene(event)
+    --print ("1st line of willEnterScene: "..system.getInfo( "textureMemoryUsed" ) / 1000000)
 	--computing size of spacing and actual image size, according to the amount of the items
 	imageSize = constants.H/(rows[level]+1)
 	spacingX = (constants.W - (itemsCount[level]/rows[level])*imageSize)/(itemsCount[level]/rows[level]+1)
 	spacingY = imageSize / (rows[level]+1)
+    --print ("end of willEnterScene: "..system.getInfo( "textureMemoryUsed" ) / 1000000)
 end
 
 function scene:enterScene(event)
+    --print ("1st line of enterScene: "..system.getInfo( "textureMemoryUsed" ) / 1000000)
 	local group = self.view
 
 	counter = 1
@@ -254,7 +263,9 @@ function scene:enterScene(event)
 			group:insert(images[i][j])
 			table.remove(items, index)
 		end
-	end
+    end
+
+    --print ("images downloaded in enterScene: "..system.getInfo( "textureMemoryUsed" ) / 1000000)
 
 	local function hideLabel()
 		transition.to( taskLabel, {time = 300, alpha = 0} )
@@ -287,31 +298,34 @@ function scene:enterScene(event)
 	end
 	group:insert(star[i])
 
-	end
+    end
+
+    --print ("end of enterScene: "..system.getInfo( "textureMemoryUsed" ) / 1000000)
+
 end
 
 function scene:exitScene(event)
 
-	for i = 1, #images do
-		for j = 1, #images[i] do
-			if images[i][j] ~= nil then
-			
-			display.remove( images[i][j] )
-			images[i][j] = nil
-			end
-		end
-	end	
-	
-	if taskLabel ~= nil then
-		display.remove( taskLabel )
-		taskLabel = nil
+    for i = 1, #images do
+        for j = 1, #images[i] do
+            if images[i][j] ~= nil then
+
+                display.remove( images[i][j] )
+                images[i][j] = nil
+            end
+        end
+    end
+
+    if taskLabel ~= nil then
+        display.remove( taskLabel )
+        taskLabel = nil
     end
 
     display:remove( background )
     background = nil
-	
-	transition.cancel( )
-	audio.stop()
+
+    transition.cancel( )
+    audio.stop()
 
     audio.dispose ( soundName )
     audio.dispose ( soundTitle )
@@ -321,6 +335,7 @@ function scene:exitScene(event)
 end
 
 function scene:destroyScene(event)
+
 end
 
 scene:addEventListener( "createScene", scene )
