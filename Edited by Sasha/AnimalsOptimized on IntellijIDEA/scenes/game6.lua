@@ -28,18 +28,13 @@ local star = {}
 local starToScore
 local items = {}
 
----------------------------------------------------------------------------------
--- functions
---------------------------
-explosionTable        = {}                    -- Define a Table to hold the Spawns
-i                    = 0                        -- Explosion counter in table
-explosionTime        = 466.6667                    -- Time defined from EXP Gen 3 tool
-resources            = "utils"
-explosionImageFolder = "images/explosion"
---------------------------------------------------
--- Create and assign a new Image Sheet using the
--- Coordinates file and packed texture.
---------------------------------------------------
+local explosionTable        = {}                    -- Define a Table to hold the Spawns
+local i                    = 0                        -- Explosion counter in table
+local explosionTime        = 466.6667                    -- Time defined from EXP Gen 3 tool
+local resources            = "utils"
+local explosionImageFolder = "images/explosion"
+
+
 local explosionSheetInfo    = require(resources..".".."explosion")
 local explosionSheet        = graphics.newImageSheet( explosionImageFolder.."/".."Explosion.png", explosionSheetInfo:getSheet() )
 
