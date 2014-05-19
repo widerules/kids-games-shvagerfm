@@ -41,14 +41,16 @@ local total, totalScore, bgscore, coins
 local coinsToScore
 
 
-explosionTable        = {}                    -- Define a Table to hold the Spawns
-i                    = 0                        -- Explosion counter in table
-explosionTime        = 416.6667                    -- Time defined from EXP Gen 3 tool
-resources            = "utils"            -- Path to external resource files
-explosionImageFolder = "images/explosion"
+local explosionTable        = {}                    -- Define a Table to hold the Spawns
+local i                    = 0                        -- Explosion counter in table
+local explosionTime        = 466.6667                    -- Time defined from EXP Gen 3 tool
+local resources            = "utils"
+local explosionImageFolder = "images/explosion"
+
+
 
 local explosionSheetInfo    = require(resources..".".."explosion")
-local explosionSheet        = graphics.newImageSheet( explosionImageFolder.."/".."Explosion.png", explosionSheetInfo:getSheet() )
+local explosionSheet
 
 
 local animationSequenceData = {
@@ -275,8 +277,10 @@ local function rainAnimation()
 end
 
 function scene:createScene (event)
-
 	group = self.view
+
+    explosionSheet = graphics.newImageSheet( explosionImageFolder.."/".."Explosion.png", explosionSheetInfo:getSheet() )
+
 	local i
 
 	for i = 1, 10, 1 do
@@ -387,6 +391,7 @@ function scene:exitScene(event)
 end
 
 function scene:destroyScene(event)
+    explosionSheet = nil
 end
 
 scene:addEventListener( "createScene", scene )

@@ -36,7 +36,7 @@ local explosionImageFolder = "images/explosion"
 
 
 local explosionSheetInfo    = require(resources..".".."explosion")
-local explosionSheet        = graphics.newImageSheet( explosionImageFolder.."/".."Explosion.png", explosionSheetInfo:getSheet() )
+local explosionSheet
 
 local animationSequenceData = {
   { name = "dbiExplosion",
@@ -150,6 +150,8 @@ end
 
 function scene:createScene(event)
 	local group = self.view
+
+    explosionSheet = graphics.newImageSheet( explosionImageFolder.."/".."Explosion.png", explosionSheetInfo:getSheet() )
 
 	background = display.newImage( "images/background1.jpg", constants.CENTERX, constants.CENTERY)
 	background.width = constants.W
@@ -278,6 +280,7 @@ function scene:exitScene(event)
 end
 
 function scene:destroyScene(event)
+    explosionSheet = nil
 end
 
 scene:addEventListener( "createScene", scene )

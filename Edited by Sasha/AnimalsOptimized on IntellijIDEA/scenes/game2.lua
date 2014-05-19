@@ -36,7 +36,7 @@ local resources            = "utils"            -- Path to external resource fil
 local explosionImageFolder = "images/explosion"
 
 local explosionSheetInfo    = require(resources..".".."explosion")
-local explosionSheet        = graphics.newImageSheet( explosionImageFolder.."/".."Explosion.png", explosionSheetInfo:getSheet() )
+local explosionSheet
 
 
 local animationSequenceData = {
@@ -204,6 +204,9 @@ end
 
 function scene:createScene(event)
         local group = self.view
+
+        explosionSheet = graphics.newImageSheet( explosionImageFolder.."/".."Explosion.png", explosionSheetInfo:getSheet() )
+
         local feedSound = audio.loadSound( "sounds/feed.mp3")
         audio.play( feedSound )
         background = display.newImage("images/background3.jpg", constants.CENTERX, constants.CENTERY)
@@ -327,6 +330,7 @@ function scene:exitScene(event)
 end
 
 function scene:destroyScene(event)
+    explosionSheet = nil
 end
 
 scene:addEventListener( "createScene", scene )
