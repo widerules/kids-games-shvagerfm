@@ -8,6 +8,8 @@ local scene = storyboard.newScene()
 
 _GAME = 5
 
+explosion.createExplosion()
+
 local _MAXLEVEL = 6
 local _ITEMH, _ITEMW
 
@@ -142,7 +144,7 @@ function scene:enterScene (event)
 
 	for i=1, #data.animals - cardAmount[level]/2 do
 		local posToRemove = math.random(1, #animals)
-		print(posToRemove)
+
 		table.remove(animals, posToRemove)
 	end
 
@@ -232,6 +234,7 @@ function scene:exitScene(event)
 end
 
 function scene:destroyScene(event)
+    explosion.destroyExplosion()
 end
 
 scene:addEventListener( "createScene", scene )

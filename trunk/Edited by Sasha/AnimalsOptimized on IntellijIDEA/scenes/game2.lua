@@ -3,8 +3,11 @@ local widget = require( "widget")
 local data = require( "data.feedData")
 local constants = require( "constants")
 local popup = require("utils.popup")
+local explosion = require ( "utils.explosion" )
 
 local scene = storyboard.newScene( )
+
+explosion.createExplosion()
 
 local _ANIMALSPATH = "images/"
 local _FOODPATH = "images/"
@@ -29,49 +32,7 @@ local rightBar;
 local pane;
 local starToScore
 
-local explosionTable        = {}                    -- Define a Table to hold the Spawns
-local i                    = 0                        -- Explosion counter in table
-local explosionTime        = 416.6667                    -- Time defined from EXP Gen 3 tool
-local resources            = "utils"            -- Path to external resource files
-local explosionImageFolder = "images/explosion"
 
-local explosionSheetInfo    = require(resources..".".."explosion")
-local explosionSheet
-
-
-local animationSequenceData = {
-  { name = "dbiExplosion",
-      frames={
-          1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25
-      },
-      time=explosionTime, loopCount=1
-  },
-}
-
-local function spawnExplosionToTable(spawnX, spawnY)
-    i = i + 1                                        -- Increment the spawn counter
-    
-    explosionTable[i] = display.newSprite( explosionSheet, animationSequenceData )
-    explosionTable[i]:setSequence( "dbiExplosion" )    -- assign the Animation to play
-    explosionTable[i].x=spawnX                        -- Set the X position (touch X)
-    explosionTable[i].y=spawnY                        -- Set the Y position (touch Y)
-    explosionTable[i]:play()                        -- Start the Animation playing
-    explosionTable[i].xScale = 1                    -- X Scale the Explosion if required
-    explosionTable[i].yScale = 1                    -- Y Scale the Explosion if required
-    
-    --Create a function to remove the Explosion - triggered from the DelatedTimer..
-    local function removeExplosionSpawn( object )
-        return function()
-            object:removeSelf()    -- remove the explosion from table
-            object = nil
-        end
-    end
-    
-    --Add a timer to the Spawned Explosion.
-    --Explosion are destroyed after all the frames have been played after a determined
-    --amount of time as setup by the Explosion Generator Tool.
-    local destroySpawneExplosion = timer.performWithDelay (explosionTime, removeExplosionSpawn(explosionTable[i]))
-end
 
 local function backHome( event )
     popup.hidePopup()
@@ -97,7 +58,8 @@ local function animScore()
     local function trans1()
         transition.to(starToScore, {time = 200, xScale = 1, yScale = 1, x = star[level].x, y= star[level].y, onComplete = listener})
     end
-    spawnExplosionToTable(constants.CENTERX, constants.CENTERY)
+    explosion.spawnExplosion(constants.CENTERX, constants.CENTERY)
+    --spawnExplosionToTable(constants.CENTERX, constants.CENTERY)
     transition.to(starToScore, {time = 300, xScale = 2, yScale = 2, transition = easing.outBack, onComplete = trans1})
 end
 
@@ -181,7 +143,8 @@ local function onFoodDrag (event)
                         onPlaces = onPlaces + 1;
                         animOnPutOn(t)
                         audio.play(animalSound)
-                        spawnExplosionToTable(t.x, t.y)
+                        explosion.spawnExplosion(t.x, t.y)
+                        --spawnExplosionToTable(t.x, t.y)
                         t:removeEventListener( "touch", onFoodDrag )
                 else 
                         t.x = startX
@@ -204,8 +167,6 @@ end
 
 function scene:createScene(event)
         local group = self.view
-
-        explosionSheet = graphics.newImageSheet( explosionImageFolder.."/".."Explosion.png", explosionSheetInfo:getSheet() )
 
         local feedSound = audio.loadSound( "sounds/feed.mp3")
         audio.play( feedSound )
@@ -330,7 +291,7 @@ function scene:exitScene(event)
 end
 
 function scene:destroyScene(event)
-    explosionSheet = nil
+    explosion.destroyExplosion()
 end
 
 scene:addEventListener( "createScene", scene )

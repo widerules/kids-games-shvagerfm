@@ -2,7 +2,7 @@ local storyboard = require("storyboard")
 local constants = require("constants")
 local data = require("data.searchData")
 local popup = require("utils.popup")
-local memoryViewer = require ("utils.memoryViewer")
+local explosion = require( "utils.explosion" )
 
 local scene = storyboard.newScene()
 local widget = require("widget")
@@ -13,6 +13,8 @@ local message = "Well done !"
 local _FONTSIZE = constants.H/7
 
 _GAME = 5
+
+explosion.createExplosion()
 
 local gamesWon = 0
 local level = 1
@@ -32,51 +34,6 @@ local soundName, soundTitle
 local star = {}
 local starToScore
 
-
-local explosionTable        = {}                    -- Define a Table to hold the Spawns
-local i                    = 0                        -- Explosion counter in table
-local explosionTime        = 466.6667                    -- Time defined from EXP Gen 3 tool
-local resources            = "utils"
-local explosionImageFolder = "images/explosion"
-
-
-
-local explosionSheetInfo    = require(resources..".".."explosion")
-local explosionSheet
-
-local animationSequenceData = {
-  { name = "dbiExplosion",
-      frames={
-          1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28
-      },
-      time=explosionTime, loopCount=1
-  },
-}
-
-function spawnExplosionToTable(spawnX, spawnY)
-    i = i + 1                                        -- Increment the spawn counter
-    
-    explosionTable[i] = display.newSprite( explosionSheet, animationSequenceData )
-    explosionTable[i]:setSequence( "dbiExplosion" )    -- assign the Animation to play
-    explosionTable[i].x=spawnX                        -- Set the X position (touch X)
-    explosionTable[i].y=spawnY                        -- Set the Y position (touch Y)
-    explosionTable[i]:play()                        -- Start the Animation playing
-    explosionTable[i].xScale = 1                    -- X Scale the Explosion if required
-    explosionTable[i].yScale = 1                    -- Y Scale the Explosion if required
-    
-    local function removeExplosionSpawn( object )
-        return function()
-            display.remove( object )
-            object = nil
-        end
-    end
-    
-    --Add a timer to the Spawned Explosion.
-    --Explosion are destroyed after all the frames have been played after a determined
-    --amount of time as setup by the Explosion Generator Tool.
-    timer.performWithDelay (explosionTime, removeExplosionSpawn(explosionTable[i]))
-end
------------------------------------------------------------
 
 local function backHome()
     popup.hidePopup()
@@ -100,7 +57,7 @@ local function animScore()
 	local function trans1()
 	 	transition.to(starToScore, {time = 200, xScale = 1, yScale = 1, x = star[level].x, y= star[level].y, onComplete = listener})
 	end
-	spawnExplosionToTable(constants.CENTERX, constants.CENTERY)
+	explosion.spawnExplosion(constants.CENTERX, constants.CENTERY)
 	transition.to(starToScore, {time = 300, xScale = 2, yScale = 2, transition = easing.outBack, onComplete = trans1})
 end
 
@@ -206,8 +163,6 @@ end
 function scene:createScene(event)
     --print ("1 st line of createScene: "..system.getInfo( "textureMemoryUsed" ) / 1000000)
 	local group = self.view
-
-    explosionSheet = graphics.newImageSheet( explosionImageFolder.."/".."Explosion.png", explosionSheetInfo:getSheet() )
 
 	background = display.newImage("images/background2.jpg", constants.CENTERX, constants.CENTERY)
 	background.width = constants.W
@@ -335,7 +290,7 @@ function scene:exitScene(event)
 end
 
 function scene:destroyScene(event)
-    explosionSheet = nil
+    explosion.destroyExplosion()
 end
 
 scene:addEventListener( "createScene", scene )

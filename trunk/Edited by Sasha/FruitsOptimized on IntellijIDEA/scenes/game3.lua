@@ -8,6 +8,8 @@ local scene = storyboard.newScene()
 
 _GAME = 3
 
+explosion.createExplosion()
+
 local _BTNSIZE = 0.1*constants.W
 local _FONTSIZE = constants.H / 15
 local _INFOSIZE = constants.H/6
@@ -320,6 +322,8 @@ function scene:destroyScene(event)
 	informationBackground:removeSelf()
 	fruitBasket:removeSelf( )
 	vegetableBasket:removeSelf( )
+
+    explosion.destroyExplosion()
 end
 
 scene:addEventListener( "createScene", scene )
