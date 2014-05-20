@@ -1,10 +1,12 @@
 local storyboard = require( "storyboard")
 local popup = require("utils.popup")
-
 local data = require("data.itemsData")
 local constants = require( "constants")
+local explosion = require( "utils.explosion" )
 
 local scene = storyboard.newScene()
+
+explosion.createExplosion()
 
 local _BERRYPATH = "images/berry.png"
 local _HOGPATH = "images/hog.png"
@@ -40,51 +42,6 @@ local timers = {}
 local total, totalScore, bgscore, coins
 local coinsToScore
 
-
-local explosionTable        = {}                    -- Define a Table to hold the Spawns
-local i                    = 0                        -- Explosion counter in table
-local explosionTime        = 466.6667                    -- Time defined from EXP Gen 3 tool
-local resources            = "utils"
-local explosionImageFolder = "images/explosion"
-
-
-
-local explosionSheetInfo    = require(resources..".".."explosion")
-local explosionSheet
-
-
-local animationSequenceData = {
-  { name = "dbiExplosion",
-      frames={
-          1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25
-      },
-      time=explosionTime, loopCount=1
-  },
-}
-
-local function spawnExplosionToTable(spawnX, spawnY)
-    i = i + 1                                        -- Increment the spawn counter
-    
-    explosionTable[i] = display.newSprite( explosionSheet, animationSequenceData )
-    explosionTable[i]:setSequence( "dbiExplosion" )    -- assign the Animation to play
-    explosionTable[i].x=spawnX                        -- Set the X position (touch X)
-    explosionTable[i].y=spawnY                        -- Set the Y position (touch Y)
-    explosionTable[i]:play()                        -- Start the Animation playing
-    explosionTable[i].xScale = 1                    -- X Scale the Explosion if required
-    explosionTable[i].yScale = 1                    -- Y Scale the Explosion if required
-    
-    --Create a function to remove the Explosion - triggered from the DelatedTimer..
-    local function removeExplosionSpawn( object )
-        return function()
-            object:removeSelf()    -- remove the explosion from table
-            object = nil
-        end
-    end
-
-    local destroySpawneExplosion = timer.performWithDelay (explosionTime, removeExplosionSpawn(explosionTable[i]))
-end
-
-
 local function onNextButtonClicked()
 	storyboard.reloadScene( )
 end
@@ -112,7 +69,7 @@ local function onItemClicked(event)
 		transition.to(t,{time = 1000, alpha = 0, x =constants.W, y = 0, xScale = 0.1, yScale = 0.1})
 	end
 	transition.scaleTo(t, {xScale = 1.5*t.xScale, yScale = 1.5*t.yScale, time = 500, onComplete = vanishAway})
-	spawnExplosionToTable(t.x, t.y)
+	explosion.spawnExplosion(t.x, t.y)
 	t:removeEventListener( "touch", onItemClicked ) 
 
 	itemsFound = itemsFound + 1
@@ -279,8 +236,6 @@ end
 function scene:createScene (event)
 	group = self.view
 
-    explosionSheet = graphics.newImageSheet( explosionImageFolder.."/".."Explosion.png", explosionSheetInfo:getSheet() )
-
 	local i
 
 	for i = 1, 10, 1 do
@@ -391,7 +346,7 @@ function scene:exitScene(event)
 end
 
 function scene:destroyScene(event)
-    explosionSheet = nil
+    explosion.destroyExplosion()
 end
 
 scene:addEventListener( "createScene", scene )

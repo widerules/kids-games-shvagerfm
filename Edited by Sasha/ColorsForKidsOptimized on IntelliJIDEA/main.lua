@@ -1,6 +1,12 @@
 local storyboard = require("storyboard")
 local rate = require( "utils.rate" )
-local admob = require( "utils.admob" )
+local memoryViewer = require ("utils.memoryViewer")
+local constants = require( "constants" )
+
+shouldWork = true
+
+memoryViewer.create(constants.W/2, 20, shouldWork)
+memoryViewer.updateInfoInLoop(100)
 
 storyboard.purgeOnSceneChange = true
 

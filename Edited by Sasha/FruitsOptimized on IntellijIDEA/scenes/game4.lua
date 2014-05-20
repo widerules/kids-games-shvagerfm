@@ -9,6 +9,8 @@ local scene = storyboard.newScene()
 
 _GAME = 4
 
+explosion.createExplosion()
+
 -------------------------------------constants
 local _INFOITEMSIZE = constants.H/6
 local _FRICTION = 0.7
@@ -319,7 +321,7 @@ function scene:exitScene(event)
 end
 
 function scene:destroyScene(event)
-
+    explosion.destroyExplosion()
 end
 
 scene:addEventListener( "createScene", scene )

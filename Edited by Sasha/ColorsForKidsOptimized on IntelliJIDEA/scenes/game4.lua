@@ -7,6 +7,8 @@ local explosion = require("utils.explosion")
 
 local scene = storyboard.newScene()
 
+explosion.createExplosion()
+
 _GAME = 4
 
 local _INFOSTARSIZE = constants.H/6
@@ -321,6 +323,7 @@ end
 function scene:destroyScene(event)
 	background:removeSelf( )
 	informationBackground:removeSelf()
+    explosion.destroyExplosion()
 end
 
 scene:addEventListener( "createScene", scene )
