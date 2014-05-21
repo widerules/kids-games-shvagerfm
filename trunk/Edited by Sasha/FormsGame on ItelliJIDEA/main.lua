@@ -27,12 +27,12 @@ local function onKeyEvent( event )
      local lastScene = storyboard.getPrevious()
 
             
-            if ( currentScene == "scenetemplate") then
+            if ( currentScene == "scenes.scenetemplate") then
                exit()
           
             else
                transition.cancel( )
-               storyboard.gotoScene( "scenetemplate" )
+               storyboard.gotoScene( "scenes.scenetemplate" )
                storyboard.removeAll( )
             end
    
