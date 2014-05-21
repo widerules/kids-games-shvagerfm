@@ -35,9 +35,8 @@ local starSound = audio.loadSound( "sounds/start.mp3" )
 
 
 local function backHome()
-
-		storyboard.gotoScene( "scenes.scenetemplate", "slideRight", 800 )
-		storyboard.removeScene( "scenes.game2" )
+	storyboard.gotoScene( "scenes.scenetemplate", "slideRight", 800 )
+	storyboard.removeScene( "scenes.game2" )
 end
 
 ----animation update score
@@ -57,53 +56,6 @@ local function animScore()
 	explosion.spawnExplosion(constants.CENTERX, constants.CENTERY)
 	transition.to(starToScore, {time = 300, xScale = 2, yScale = 2, transition = easing.outBack, onComplete = trans1})
 end
-
---[[local function playAgain()
-	level = 1
-	popupBg:removeSelf( )
-	popupText:removeSelf( )
-	homeBtn:removeSelf( )
-	nextBtn:removeSelf( )
-
-	storyboard.reloadScene()
-end]]--
-
-
---[[local function showPopUp()
-	local sound = audio.loadSound( "sounds/playagain.mp3")
-	audio.play( sound )
-	popupBg = display.newImage( "images/popupbg.png", constants.CENTERX, constants.CENTERY );
-	popupBg.height = 0.7*constants.H;
-	popupBg.width = 0.7*constants.W;
-
-	popupText = display.newText("Well done !", popupBg.x, 0, native.systemFont, _FONTSIZE);
-	popupText.y = popupBg.y-popupBg.height+2*popupText.width/3;
-
-	homeBtn = widget.newButton
-	{
-		width = 0.4*popupBg.height,
-		height = 0.4*popupBg.height,
-		x = popupBg.x - 0.4*popupBg.width/2,
-		y = popupBg.y + 0.4*popupBg.height/2,
-		defaultFile = "images/home.png",
-		overFile = "images/homehover.png",
-		onRelease = backHome
-	}
-
-
-	nextBtn = widget.newButton
-	{
-		width = 0.4*popupBg.height,
-		height = 0.4*popupBg.height,
-		x = popupBg.x + 0.4*popupBg.width/2,
-		y = popupBg.y + 0.4*popupBg.height/2,
-		defaultFile = "images/reload.png",
-		overFile = "images/reloadhover.png",
-		onRelease = playAgain
-	}	
-
-
-end;]]--
 
 local function generateItems()
 	local tmp = table.copy(data.colors)
@@ -232,7 +184,8 @@ function scene:willEnterScene(event)
 end
 
 function scene:enterScene(event)
-		local group = self.view
+	local group = self.view
+
 	counter = 1
 	generateItems()
 	for i = 1, itemsCount[level]/rows[level] do
@@ -270,15 +223,18 @@ function scene:enterScene(event)
 		if i < level then
 			star[i] = display.newImage("images/stars/starfull.png", 0, 0, constants.H/20, constants.H/12)
 		else
-	star[i] = display.newImage("images/stars/star.png", 0, 0, constants.H/20, constants.H/12)
-	end
+	        star[i] = display.newImage("images/stars/star.png", 0, 0, constants.H/20, constants.H/12)
+        end
+
 	star[i].width, star[i].height = constants.H/16, constants.H/16
 	star[i].x = constants.W - star[i].width/2
+
 	if i == 1 then
 		star[i].y = constants.H - star[i].height/2
 	else
 		star[i].y = star[i-1].y - star[i].height
-	end
+    end
+
 	group:insert(star[i])
 
 	end
@@ -286,42 +242,33 @@ end
 
 function scene:exitScene(event)
 	if images ~= nil then
-	for i = 1, #images do
-		for j = 1, #images[i] do
-			if images[i][j] ~= nil then
-				display.remove( images[i][j] )
-			images[i][j] = nil
-			end
-		end
-	end	
-end
-	if taskLabel ~= nil then
-		display.remove( taskLabel )
-	taskLabel = nil
+        for i = 1, #images do
+            for j = 1, #images[i] do
+                if images[i][j] ~= nil then
+                    display.remove( images[i][j] )
+                    images[i][j] = nil
+                end
+            end
+        end
     end
 
-	--[[if popupBg ~= nil then
-		display.remove( popupBg )
-		display.remove( popupText )
-		display.remove( nextBtn )
-		display.remove( homeBtn )
-		popupBg = nil
-		popupText = nil
-		nextBtn = nil
-		homeBtn = nil
-	end;
-	if starToScore ~= nil then
-		display.remove( starToScore )
-		starToScore = nil
-	end
-	]]--
+    if starToScore ~= nil then
+        display.remove( starToScore )
+        starToScore = nil
+    end
+
+	if taskLabel ~= nil then
+		display.remove( taskLabel )
+	    taskLabel = nil
+    end
+
     transition.cancel( )
 
     popup.hidePopUp()
 end
 
 function scene:destroyScene(event)
-    explosion.destroyExplosion()
+   explosion.destroyExplosion()
 end
 
 scene:addEventListener( "createScene", scene )
