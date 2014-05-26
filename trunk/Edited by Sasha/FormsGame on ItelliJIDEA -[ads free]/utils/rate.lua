@@ -48,13 +48,11 @@ M.init = function ()
 	    	elseif 2 == event.index then 
 	    		db:close()
 	    		native.requestExit()
-            elseif 3 == event.index then
-                system.openURL( "market://details?id=" .. applicationId )
             end
 		end
 	end
 	if (not M.isRated()) then
-		native.showAlert( "Thank You!", "If you like our app  - please rate it", { "OK", "Exit", "Disable ads" }, onComplete )
+		native.showAlert( "Thank You!", "If you like our app  - please rate it", { "OK", "Exit" }, onComplete )
 	else
 		local onComplete = function ( event )
 		if "clicked" == event.action then
@@ -63,13 +61,11 @@ M.init = function ()
 	    		native.requestExit()
 	    	elseif 2 == event.index then 
 	    		-- "OK button"
-            elseif 3 == event.index then
-                system.openURL( "market://details?id=" .. applicationId )
             end
 
 		end
 	end
-		native.showAlert( "Exit", "Do you really want to exit?", { "Exit", "No", "Disable ads"  }, onComplete )
+		native.showAlert( "Exit", "Do you really want to exit?", { "Exit", "No" }, onComplete )
 	end
 end
 
