@@ -1,0 +1,66 @@
+class Slide {
+
+	private:
+	
+		arrayOfFunctionForShowingObject // each function should load all object's data (images, etc) and show object
+		arrayOfFunctionForHidingObject // each function should hide and nil object
+		
+	public:
+
+		Slide(x, y, width, height)
+		
+		number getObjectsCount // the number of functions of each type (showing and hiding) is equal the number of objects on slide
+		
+		insertObject(functionForShowingObject, functionForHidingObject, objectName) // add functions to corresponding arrays
+		
+		showObject(numberOfFunctionForShowingInArray) // invoke function with corresponding number from arrayOfFunctionForShowingObject
+		hideObject(numberOfFunctionForHidingInArray) // invoke function with corresponding number from arrayOfFunctionForHidingObject
+		
+		showAllObjects() // invoke each function from arrayOfFunctionForShowingObject
+		hideAllObjects() // invoke each function from arrayOfFunctionForHidingObject
+		
+		destroy() // invoke hideAllObjects; delete and nil arrays
+		
+}
+
+class Carousel {
+
+	private: 
+	
+		arrayOfSlides // array which keeps slides
+		
+	public:
+	
+		number getSlidesCount() // get the number of slides within arrayOfSlides
+		
+		Carousel(x, y, width, height)
+
+		insertSlide(newSlide) // add slide to slides array and set it's ID to (#arrayOfSlides + 1) (ID == index of slide in array)
+		insertSlide(newSlide, nameForNewSlide) // add slide to slides array, setting it nameForNewSlide
+		
+		// delete slide from slides array
+		removeSlide(slideID) // id from 1 to # arrayOfSlides
+		removeSlide(slideName)
+		
+		Slide getCurrentSlide() // if nothing is showing - returns nil
+		number getCurrentSlideID()
+		string getCurrentSlideName() // return the name of slide, if name is available
+		
+		// invoke Slide.showAllObjects() for corresponding slide
+		showSlide(slideID) 
+		showSlide(slideName)
+		
+		// invoke Slide.showAllObjects() for corresponding slide, if it is possible (shows all object on slide)
+		showNextSlide()
+		showPreviousSlide()
+		
+		// invoke Slide.hideAllObjects() for slide which is showing
+		hideCurrentSlide()
+		
+		// invoke Slide.hideAllObjects() for corresponding slide
+		hideSlide(slideName)
+		hideSlide(slideID)
+		
+		destroy() // invoke Slide.hideAllObjects() for each slide in slide array; delete and nil array
+		
+}
