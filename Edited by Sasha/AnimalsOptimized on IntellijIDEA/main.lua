@@ -3,6 +3,7 @@ local constants = require ( "constants" )
 local rate = require( "utils.rate" )
 local admob = require( "utils.admob" )
 local memoryViewer = require ("utils.memoryViewer")
+local popup = require("utils.popup")
 
 shouldWork = true
 
@@ -30,7 +31,8 @@ local function onKeyEvent( event )
             exit()
        
          elseif (currentScene == "scenes.gametitle" or currentScene == "scenes.gametitle2") then
-
+            timer.performWithDelay(300, function()
+               popup.hidePopup()
                local options =
                   {
                      effect = "slideRight",
@@ -38,14 +40,18 @@ local function onKeyEvent( event )
                   }
                storyboard.gotoScene( "scenetemplate", options )
                storyboard.removeAll( )
+            end)
          else
-            local options =
-               {
-                  effect = "slideRight",
-                  time = 500
-               }
-            storyboard.gotoScene( lastScene, options )
-            storyboard.removeAll( )
+            timer.performWithDelay(500, function()
+                popup.hidePopup()
+                local options =
+                   {
+                      effect = "slideRight",
+                      time = 500
+                   }
+                storyboard.gotoScene( lastScene, options )
+                storyboard.removeAll( )
+            end)
 
          end
    end

@@ -3,9 +3,10 @@ local rate = require( "utils.rate" )
 local admob = require( "utils.admob" )
 local memoryViewer = require( "utils.memoryViewer" )
 local constants = require( "constants" )
+local popup = require("utils.popup")
 storyboard.purgeOnSceneChange = true
 
-_GAME = nil
+_GAME = 1
 
 shouldWork = true
 
@@ -30,29 +31,32 @@ if ( ("back" == keyName or "deleteBack" == keyName) and phase == "up" ) then
             exit()
        
          elseif (currentScene == "scenes.gametitle" or currentScene == "scenes.gametitle2") then
-           
+            timer.performWithDelay(500, function()
                local options =
                   {
                      effect = "slideRight",
                      time = 600,
                   }
                transition.cancel( )
+               popup.hidePopup()
                storyboard.gotoScene( "scenetemplate", options )
                storyboard.removeAll( )
+             end)
          elseif (currentScene == "scenes.game3") then
 
          else
-            local options =
-               {
-                  effect = "slideRight",
-                  time = 600,
-                  params = { ind = _GAME }
-               }
-            transition.cancel( )
-            audio.stop()
-            storyboard.gotoScene( lastScene, options )
-            storyboard.removeAll( )
-
+             timer.performWithDelay(500, function()
+                local options =
+                   {
+                      effect = "slideRight",
+                      time = 600
+                   }
+                transition.cancel( )
+                audio.stop()
+                popup.hidePopup()
+                storyboard.gotoScene( lastScene, options )
+                storyboard.removeAll( )
+             end)
          end
    end
    if ( keyName == "volumeUp" and phase == "down" ) then

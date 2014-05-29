@@ -3,7 +3,6 @@ local rate = require( "utils.rate" )
 local memoryViewer = require( "utils.memoryViewer" )
 local constants = require( "constants" )
 
-
 _SOUNDON = true
 
 storyboard.purgeOnSceneChange = true
@@ -31,9 +30,11 @@ local function onKeyEvent( event )
                exit()
           
             else
-               transition.cancel( )
-               storyboard.gotoScene( "scenes.scenetemplate" )
-               storyboard.removeAll( )
+                timer.performWithDelay(500, function()
+                    transition.cancel( )
+                    storyboard.gotoScene( "scenes.scenetemplate" )
+                    storyboard.removeAll()
+                end)
             end
    
    end

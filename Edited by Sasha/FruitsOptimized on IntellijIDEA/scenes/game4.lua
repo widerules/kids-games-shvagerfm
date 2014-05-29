@@ -52,8 +52,7 @@ local function onHomeButtonClicked ()
 		local options =
 		{
     		effect = "slideRight",
-    		time = 800,
-    		params = { ind = _GAME }
+    		time = 800
 		}
 		storyboard.gotoScene( "scenes.gametitle", options)
 		storyboard.removeScene( "scenes.game4" )

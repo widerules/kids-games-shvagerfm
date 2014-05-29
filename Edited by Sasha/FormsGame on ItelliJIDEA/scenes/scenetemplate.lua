@@ -224,11 +224,11 @@ function scene:enterScene( event )
 
 	
 	local sheetData = {
-	width = _H/2,
-	height = 5*_H/12,
+	width = 300,
+	height = 249,
 	numFrames = 4,
-	sheetContentWidth = _H,
-	sheetContentHeight = 10*_H/12
+	sheetContentWidth = 600,
+	sheetContentHeight = 498
 }
 	local shapeSheet = graphics.newImageSheet("images/sunsheet.png", sheetData)
 		local sequenceData = {

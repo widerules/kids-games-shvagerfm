@@ -25,8 +25,7 @@ local function toTitle()
 	local options = 
 	{
 		effect = "slideLeft",
-		time = 400,
-		params = {ind = _GAME}
+		time = 400
 	}
 	storyboard.gotoScene("scenes.gametitle", options)
 	storyboard.removeScene( "scenes.game1" )

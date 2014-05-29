@@ -13,33 +13,33 @@ local slideData = {
     viewGroup = nil
 }
 
-local function invokeShowingFunction( showingFunctionToBeInvoked )
-    local object = showingFunctionToBeInvoked()
+local function invokeShowingFunction( func )
+    local object = func()
     slideData.viewGroup:insert(object)
 end
 
-local function invokeHidingFunction( hidingFunctionToBeInvoked )
-    hidingFunctionToBeInvoked()
+local function invokeHidingFunction( func )
+    func()
 end
 
-slide.create = function( xValue, yValue, widthValue, heightValue )
+slide.create = function( x, y, width, height )
     slideData.objectsCount = 0
 
-    slideData.x = xValue
-    slideData.y = yValue
+    slideData.x = x
+    slideData.y = y
 
     slideData.viewGroup = display.newGroup()
 	
 	if widthValue>0 then
-        slideData.width = widthValue
+        slideData.width = width
 	else
-		print("width == " .. widthValue .. ". It should be greater the 0!")
+		print("width == " .. width .. ". It should be greater the 0!")
     end
 		
 	if heightValue>0 then
-        slideData.height = heightValue
+        slideData.height = height
 	else
-		print("height == " .. heightValue .. ". It should be greater the 0!")
+		print("height == " .. height .. ". It should be greater the 0!")
     end
 
     return setmetatable( slideData, slideMetaTable )

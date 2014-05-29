@@ -33,7 +33,6 @@ local pane;
 local starToScore
 
 
-
 local function backHome( event )
     popup.hidePopup()
     local options =

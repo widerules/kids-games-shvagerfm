@@ -22,28 +22,26 @@ local background, title, titlePic, complexity
 local btnPlay, leftArrow, rightArrow
 
 local function goNextGame()
-	if indexGame < _GAMEAMOUNT then
-		indexGame = indexGame + 1
+	if _GAME < _GAMEAMOUNT then
+        _GAME = _GAME + 1
 
 		local options =
 		{
     		effect = "slideLeft",
     		time = 800,
-    		params = { ind = indexGame }
 		}
 		storyboard.gotoScene("scenes.gametitle2", options)
 	end 
 end
 
 local function goPreviousGame()
-	if indexGame > 1 then
-		indexGame = indexGame - 1
+	if _GAME > 1 then
+        _GAME = _GAME - 1
 
 		local options =
 		{
     		effect = "slideRight",
     		time = 800,
-    		params = { ind = indexGame }
 		}
 		storyboard.gotoScene("scenes.gametitle2", options)
 	else
@@ -80,14 +78,12 @@ end
 
 local function startGame(event)
 		
-	    storyboard.gotoScene(gamePath .. indexGame, "slideLeft", 400)
+	    storyboard.gotoScene(gamePath .. _GAME, "slideLeft", 400)
         storyboard.removeScene("scenes.gametitle")
 end
 
 function scene:createScene(event)
 	local group = self.view
-
-	indexGame = event.params.ind
 
 	background = display.newImage("images/background1.jpg", constants.CENTERX, constants.CENTERY)
 	group:insert(background)
@@ -99,16 +95,15 @@ end
 
 function scene:enterScene (event)
 	local group = self.view
-indexGame = event.params.ind
 
-	titlePic = display.newImage(resPath .. indexGame .. imagePath .. format, 0, constants.CENTERY, constants.W/2, 3*constants.W/8)
+	titlePic = display.newImage(resPath .. _GAME .. imagePath .. format, 0, constants.CENTERY, constants.W/2, 3*constants.W/8)
 		titlePic.width = constants.W/2
 	titlePic.height = 3*constants.W/8
 	titlePic.x = 0.6*titlePic.width
 	group:insert(titlePic)
 
 	
-	title = display.newImage(resPath .. indexGame .. namePath .. format,  0, 0, constants.W/4, constants.W/12)
+	title = display.newImage(resPath .. _GAME .. namePath .. format,  0, 0, constants.W/4, constants.W/12)
 	title.y = title.height
 	title.x = constants.W - title.width
 
@@ -128,7 +123,7 @@ indexGame = event.params.ind
 	transition.to(leftArrow, {time = 200, alpha = 1})
 	group:insert(leftArrow)
 
-	if indexGame < _GAMEAMOUNT then
+	if _GAME < _GAMEAMOUNT then
 		rightArrow = widget.newButton
 			{
 				width = constants.W/12,
