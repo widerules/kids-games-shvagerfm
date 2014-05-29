@@ -38,15 +38,17 @@ local function onKeyEvent( event )
                storyboard.gotoScene( "scenetemplate", options )
                storyboard.removeAll( )
          else
-            local options =
-               {
-                  effect = "slideRight",
-                  time = 500,
-                  params = { ind = _GAME }
-               }
-            transition.cancel( )
-            storyboard.gotoScene( lastScene, options )
-            storyboard.removeAll( )
+            timer.performWithDelay(300, function()
+                local options =
+                {
+                    effect = "slideRight",
+                    time = 500,
+                    params = { ind = _GAME }
+                }
+                transition.cancel( )
+                storyboard.gotoScene( lastScene, options )
+                storyboard.removeAll( )
+            end)
 
          end
    end
