@@ -119,7 +119,7 @@ function scene:createScene( event )
 		    defaultFile = "images/button.png",
 		    overFile = "images/pbutton.png",
 		    id = "button_2",
-		    label = "Find",
+		    label = "Find shapes",
 		    labelColor = { default={ 0,0,0 }, over={ 0, 0, 0, 0.9 } },
 		    fontSize = sizeFont,
 		    emboss = true,
@@ -224,11 +224,11 @@ function scene:enterScene( event )
 
 	
 	local sheetData = {
-	width = 300,
-	height = 249,
+	width = _H/2,
+	height = 5*_H/12,
 	numFrames = 4,
-	sheetContentWidth = 600,
-	sheetContentHeight = 498
+	sheetContentWidth = _H,
+	sheetContentHeight = 10*_H/12
 }
 	local shapeSheet = graphics.newImageSheet("images/sunsheet.png", sheetData)
 		local sequenceData = {
