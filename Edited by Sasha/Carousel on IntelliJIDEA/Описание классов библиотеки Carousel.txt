@@ -1,20 +1,35 @@
+class SlideObject {
+    public:
+
+        createFunction
+        showFunction
+        hideFunction
+        removeFunction
+
+        object
+        name
+}
+
+
 class Slide {
 
 	private:
 	
 		arrayOfFunctionForShowingObject // each function should load all object's data (images, etc) and show object
 		arrayOfFunctionForHidingObject // each function should hide and nil object
+		arrayOfObjects -- links to objects
 		
 	public:
 
 		Slide(x, y, width, height)
 		
-		number getObjectsCount // the number of functions of each type (showing and hiding) is equal the number of objects on slide
+		number count // the number of functions of each type (showing and hiding) is equal the number of objects on slide
 		
 		insertObject(functionForShowingObject, functionForHidingObject, objectName) // add functions to corresponding arrays
+		removeObject(identificator)
 		
-		showObject(numberOfFunctionForShowingInArray) // invoke function with corresponding number from arrayOfFunctionForShowingObject
-		hideObject(numberOfFunctionForHidingInArray) // invoke function with corresponding number from arrayOfFunctionForHidingObject
+		showObject(identificator) // invoke function with corresponding number from arrayOfFunctionForShowingObject
+		hideObject(identificator) // invoke function with corresponding number from arrayOfFunctionForHidingObject
 		
 		showAllObjects() // invoke each function from arrayOfFunctionForShowingObject
 		hideAllObjects() // invoke each function from arrayOfFunctionForHidingObject
