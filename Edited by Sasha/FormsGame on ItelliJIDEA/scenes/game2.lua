@@ -106,9 +106,9 @@ local function onItemTapped (event)
 					animScore()
 					
 				else
-					level = 1
 					--showPopUp()
                     popup.showPopUpWithReloadButton("Well done!", "scenes.scenetemplate", "scenes.game2")
+                    level = 1
 				end
 			else
 				storyboard.reloadScene()

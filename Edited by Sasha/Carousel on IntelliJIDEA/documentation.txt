@@ -1,0 +1,58 @@
+carousel:
+
+	carousel.new( x, y, width, height, name )
+
+	carousel:count() // возвращает количество слайдов, которые хранит карусель
+
+	slide carousel:getCurrentSlide() // возвращает объект текущего слайд
+
+	carousel:insertSlide( slide ) // добавляет слайд в массив, но не отображает его
+
+	carousel:showSlide( identificator ) // отображает слайд на экране по его индексу в массиве или имени (вызывает slide:showAllObjects())
+										// если объекты слайда не были инициализированы - загружает их
+	
+	carousel:hideSlide( identificator ) // прячет все объекты указанного слайда, не удаляя их (вызывает slide:hideAllObjects())
+
+	carousel:removeSlide( identificator ) // прячет слайд и удаляет все его объекты из памяти. (вызывает slide:destroy())
+		
+	carousel:showNextSlide() // прячет (или удаляет) текущий слайд, отображая следующий (вызывает showSlide() для слайда, на который указывает внутренний счетчик; после увеличивает показатель счетчика)
+		
+	carousel:showPreviousSlide() // прячет (или удаляет) текущий слайд и отображает тот, что следует перед ним вызывает showSlide() для слайда, на который указывает внутренний счетчик; после уменьшает показатель счетчика
+
+	carousel:destroy() // удалять все слайды, удаляя все их объекты (вызывает removeSlide в цикле )
+	
+slide:
+
+	slide.new( x, y, width, height, name )
+
+	// приватные методы, не использовать
+	slide:invokeShowingFunctionForObject( objectIdentificator, slideId )
+	slide:invokeHidingFunctionForObject( objectIdentificator, slideId )
+	slide:invokeRemovingFunctionForObject( objectIdentificator, slideId )
+	//
+		
+	slide:count() // возвращает количество объектов на слайде
+	
+	slide:insertObject( object ) // добавляет объект на слайд, не отображая его
+
+	slide:showObject( identificator ) // отображает или создает объект
+
+	slide:hideObject( identificator ) // прячет объект, не удаляя его
+
+	slide:removeObject( identificator ) // прячет и удаляет объект из памяти
+ 
+	slide:showAllObjects( slideId ) // отображает все объекты
+
+	slide:hideAllObjects( slideId ) // прячет все объкты, не удаляя их
+	
+	slide:destroy( slideId ) // прячет и удаляет все объекты
+	
+	
+	рекомендации:
+	
+1. Создать объект класса carousel
+2. Создать объекты класса slideObject, инициализировать их поля соответствующими ссылками на функции
+3. Создать объект класса slide
+4. Добавить к объекту класса slide необходимые slideObject (slide:insertObject( slideObject ))
+5. Добавиит слайд на карусель
+

@@ -7,7 +7,7 @@ _SOUNDON = true
 
 storyboard.purgeOnSceneChange = true
 
-shouldWork = false
+shouldWork = true
 
 memoryViewer.create(constants.W/2, 20, shouldWork)
 memoryViewer.updateInfoInLoop(100)
