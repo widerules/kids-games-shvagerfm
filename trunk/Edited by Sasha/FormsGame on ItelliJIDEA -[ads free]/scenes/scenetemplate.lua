@@ -118,7 +118,7 @@ function scene:createScene( event )
 		    defaultFile = "images/button.png",
 		    overFile = "images/pbutton.png",
 		    id = "button_2",
-		    label = "Find shapes",
+		    label = "Find",
 		    labelColor = { default={ 0,0,0 }, over={ 0, 0, 0, 0.9 } },
 		    fontSize = sizeFont,
 		    emboss = true,
