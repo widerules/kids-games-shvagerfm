@@ -77,7 +77,7 @@ local function onItemClicked(event)
 	if (itemsFound == 7) then
 		soundHarp = audio.loadSound( "sounds/harp.ogg")
 		audio.play( soundHarp )
-		timers[#timers+1] = timer.performWithDelay( 800, popup.showPopupWithNextButton("Well done !", "scenes.gametitle", "scenes.game4"), 1)
+		timers[#timers+1] = timer.performWithDelay( 800, popup.showPopupWithNextButton("Well done !", "scenes.menu", "scenes.game4"), 1)
 	end
 end
 
