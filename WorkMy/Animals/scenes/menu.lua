@@ -15,9 +15,8 @@ local imagePath = "/titlepic"
 
 local format = ".png"
 
-local swypeGroup
 local background, title, titlePic, complexity
-local btnPlay, leftArrow, rightArrow
+local btnPlay
 
 local game = {}
 
@@ -41,26 +40,38 @@ function scene:createScene(event)
 end
 
 function scene:enterScene (event)
-	local group = self.view
-		local gameWidth = constants.W/4
-		local gameHeight = 5*gameWidth/6
-		for i=1, 6 do
-			game[i] = display.newImage( "images/game"..i.."/titlepic.png", i*constants.CENTERX/2 , constants.CENTERY/2 )
+	local group = self.view	
+
+		local inRow = math.floor(_GAMEAMOUNT/2)	
+		local gameWidht, gameHeight
+		local vGap, hGap1, hGap2
+		
+		if _GAMEAMOUNT % 2 == 0 then
+			gameWidth = constants.W/(inRow+1)
+			hGap2 = (constants.W-inRow*gameWidth)/(inRow+1)
+		else
+			gameWidth = constants.W/(inRow+2)
+			hGap2 = (constants.W - (inRow+1)*gameWidth)/(inRow+2)
+		end 
+		hGap1 = (constants.W-inRow*gameWidth)/(inRow+1)
+
+		gameHeight = 5*gameWidth/6
+		vGap = (constants.H - 2*gameHeight)/3
+	
+		for i=1, _GAMEAMOUNT do			
+			if i <= _GAMEAMOUNT/2 then
+				game[i] = display.newImage( "images/game"..i.."/titlepic.png", (i-0.5)*gameWidth+hGap1*i , 0.5*gameHeight + vGap)				
+			else
+				game[i] = display.newImage( "images/game"..i.."/titlepic.png", (i-0.5-inRow)*gameWidth+hGap2*(i-inRow) , 1.5*gameHeight + vGap*2)				
+			end
 			game[i].name = i
 			game[i].width = gameWidth
 			game[i].height = gameHeight
-			if i < 4 then
-				game[i].y = constants.CENTERY/2 
-				game[i].x = i*constants.CENTERX/2
-			else
-				game[i].y = 3*constants.CENTERY/2 
-				game[i].x = (i-3)*constants.CENTERX/2
-			end
 			game[i]:addEventListener("tap", onGamesTap )
-			group:insert(game[i])
-			i= i+1
 
+			group:insert(game[i])			
 		end
+	
 	homeButton = widget.newButton 
 	{
 		height = _BTNSIZE,
@@ -72,8 +83,7 @@ function scene:enterScene (event)
 		width = _BTNSIZE,
 		height = _BTNSIZE,
         onRelease = onHomeButtonClicked
-	}
-	--homeButton:addEventListener("tap", onHomeButtonClicked);
+	}	
 	group:insert (homeButton);	
 		
 end
