@@ -8,7 +8,7 @@ local M = {}
 M.rateIt = function ()
 	local options =
 	{	
-		androidAppPackageName = "com.shvagerfm.AnimalsForKids",
+		androidAppPackageName = "com.shvagerfm.ColorsForKids",
 		supportedAndroidStores = { "google" }
 	}
 	native.showPopup("rateApp", options)

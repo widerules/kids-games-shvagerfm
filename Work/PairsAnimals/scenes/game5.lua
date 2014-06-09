@@ -7,12 +7,12 @@ local scene = storyboard.newScene()
 _GAME = 5
 
 local _FONTSIZE = constants.H / 13
-local _MAXLEVEL = 4
+local _MAXLEVEL = 6
 local _ITEMH, _ITEMW
 
-local cardAmount = {6, 8, 12, 16}
-local rows = {2, 2, 3, 4}
-local level = 1
+local cardAmount = {6, 8, 12, 16, 20, 24}
+local rows = {2, 2, 3, 4, 4, 4}
+local level = 6
 local gameWon = 0
 
 local background, backBtn

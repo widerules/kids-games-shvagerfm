@@ -219,13 +219,13 @@ function scene:exitScene(event)
 		for j = 1, #images[i] do
 			if images[i][j] ~= nil then
 			print ("level "..level.." i "..i.." j "..j)
-			images[i][j]:removeSelf()
-			images[i][j] = nil
+			display.remove( images[i][j] )
+			
 			end
 		end
 	end	
+	display.remove( taskLabel )
 
-	taskLabel:removeSelf()	
 end
 
 function scene:destroyScene(event)

@@ -83,7 +83,7 @@ data.animalsSounds = {
 	"sounds/beawer.mp3",
 	"sounds/bird.mp3",
 	"sounds/camel.mp3",
-	"sounds/chiсken.mp3",
+	"sounds/chicken.mp3",
 	"sounds/koala.mp3",
 	"sounds/crocodile.mp3",
 	"sounds/deer.mp3",

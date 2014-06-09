@@ -1,6 +1,6 @@
 require "sqlite3"
 
-local path = system.pathForFile( "pullups.sqlite", system.DocumentsDirectory )
+local path = system.pathForFile( "animalskids.sqlite", system.DocumentsDirectory )
 local db = sqlite3.open( path )
 
 local M = {}
@@ -8,7 +8,7 @@ local M = {}
 M.rateIt = function ()
 	local options =
 	{	
-		androidAppPackageName = "com.shvagerfm.Pullupspro",
+		androidAppPackageName = "com.shvagerfm.AnimalsForKids",
 		supportedAndroidStores = { "google" }
 	}
 	native.showPopup("rateApp", options)
@@ -51,7 +51,7 @@ M.init = function ()
 	end
 	print (M.isRated())
 	if (not M.isRated()) then
-		native.showAlert( "Спасибо!", "Если Вам понравилось приложение оставьте отзыв", { "OK", "Выход" }, onComplete )
+		native.showAlert( "Thank You!", "If you like our app  - please rate it", { "OK", "Exit" }, onComplete )
 	else
 		local onComplete = function ( event )
 		if "clicked" == event.action then
@@ -63,7 +63,7 @@ M.init = function ()
 		    end
 		end
 	end
-		native.showAlert( "Выход", "Вы действительно хотите выйти", { "Выход", "Нет" }, onComplete )
+		native.showAlert( "Exit", "Do you really want to exit?", { "Exit", "No" }, onComplete )
 	end
 end
 

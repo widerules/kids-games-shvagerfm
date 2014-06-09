@@ -70,6 +70,7 @@ end
 
 function scene:enterScene (event)
     local group = self.view
+    count = 0.2 * constants.W
 end
 
 

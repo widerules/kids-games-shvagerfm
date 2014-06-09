@@ -9,10 +9,10 @@ local explosion = require("utils.explosion")
 local scene = storyboard.newScene()
 
 -------------------------------------constants
-local _STARSIZE = constants.H/6
+local _STARSIZE = constants.H/4
 local _FRICTION = 0.7
 local _FONTSIZE = constants.H / 15
-local _STARSPEED = 5
+local _STARSPEED = 3
 
 -------------------------------------texts
 local scoreText = "Score: "
@@ -24,6 +24,7 @@ local score, record					--score variables
 local starGroup, informationGroup 	--group for falling stars and for information such as type of the star and score
 local scoreLabel 					--for showing score during the game
 local background, informationBackground  --for showing main background, and panel with information
+
 
 --this function called each time when user touch star
 local function onStarTouched(event)
@@ -64,7 +65,7 @@ end
 
 function scene:willEnterScene(event)
 	physics.start(true)
-	physics.getGravity(0, _STARSPEED) 
+	physics.setGravity(0, _STARSPEED) 
 	index = math.random(1, #data.colors)
 	starType = data.colors[index]
 	score = 0

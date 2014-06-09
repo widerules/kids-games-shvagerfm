@@ -347,7 +347,7 @@ function scene:exitScene(event)
 		end
 	end	
     
-	taskLabel:removeSelf()
+	display.remove(taskLabel)
     taskLabel = nil
 	if popupBg ~= nil then
 		popupBg:removeSelf();

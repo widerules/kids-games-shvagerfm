@@ -197,17 +197,17 @@ end
 
 function scene:exitScene(event)
 	transition.cancel( )
+	display.remove(image)
+	display.remove(itemName)
 
-	image:removeSelf( )
-	itemName:removeSelf()
 end
 
 function scene:destroyScene(event)
-	homeButton:removeSelf( )
-	previousButton:removeSelf( )
-	nextButton:removeSelf( )
-	vegetablesButton:removeSelf()
-	fruitsButton:removeSelf()
+	display.remove( homeButton )
+	display.remove( previousButton )
+	display.remove( nextButton )
+	display.remove( vegetablesButton )
+	display.remove( fruitsButton )
 end
 
 scene:addEventListener( "createScene", scene )
