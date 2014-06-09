@@ -298,7 +298,10 @@ function scene:enterScene (event)
 end
 
 function scene:exitScene(event)
+	if timerID ~= nil then
 	timer.cancel(timerID)
+	end
+
 	for i = 1, #starTimerID do
 		if starTimerID ~= nil then
 			timer.cancel(starTimerID[i])
@@ -308,14 +311,15 @@ function scene:exitScene(event)
 	physics.stop()
 	transition.cancel()
 
-	starTypeImage:removeSelf( )
-	scoreLabel:removeSelf()
+	display.remove( starTypeImage )
+	display.remove( scoreLabel )
+
 	hidePopUp()
 end
 
 function scene:destroyScene(event)
-	background:removeSelf( )
-	informationBackground:removeSelf()
+	--background:removeSelf( )
+	--informationBackground:removeSelf()
 end
 
 scene:addEventListener( "createScene", scene )

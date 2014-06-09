@@ -177,7 +177,7 @@ end
 
 --if game lost - we stops all transitions and lets items fall down 
 local function onTransitionCanceled(item)
-	if lifes<1 then 
+	if lifes < 1 then 
 		item:removeEventListener( "touch", onElementTouched )
 		transition.to (item, {time = 500, y = constants.H+_ITEMSIZE/2, alpha = 0, onComplete = function() display:remove(item) end, onCancle = onTransitionCanceled})
 	end
@@ -298,7 +298,10 @@ end
 function scene:exitScene(event)
 	lifes = 0
 	transition.cancel()
+	
+	if currentTimer ~= nil then
 	timer.cancel(currentTimer)
+	end
 
 	popup.hidePopUp()
 

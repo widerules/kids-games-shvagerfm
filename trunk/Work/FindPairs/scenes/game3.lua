@@ -72,7 +72,7 @@ end
 function scene:createScene(event)
 	local group = self.view
 
-	background = display.newImage ("images/background3.png", constants.CENTERX, constants.CENTERY)
+	background = display.newImage ("images/background4.png", constants.CENTERX, constants.CENTERY)
 	background.width = constants.W
 	background.height = constants.H
 	group:insert(background)

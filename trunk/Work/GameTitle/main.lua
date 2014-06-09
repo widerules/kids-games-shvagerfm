@@ -5,8 +5,11 @@
 -----------------------------------------------------------------------------------------
 local storyboard = require("storyboard")
 -- Your code here
-_GAME = nil
+_GAME = 1
 
+local function exit ()
+   rate.init()
+end
 local function onKeyEvent( event )
 
    local phase = event.phase

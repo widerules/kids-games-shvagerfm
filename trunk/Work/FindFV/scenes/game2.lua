@@ -13,7 +13,6 @@ local message = "Well done !"
 local _FONTSIZE = constants.H / 7
 
 local gamesWon = 0
-local level = 5
 local itemsCount = {2, 3, 4, 6, 9, 12, 16, 20}
 local rows =       {1, 1, 2, 2, 3, 3, 4, 4}
 local items = {}

@@ -7,10 +7,7 @@
 local storyboard = require "storyboard"
 local rate = require( "utils.rate" )
 --global center & heigh-width
-_CENTERX = display.contentCenterX
-_CENTERY = display.contentCenterY
-_W = display.contentWidth
-_H = display.contentHeight
+
 -- load scenetemplate.lua
 local function exit ()
 	rate.init()

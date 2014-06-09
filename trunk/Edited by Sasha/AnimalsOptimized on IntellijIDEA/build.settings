@@ -39,7 +39,7 @@ settings = {
 	},	
 	--[[
 	-- Android permissions
-	versionCode = "23",
+	versionCode = "24",
 	androidPermissions = {
   		"android.permission.INTERNET",
   		"android.permission.ACCESS_NETWORK_STATE",

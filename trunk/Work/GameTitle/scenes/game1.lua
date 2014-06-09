@@ -26,7 +26,7 @@ local function backHome()
 		local options =
 		{
     		effect = "slideRight",
-    		time = 800,
+    		time = 400,
     		params = { ind = _GAME }
 		}
 		storyboard.gotoScene( "scenes.gametitle", options)
@@ -135,11 +135,10 @@ end
 
 function scene:exitScene(event)
 	--TODO :
-	--for i=1,7 do
-	--	circles[i]:removeSelf()
-	--end
-	butterfly:removeSelf()
-	colorName:removeSelf()	
+
+	display.remove(butterfly)
+	display.remove(colorName)
+
 end
 
 function scene:destroyScene(event)
