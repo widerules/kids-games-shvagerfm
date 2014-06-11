@@ -80,22 +80,38 @@ local function completedShape ()
 end
 
 local function buttonListener (event)
-    print(event.phase)
+   -- print(event.phase)
     local shape = data.shapes[index]
     local i = tonumber(event.target.id)
+    --if(event.phase == "began") then return end
+    print(event.phase)
     --if(event.target.isEnabled == false) then return end
     event.target:setEnabled(false)
     print ("in button")
         audio.play(dotSound)
-        if (i == 1) then
-            completed = completed + 1
-        end
         img[i]:setFillColor(1, 1, 0)
         transition.scaleTo(img[i], {time = 300, xScale = 1.5, yScale = 1.5, transition = easing.outBack})
         transition.scaleTo(dotName[i], {time = 300, xScale = 1.5, yScale = 1.5, transition = easing.outBack})
         but[i].width = but[i].width * 1.5
         but[i].height = but[i].height * 1.5
-        if (i > 1)  then
+
+
+    if (completed == true) then
+        local line = display.newLine(table[shape][table[shape].size].x, table[shape][table[shape].size].y, table[shape][1].x, table[shape][1].y)
+        line:setStrokeColor(1, 1, 0)
+        line.strokeWidth = _RADIUS
+        dots[i]:insert(line)
+
+        dotName[table[shape].size]:toFront()
+        dotName[1]:toFront()
+
+        playStart()
+
+        --del = 0
+        local listener = function () return completedShape(shape) end
+        timer.performWithDelay(1000, completedShape)
+    else
+        if(i>1) then
             local line = display.newLine(table[shape][i-1].x, table[shape][i-1].y, table[shape][i].x, table[shape][i].y)
             line:setStrokeColor(1, 1, 0)
             line.strokeWidth = _RADIUS
@@ -103,29 +119,15 @@ local function buttonListener (event)
             dotName[i-1]:toFront()
             dotName[i]:toFront()
         end
-        if (i < table[shape].size and (completed ~= 1)) then
+        if (i < #but) then
             but[i+1]:setEnabled(true)           --ВОТ! ЗДЕСЬ ВКЛЮЧАЕТСЯ СЛЕДУЮЩАЯ КНОПКА! НО ПРИ БЕГАН ОНА НЕ ВКЛЮЧАЕТСЯ #@#$@!%$#%
-            print(i)
-        end
-        if i == table[shape].size then
+
+            print(#but)
+        else
             but[1]:setEnabled(true)
+            completed = true
         end
-        if (completed == 1) then
-
-            local line = display.newLine(table[shape][table[shape].size].x, table[shape][table[shape].size].y, table[shape][1].x, table[shape][1].y)
-            line:setStrokeColor(1, 1, 0)
-            line.strokeWidth = _RADIUS
-            dots[i]:insert(line)
-
-            dotName[table[shape].size]:toFront()
-            dotName[1]:toFront()
-
-            playStart()
-
-            --del = 0
-            local listener = function () return completedShape(shape) end
-            timer.performWithDelay(1000, listener)
-        end
+    end
 end
 
 function scene:createScene(event)
@@ -157,7 +159,7 @@ function scene:enterScene(event)
     local group = self.view
     local shape = data.shapes[index]
     local del = 0 -- delay
-    completed = -1
+    completed = false
 
     dotSound = audio.loadSound("sounds/plopp.mp3")
     --DRAW SHAPE
