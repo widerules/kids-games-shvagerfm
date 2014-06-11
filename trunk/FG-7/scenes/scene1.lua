@@ -18,6 +18,8 @@ local homeButton
 local dots = {}
 local but = {}
 local dotName = {}
+local img = {}
+local completed
 
 local soundName, soundStart, dotSound
 
@@ -78,7 +80,52 @@ local function completedShape ()
 end
 
 local function buttonListener (event)
+    print(event.phase)
+    local shape = data.shapes[index]
+    local i = tonumber(event.target.id)
+    --if(event.target.isEnabled == false) then return end
+    event.target:setEnabled(false)
+    print ("in button")
+        audio.play(dotSound)
+        if (i == 1) then
+            completed = completed + 1
+        end
+        img[i]:setFillColor(1, 1, 0)
+        transition.scaleTo(img[i], {time = 300, xScale = 1.5, yScale = 1.5, transition = easing.outBack})
+        transition.scaleTo(dotName[i], {time = 300, xScale = 1.5, yScale = 1.5, transition = easing.outBack})
+        but[i].width = but[i].width * 1.5
+        but[i].height = but[i].height * 1.5
+        if (i > 1)  then
+            local line = display.newLine(table[shape][i-1].x, table[shape][i-1].y, table[shape][i].x, table[shape][i].y)
+            line:setStrokeColor(1, 1, 0)
+            line.strokeWidth = _RADIUS
+            dots[i]:insert(line)
+            dotName[i-1]:toFront()
+            dotName[i]:toFront()
+        end
+        if (i < table[shape].size and (completed ~= 1)) then
+            but[i+1]:setEnabled(true)           --ВОТ! ЗДЕСЬ ВКЛЮЧАЕТСЯ СЛЕДУЮЩАЯ КНОПКА! НО ПРИ БЕГАН ОНА НЕ ВКЛЮЧАЕТСЯ #@#$@!%$#%
+            print(i)
+        end
+        if i == table[shape].size then
+            but[1]:setEnabled(true)
+        end
+        if (completed == 1) then
 
+            local line = display.newLine(table[shape][table[shape].size].x, table[shape][table[shape].size].y, table[shape][1].x, table[shape][1].y)
+            line:setStrokeColor(1, 1, 0)
+            line.strokeWidth = _RADIUS
+            dots[i]:insert(line)
+
+            dotName[table[shape].size]:toFront()
+            dotName[1]:toFront()
+
+            playStart()
+
+            --del = 0
+            local listener = function () return completedShape(shape) end
+            timer.performWithDelay(1000, listener)
+        end
 end
 
 function scene:createScene(event)
@@ -109,18 +156,18 @@ end
 function scene:enterScene(event)
     local group = self.view
     local shape = data.shapes[index]
-    local del = 0
-    local completed = -1
+    local del = 0 -- delay
+    completed = -1
 
     dotSound = audio.loadSound("sounds/plopp.mp3")
     --DRAW SHAPE
     for i = 1,table[shape].size do
         dots[i] = display.newGroup()
-        local img = display.newCircle(table[shape][i].x, table[shape][i].y, _RADIUS)
-        img:setFillColor(0,0,0)
-        img.alpha = 0.0
-        transition.fadeIn(img, {time = 1000, delay = del})
-        dots[i]:insert(img)
+        img[i] = display.newCircle(table[shape][i].x, table[shape][i].y, _RADIUS)
+        img[i]:setFillColor(0,0,0)
+        img[i].alpha = 0.0
+        transition.fadeIn(img[i], {time = 1000, delay = del})
+        dots[i]:insert(img[i])
         dotName[i] = display.newText(i, table[shape][i].x, table[shape][i].y, native.systemFont, _RADIUS*1.8)
         dotName[i].alpha = 0.0
         transition.fadeIn(dotName[i], {time = 1000, delay = del})
@@ -129,15 +176,13 @@ function scene:enterScene(event)
 
         but[i]  = widget.newButton {
             id = i,
-            isEnabled = (i == 1),
+            isEnabled = (i==1),
             width = _RADIUS*2,
             height = _RADIUS*2,
             x = table[shape][i].x,
             y = table[shape][i].y,
-            onPress = function (event)
-               -- if event.phase == "began" then
-
-                --end
+            onEvent = buttonListener
+            --[[onEvent = function (event)
                 --if event.phase == "began" then
                     audio.play(dotSound)
                     if (i == 1) then
@@ -180,10 +225,11 @@ function scene:enterScene(event)
                         timer.performWithDelay(1000, listener)
                   --  end
                 end
-            end
+            end--]]
         }
         but[i].alpha = 0.01
         dots[i]:insert(but[i])
+        --but[i]:addEventListener("touch", buttonListener)
         del = del + 500
     end
 end
