@@ -21,11 +21,11 @@ local soundName, soundStart, dotSound
 
 local completedShape
 
---[[local function onHomeButtonTapped (event)
+local function onHomeButtonTapped (event)
     storyboard.gotoScene( "scenes.scenetemplate", "slideRight", 800 )
-    storyboard.removeScene( "scenes.game1" )
+    storyboard.removeScene( "scenes.game6" )
 end
-]]
+
 local function sayGood()
     if(math.random() < 0.5) then
         soundName = audio.loadSound("sounds/good.mp3")
@@ -168,7 +168,7 @@ function scene:createScene(event)
             overFile = "images/homehover.png",
             width = _BTNSIZE,
             height = _BTNSIZE,
-            --onRelease = onHomeButtonTapped
+            onRelease = onHomeButtonTapped
         }
 
     group:insert(homeButton)
@@ -239,7 +239,7 @@ function scene:exitScene(event)
     display.remove(image)
     image = nil
 
-    storyboard.purgeScene("scene1")
+    storyboard.purgeScene("scenes.game6")
 end
 
 function scene:destroyScene(event)
