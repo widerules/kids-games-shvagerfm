@@ -46,9 +46,10 @@ local function toNextFigure()  --функция для перехода на с�
     else
         index = 1
     end
-
-    transition.to(image, {time = 1500, rotation = 360, transition = easing.outBack,                                   --анимация для фигуры:
+    if (image ~= nil) then
+        transition.to(image, {time = 1500, rotation = 360, transition = easing.outBack,                                   --анимация для фигуры:
                           x = constants.W+_IMAGESIZE/2, y = 0, xScale = image.width*0.1, yScale = image.height*0.1})  --вращение, выезд за пределы экрана, уменьшение
+    end
     timer.performWithDelay(500, sayGood)
     timer.performWithDelay(1600, storyboard.reloadScene)
 
@@ -132,10 +133,11 @@ local function createBut()  --создаём точки
 end
 
 completedShape =  function  ()       --функция вызывается при замыкании контура, рисует фигуру, говорит поздравления
-
-   for j = 1, #dots do                 --удаляем точки и цифры
-        display.remove(dots[j])
-        display.remove(dotName[j])
+   if (dots ~= nil and dotName ~= nil) then
+       for j = 1, #dots do                 --удаляем точки и цифры
+            display.remove(dots[j])
+            display.remove(dotName[j])
+       end
    end
 
     image = display.newImage(data.formPath..data.shapes[index]..data.format, constants.CENTERX, constants.CENTERY)  --рисует фигуру
@@ -214,32 +216,51 @@ end
 
 function scene:exitScene(event)
     local group = self.view
-
-    audio.dispose(soundStart)
-    audio.dispose(dotSound)
-
-    soundStart = nil
-    dotSound = nil
-
-    for i = 1, #dots do
-        display.remove(dots[i])
-        display.remove(but[i])
-        display.remove(dotName[i])
-        display.remove(img[i])
+    transition.cancel()
+    if (soundStart ~= nil) then
+       audio.dispose(soundStart)
+       soundStart = nil
+    end
+    if (dotSound ~= nil) then
+       audio.dispose(dotSound)
+       dotSound = nil
     end
 
-    dots = nil
-    but = nil
-    dotName = nil
-    img = nil
+    if (dots ~= nil) then
+        for i = 1, #dots do
+            display.remove(dots[i])
+        end
+        dots = nil
+    end
+    if (but ~= nil) then
+        for i = 1, #but do
+            display.remove(but[i])
+        end
+        but = nil
+    end
+    if (dotName ~= nil) then
+        for i = 1, #dotName do
+            display.remove(dotName[i])
+        end
+        dotName = nil
+    end
+    if (img ~= nil) then
+        for i = 1, #img do
+            display.remove(img[i])
+        end
+        img = nil
+    end
 
-    transition.cancel( )
-    audio.dispose( soundName )
-    soundName = nil
-    display.remove(image)
-    image = nil
 
-    storyboard.purgeScene("scenes.game6")
+    if (soundName ~= nil) then
+        audio.stop(soundName)
+        audio.dispose( soundName )
+        soundName = nil
+    end
+    if (image ~= nil) then
+        display.remove(image)
+        image = nil
+    end
 end
 
 function scene:destroyScene(event)
