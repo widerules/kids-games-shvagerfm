@@ -17,6 +17,8 @@ local background, image
 local homeButton
 local dots, but,dotName, img, completed
 
+local timers
+
 local soundName, soundStart, dotSound
 
 local completedShape
@@ -50,8 +52,8 @@ local function toNextFigure()  --функция для перехода на с�
         transition.to(image, {time = 1500, rotation = 360, transition = easing.outBack,                                   --анимация для фигуры:
                           x = constants.W+_IMAGESIZE/2, y = 0, xScale = image.width*0.1, yScale = image.height*0.1})  --вращение, выезд за пределы экрана, уменьшение
     end
-    timer.performWithDelay(500, sayGood)
-    timer.performWithDelay(1600, storyboard.reloadScene)
+    timers[#timers+1] = timer.performWithDelay(500, sayGood)
+    timers[#timers+1] = timer.performWithDelay(1600, storyboard.reloadScene)
 
 end
 
@@ -91,7 +93,7 @@ local function buttonListener (event)   --обработчик сообщени�
 
         playStart()     --играет звук
 
-        timer.performWithDelay(1000, completedShape)
+        timers[#timers+1] = timer.performWithDelay(1000, completedShape)
     else
         if(i>1) then
 
@@ -148,8 +150,8 @@ completedShape =  function  ()       --функция вызывается пр�
     transition.scaleTo(image, {time = 500, xScale = 10.0, yScale = 10.0, transition = easing.outBack})
     transition.fadeIn(image, {time = 500})
 
-    timer.performWithDelay(500, sayName)
-    timer.performWithDelay(2000, toNextFigure)
+    timers[#timers+1] = timer.performWithDelay(500, sayName)
+    timers[#timers+1] = timer.performWithDelay(2000, toNextFigure)
 end
 
 function scene:createScene(event)
@@ -181,6 +183,7 @@ function scene:enterScene(event)
     local group = self.view
 
     local shape = data.shapes[index]
+    timers = {}     --таймеры
     dots = {}       --точки
     but = {}        --кнопки
     dotName = {}    --цифры
@@ -216,7 +219,15 @@ end
 
 function scene:exitScene(event)
     local group = self.view
+    for i = 1, #timers do
+        timer.cancel(timers[i])
+    end
+    if (image ~= nil) then
+        display.remove(image)
+        image = nil
+    end
     transition.cancel()
+    audio.stop()
     if (soundStart ~= nil) then
        audio.dispose(soundStart)
        soundStart = nil
@@ -253,13 +264,8 @@ function scene:exitScene(event)
 
 
     if (soundName ~= nil) then
-        audio.stop(soundName)
         audio.dispose( soundName )
         soundName = nil
-    end
-    if (image ~= nil) then
-        display.remove(image)
-        image = nil
     end
 end
 
