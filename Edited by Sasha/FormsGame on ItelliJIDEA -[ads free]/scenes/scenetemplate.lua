@@ -3,7 +3,7 @@ local scene = storyboard.newScene()
 local widget = require("widget")
 
 
-local background, btnOne, btnTwo, btnThree, btnFour, btnFive, mikki, minni, sun, kidsAnimals, moreGames
+local background, btnOne, btnTwo, btnThree, btnFour, btnFive, btnSix, mikki, minni, sun, kidsAnimals, moreGames
 local centerX = display.contentCenterX
 local centerY = display.contentCenterY
 local _W = display.contentWidth
@@ -51,6 +51,11 @@ local function gameFive()
 	storyboard.gotoScene( "scenes.game3new", "slideLeft", 100 )
 	storyboard.removeScene("scenes.scenetemplate")
 end 
+
+local function gameSix()
+    storyboard.gotoScene( "scenes.game6", "slideLeft", 100 )
+    storyboard.removeScene("scenes.scenetemplate")
+end
 
 function moveBack()
 	transition.to( sun, {rotation = -20, time = 3000, transition = easing.inOutCubic, onComplete = moveForward})
@@ -184,12 +189,30 @@ function scene:createScene( event )
 	btnFive.x = centerX
 	btnFive.y = btnFour.y + bHeight
 
+	btnSix = widget.newButton
+        {
+            top = 0.75*_H,
+            width = bWidth,
+            height = bHeight,
+            defaultFile = "images/button.png",
+            overFile = "images/pbutton.png",
+            id = "button_6",
+            label = "Draw shapes",
+            labelColor = { default={ 0,0,0 }, over={ 0, 0, 0, 0.9 } },
+            fontSize = sizeFont,
+            emboss = true,
+            onRelease = gameSix,
+
+        }
+    btnSix.y = btnFive.y + bHeight
+    btnSix.x = centerX
 	
 	group:insert( btnOne)
 	group:insert( btnTwo)
 	group:insert( btnThree)
 	group:insert( btnFour)	
 	group:insert( btnFive)
+	group:insert( btnSix)
 end
 
 
