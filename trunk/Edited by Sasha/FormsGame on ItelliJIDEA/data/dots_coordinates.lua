@@ -308,26 +308,26 @@ local coordinates = {
             x = start_coordinates.heart.x,
             y = start_coordinates.heart.y,
         },
-        {
+        --[[{
             x = start_coordinates.heart.x + 30/300*koefficient,
             y = start_coordinates.heart.y - 20/300*koefficient,
-        },
+        },]]
         {
             x = start_coordinates.heart.x + 70/300*koefficient,
             y = start_coordinates.heart.y - 33/300*koefficient,
         },
-        {
+        --[[{
             x = start_coordinates.heart.x + 110/300*koefficient,
             y = start_coordinates.heart.y - 20/300*koefficient,
-        },
+        },]]
         {
             x = start_coordinates.heart.x + 130/300*koefficient,
             y = start_coordinates.heart.y + 37/300*koefficient,
         },
-        {
+        --[[{
             x = start_coordinates.heart.x + 110/300*koefficient,
             y = start_coordinates.heart.y + 94/300*koefficient,
-        },
+        },]]
         {
             x = start_coordinates.heart.x +60/300*koefficient,
             y = start_coordinates.heart.y + 130/300*koefficient,
@@ -340,27 +340,27 @@ local coordinates = {
             x = start_coordinates.heart.x - 60/300*koefficient,
             y = start_coordinates.heart.y + 130/300*koefficient,
         },
-        {
+        --[[{
             x = start_coordinates.heart.x - 110/300*koefficient,
             y = start_coordinates.heart.y + 94/300*koefficient,
-        },
+        },]]
         {
             x = start_coordinates.heart.x - 130/300*koefficient,
             y = start_coordinates.heart.y + 37/300*koefficient,
         },
-        {
+        --[[{
             x = start_coordinates.heart.x - 110/300*koefficient,
             y = start_coordinates.heart.y - 20/300*koefficient,
-        },
+        },]]
         {
             x = start_coordinates.heart.x - 70/300*koefficient,
             y = start_coordinates.heart.y - 33/300*koefficient,
         },
-        {
+        --[[{
             x = start_coordinates.heart.x - 30/300*koefficient,
             y = start_coordinates.heart.y - 20/300*koefficient,
-        },
-        size = 14
+        },]]
+        size = 8
     },
     semicircle = {
         {
