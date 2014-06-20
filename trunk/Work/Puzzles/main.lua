@@ -8,4 +8,6 @@
 
 local composer = require "composer"
 
-composer.gotoScene("scenes.scenetemplate")
+composer.recycleOnSceneChange = true
+
+composer.gotoScene("scenes.locationMap")
