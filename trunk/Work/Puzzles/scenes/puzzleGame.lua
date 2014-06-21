@@ -3,16 +3,22 @@ local composer = require("composer")
 
 local storyboard = require( "storyboard" )
 local widget = require( "widget" )
-local scene = composer.newScene()
 local widget = require("widget")
+
+local scene = composer.newScene()
 
 local DISPLAY_CENTER_X = display.contentCenterX
 local DISPLAY_CENTER_Y = display.contentCenterY
 
 local _CURRENT_LEVEL = 1
+local _CURRENT_LOCATION = 1
 
---local dirPath = "images/"
---local partsDirPath = dirPath.."parts/"
+local DIR_PATH = "images/"
+local EXT = ".png"
+
+local location
+local locationPicture
+
 local puzzle
 local puzzlePicture, puzzleShadow
 
@@ -21,6 +27,11 @@ local partsPictures = {}
 
 local partsOnPlaces = 0;
 
+function scene:loadLocation()
+    local locations = database.getLocation(_CURRENT_LOCATION)
+    location = locations[1]
+end
+
 function scene:loadPuzzle()
     local puzzles = database.getLevelPuzzles(_CURRENT_LEVEL)
     puzzle = puzzles[1]
@@ -28,6 +39,11 @@ end
 
 function scene:loadParts()
     parts = database.getPuzzleParts(puzzle.id)
+end
+
+function scene:removeLocation()
+    display.remove(locationPicture)
+    locationPicture = nil
 end
 
 function scene:removePuzzle()
@@ -42,10 +58,20 @@ function scene:removeParts()
     end
 end
 
+function scene:showLocation()
+    local group = self.view
+
+    locationPicture = display.newImage( DIR_PATH .. location.picture .. EXT )
+    locationPicture.x = DISPLAY_CENTER_X
+    locationPicture.y = DISPLAY_CENTER_Y
+
+    group:insert(locationPicture)
+end
+
 function scene:showPuzzle()
     local group = self.view
 
-    puzzlePicture = display.newImage( puzzle.picture .. ".png" )
+    puzzlePicture = display.newImage( DIR_PATH .. puzzle.picture .. EXT )
     puzzlePicture.x = DISPLAY_CENTER_X + DISPLAY_CENTER_X/3
     puzzlePicture.y = DISPLAY_CENTER_Y
 
@@ -58,8 +84,7 @@ function scene:showParts()
     for i = 1, #parts do
 
         local currentPart = {}
-
-        currentPart.image = display.newImage( parts[i].picture .. ".png" )
+        currentPart.image = display.newImage( DIR_PATH .. parts[i].picture .. EXT )
         currentPart.image.x = math.random( DISPLAY_CENTER_X / 2 +1 ) + DISPLAY_CENTER_X / 6
         currentPart.image.y = math.random( DISPLAY_CENTER_Y ) + DISPLAY_CENTER_Y / 2
         currentPart.id = i
@@ -86,7 +111,7 @@ function scene:showParts()
                     partsOnPlaces = partsOnPlaces + 1;
                 end
 
-                if (partsOnPlaces == #parts)  then
+                if (partsOnPlaces == #parts) then
                     print("done!")
                 end
             end
@@ -100,32 +125,33 @@ function scene:showParts()
 end
 
 function scene:create( event )
+    self:loadLocation()
     self:loadPuzzle()
     self:loadParts()
 end
 
 
 function scene:show( event )
-    local sceneGroup = self.view
     local phase = event.phase
 
     partsOnPlaces = 0
 
     if ( phase == "will" ) then
-        self:showPuzzle()
+        self:showLocation()
     elseif ( phase == "did" ) then
+        self:showPuzzle()
         self:showParts()
     end
 end
 
 function scene:hide( event )
-    local sceneGroup = self.view
     local phase = event.phase
 
     if ( phase == "will" ) then
         self:removeParts()
-    elseif ( phase == "did" ) then
         self:removeParts()
+    elseif ( phase == "did" ) then
+        self:removeLocation()
     end
 end
 
