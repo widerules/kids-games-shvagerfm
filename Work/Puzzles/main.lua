@@ -7,7 +7,11 @@
 --
 
 local composer = require "composer"
+local database = require "utils.database"
+
+database.create()
+database.fill()
 
 composer.recycleOnSceneChange = true
 
-composer.gotoScene("scenes.locationMap")
+composer.gotoScene("scenes.scenetemplate")

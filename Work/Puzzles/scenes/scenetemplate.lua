@@ -46,7 +46,7 @@ function scene:create(event)
             overFile = playBtnOverImagePyth,
             onRelease = function ()
                 --admob.showAd( "interstitial" )
-                --composer.gotoScene("scenes.locationMap")
+                composer.gotoScene("scenes.locationMap")
 
                 --приделать обработку
             end
