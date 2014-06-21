@@ -109,7 +109,7 @@ function scene:show(event)
             isEnabled = (activeLocation.status == "opened"),
             onRelease = function ()
                 print ("center loc pressed")
-                --composer.gotoScene("location") --добавить путь
+                composer.gotoScene("scenes.levelMap", {params = {"forest"}}) --добавить путь
             end
         }
 
@@ -118,10 +118,10 @@ function scene:show(event)
             height = rightLocation.image.height,
             x = rightLocation.image.x,
             y = rightLocation.image.y,
-            isEnabled = (rightLocation.status == "opened"),
+            --isEnabled = (rightLocation.status == "opened"),
             onRelease = function ()
                 print ("right loc pressed")
-            --composer.gotoScene("location") --добавить путь
+                composer.gotoScene("scenes.levelMap", {params = {"farm"}})
             end
         }
 
@@ -130,10 +130,10 @@ function scene:show(event)
             height = leftLocation.image.height,
             x = leftLocation.image.x,
             y = leftLocation.image.y,
-            isEnabled = (leftLocation.status == "opened"),
+            --isEnabled = (leftLocation.status == "opened"),
             onRelease = function ()
                 print ("left loc pressed")
-            --composer.gotoScene("location") --добавить путь
+                composer.gotoScene("scenes.levelMap", {params = {"city"}})
             end
         }
 
