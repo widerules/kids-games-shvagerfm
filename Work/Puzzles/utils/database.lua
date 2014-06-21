@@ -108,17 +108,39 @@ database.fill = function()
     -- add data to Location table
     if isLocationTableEmpty then
         local locationData = {}
-        locationData[1] = { name = "Forest", levelsCount = 1, pictures = "forest_pict" }
-        locationData[2] = { name = "City", levelsCount = 2, pictures = "city_pict" }
-        locationData[3] = { name = "Farm", levelsCount = 3, pictures = "farm.pict" }
+        locationData[1] = { name = "forest", levelsCount = 7, pictures = "forest_bg" }
+        locationData[2] = { name = "city", levelsCount = 7, pictures = "city_bg" }
+        locationData[3] = { name = "farm", levelsCount = 7, pictures = "farm_bg" }
         addDataToLocationTable(locationData)
     end
 
     -- add data to Level table
     if isLevelTableEmpty then
         local levelData = {}
-        levelData[1] = { name = "level_name_1", idPuzzle = "1", idLocation = "1" }
-        levelData[2] = { name = "level_name_2", idPuzzle = "2", idLocation = "1" }
+        levelData[1] = { name = "level1", idPuzzle = "1", idLocation = "1" }
+        levelData[2] = { name = "level2", idPuzzle = "2", idLocation = "1" }
+        levelData[3] = { name = "level3", idPuzzle = "3", idLocation = "1" }
+        levelData[4] = { name = "level4", idPuzzle = "4", idLocation = "1" }
+        levelData[5] = { name = "level5", idPuzzle = "5", idLocation = "1" }
+        levelData[6] = { name = "level6", idPuzzle = "6", idLocation = "1" }
+        levelData[7] = { name = "level7", idPuzzle = "7", idLocation = "1" }
+
+        levelData[8] = { name = "level1", idPuzzle = "8", idLocation = "2" }
+        levelData[9] = { name = "level2", idPuzzle = "9", idLocation = "2" }
+        levelData[10] = { name = "level3", idPuzzle = "10", idLocation = "2" }
+        levelData[11] = { name = "level4", idPuzzle = "11", idLocation = "2" }
+        levelData[12] = { name = "level5", idPuzzle = "12", idLocation = "2" }
+        levelData[13] = { name = "level16", idPuzzle = "13", idLocation = "2" }
+        levelData[14] = { name = "level7", idPuzzle = "14", idLocation = "2" }
+
+        levelData[15] = { name = "level1", idPuzzle = "15", idLocation = "3" }
+        levelData[16] = { name = "level2", idPuzzle = "16", idLocation = "3" }
+        levelData[17] = { name = "level3", idPuzzle = "17", idLocation = "3" }
+        levelData[18] = { name = "level4", idPuzzle = "18", idLocation = "4" }
+        levelData[19] = { name = "level5", idPuzzle = "19", idLocation = "5" }
+        levelData[20] = { name = "level6", idPuzzle = "20", idLocation = "6" }
+        levelData[21] = { name = "level7", idPuzzle = "21", idLocation = "7" }
+
         addDataToLevelTable(levelData)
     end
 
@@ -231,6 +253,24 @@ database.getLevelPuzzles = function(level)
     end
 
     return puzzles
+end
+
+database.getLocation = function(name)
+    local location = {}
+
+    local id = tonumber(name)
+
+    if (id == nil) then
+        id = getTableIdByName("Location", name)
+    end
+
+    local request = [[SELECT * FROM Location WHERE id=']] .. id .. [[';]]
+
+    for row in db:nrows(request) do
+        location = row
+    end
+
+    return location
 end
 
 database.close = function()
