@@ -16,7 +16,7 @@ database.create = function()
     local createLevelTable = [[CREATE TABLE IF NOT EXISTS Level (id INTEGER PRIMARY KEY, name, idPuzzle, idLocation);]]
     db:exec (createLevelTable)
 
-    local createLocationTable = [[CREATE TABLE IF NOT EXISTS Location (id INTEGER PRIMARY KEY, name, levelsCount, pictures);]]
+    local createLocationTable = [[CREATE TABLE IF NOT EXISTS Location (id INTEGER PRIMARY KEY, name, levelsCount, picture);]]
     db:exec (createLocationTable)
 end
 
@@ -58,11 +58,11 @@ local function addDataToTable(table, data)
     end
 end
 
--- add data to table: Location.     data is an array of tables, like: {name, levelsCount, pictures}
+-- add data to table: Location.     data is an array of tables, like: {name, levelsCount, picture}
 local function addDataToLocationTable(data)
     if (data ~= nil) then
         for i = 1, #data do
-            local request = [[INSERT INTO Location VALUES (NULL, ']] .. data[i].name .. [[',']] .. data[i].levelsCount .. [[',']] .. data[i].pictures .. [['); ]]
+            local request = [[INSERT INTO Location VALUES (NULL, ']] .. data[i].name .. [[',']] .. data[i].levelsCount .. [[',']] .. data[i].picture .. [['); ]]
             db:exec(request)
         end
     end
@@ -108,9 +108,9 @@ database.fill = function()
     -- add data to Location table
     if isLocationTableEmpty then
         local locationData = {}
-        locationData[1] = { name = "forest", levelsCount = 7, pictures = "forest_bg" }
-        locationData[2] = { name = "city", levelsCount = 7, pictures = "city_bg" }
-        locationData[3] = { name = "farm", levelsCount = 7, pictures = "farm_bg" }
+        locationData[1] = { name = "forest", levelsCount = 7, picture = "forest_bg" }
+        locationData[2] = { name = "city", levelsCount = 7, picture = "city_bg" }
+        locationData[3] = { name = "farm", levelsCount = 7, picture = "farm_bg" }
         addDataToLocationTable(locationData)
     end
 
