@@ -4,13 +4,13 @@ local widget = require("widget")
 local admob = require( "utils.admob" )
 
 
-local background, btnOne, btnTwo, btnThree, btnFour, btnFive, btnSix, mikki, minni, sun, kidsAnimals, moreGames
+local background, btnOne, btnTwo, btnThree, btnFour, btnFive, btnSix, btnSeven, mikki, minni, sun, kidsAnimals, moreGames
 local centerX = display.contentCenterX
 local centerY = display.contentCenterY
 local _W = display.contentWidth
 local _H = display.contentHeight
 local bWidth = 0.33*_W
-local bHeight = 0.28*bWidth
+local bHeight = 0.24*bWidth
 local sizeFont = 0.07*_H
 local sizeBtn
 
@@ -54,6 +54,10 @@ local function gameFive()
 end
 local function gameSix()
     storyboard.gotoScene( "scenes.game6", "slideLeft", 100 )
+    storyboard.removeScene("scenes.scenetemplate")
+end
+local function gameSeven()
+    storyboard.gotoScene( "scenes.game7", "slideLeft", 100 )
     storyboard.removeScene("scenes.scenetemplate")
 end
 
@@ -206,6 +210,24 @@ function scene:createScene( event )
         }
     btnSix.y = btnFive.y + bHeight
     btnSix.x = centerX
+
+    btnSeven = widget.newButton
+        {
+            top = 0.75*_H,
+            width = bWidth,
+            height = bHeight,
+            defaultFile = "images/button.png",
+            overFile = "images/pbutton.png",
+            id = "button_7",
+            label = "Associations",
+            labelColor = { default={ 0,0,0 }, over={ 0, 0, 0, 0.9 } },
+            fontSize = sizeFont,
+            emboss = true,
+            onRelease = gameSeven,
+
+        }
+    btnSeven.y = btnSix.y + bHeight
+    btnSeven.x = centerX
 	admob.init()
 	
 	group:insert( btnOne)
@@ -214,6 +236,7 @@ function scene:createScene( event )
 	group:insert( btnFour)	
 	group:insert( btnFive)
     group:insert( btnSix)
+    group:insert (btnSeven)
 end
 
 
