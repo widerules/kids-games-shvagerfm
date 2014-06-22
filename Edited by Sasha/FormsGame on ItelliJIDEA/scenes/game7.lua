@@ -313,7 +313,12 @@ function scene:exitScene(event)
 
     transition.cancel()
     audio.stop()
-    
+
+    if (soundName ~= nil) then
+        audio.dispose(soundName)
+        soundName = nil
+    end
+
     for i = 1, #timers do
         timer.cancel(timers[i])
     end
