@@ -10,6 +10,8 @@ local location
 
 local background
 
+local backButton
+
 local buttons = {}
 
 function scene:create(event)
@@ -32,6 +34,22 @@ function scene:create(event)
 
     background = display.newImage("images/"..location.picture..".png", constants.CENTERX, constants.CENTERY, constants.W, constants.H)
     group:insert(background)
+
+    backButton = widget.newButton{
+        width = constants.W*0.17*0.66,
+        height = constants.W*0.13*0.66,
+        x = constants.CENTERX,
+        y = constants.CENTERY,
+        defaultFile = "images/settings_a.png",
+        overFile = "images/settings_n.png",
+        onRelease = function ()
+            composer.gotoScene("scenes.locationMap")
+        end
+    }
+    backButton.x = backButton.width*0.5
+    backButton.y = backButton.height*0.5
+
+    group:insert(backButton)
 
 end
 
