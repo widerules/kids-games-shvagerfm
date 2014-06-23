@@ -30,7 +30,7 @@ function scene:create(event)
 
     if (location == nil) then return end
 
-    background = display.newImage("images/"..location.pictures..".png", constants.CENTERX, constants.CENTERY, constants.W, constants.H)
+    background = display.newImage("images/"..location.picture..".png", constants.CENTERX, constants.CENTERY, constants.W, constants.H)
     group:insert(background)
 
 end
