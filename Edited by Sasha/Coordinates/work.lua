@@ -41,7 +41,6 @@ function scene:addImageControls()
                 currentPart.image.x = currentPart.image.x - dx
 
                 local info = "x: " .. currentPart.image.x - leftCornerX .. "; y: "..currentPart.image.y - leftCornerY
-                currentPart.image:removeEventListener("touch", part) -- TODO: make it working
 
                 infoTextBox.text = info
             end
@@ -76,7 +75,6 @@ function scene:addImageControls()
                 currentPart.image.y = currentPart.image.y + dy
 
                 local info = "x: " .. currentPart.image.x - leftCornerX .. "; y: "..currentPart.image.y - leftCornerY
-                currentPart.image:removeEventListener("touch", part) -- TODO: make it working
 
                 infoTextBox.text = info
             end
@@ -94,7 +92,6 @@ function scene:addImageControls()
                 currentPart.image.x = currentPart.image.x + dx
 
                 local info = "x: " .. currentPart.image.x - leftCornerX .. "; y: "..currentPart.image.y - leftCornerY
-                currentPart.image:removeEventListener("touch", part) -- TODO: make it working
 
                 infoTextBox.text = info
             end
@@ -127,7 +124,6 @@ function scene:addSaveButton()
             onRelease = function()
                 if (currentPart ~= nil) then
                     local info = "["..currentPart.name.."] x: " .. currentPart.image.x - leftCornerX .. "; y: "..currentPart.image.y - leftCornerY
-                    currentPart.image:removeEventListener("touch", part) -- TODO: make it working
 
                     infoTextBox.text = info
                     print(info)
