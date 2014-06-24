@@ -59,7 +59,6 @@ function scene:addImageControls()
                 currentPart.image.y = currentPart.image.y - dy
 
                 local info = "x: " .. currentPart.image.x - leftCornerX .. "; y: "..currentPart.image.y - leftCornerY
-                currentPart.image:removeEventListener("touch", part) -- TODO: make it working
 
                 infoTextBox.text = info
             end
