@@ -75,7 +75,7 @@ local function transitionFigure()
 end
 
 local function toNextFigure()  --функция для перехода на следующую фигуру
-    level = (level < 7) and level + 1 or 1
+    level = (level < #table) and level + 1 or 1
     storyboard.reloadScene()
 end
 
