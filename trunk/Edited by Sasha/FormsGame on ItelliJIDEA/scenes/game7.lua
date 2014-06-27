@@ -27,6 +27,7 @@ local scene = storyboard.newScene()
 
 local _IMAGESIZE, _BUTTONSIZE
 --local _FONTSIZE = constants.H / 14
+local lvlInfo
 
 local level--, gamesWon
 
@@ -171,20 +172,14 @@ end
 function scene:willEnterScene(event)
     local group = self.view
 
-    if (level == 1) then
-        _IMAGESIZE = constants.W*0.7/3
-    elseif (level == 2 or level == 3) then
-        _IMAGESIZE = constants.W*0.7/4
-    elseif (level == 4 or level == 5) then
-        _IMAGESIZE = constants.W*0.7/6
-    end
+    lvlInfo = table[level]
+
+    _IMAGESIZE = constants.W*0.7/(#lvlInfo+1)
 
 end
 
 function scene:enterScene(event)
     local group = self.view
-
-    local lvlInfo = table[level]
 
     index[1] = math.random (1, 13)
     index[2] = index[1]
@@ -221,6 +216,8 @@ end
 
 function scene:exitScene(event)
     local group = self.view
+
+    lvlInfo = nil
 
     transition.cancel()
     audio.stop()
