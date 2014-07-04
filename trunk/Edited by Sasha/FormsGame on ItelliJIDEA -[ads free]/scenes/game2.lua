@@ -108,6 +108,7 @@ local function onItemTapped (event)
 				else
 					--showPopUp()
                     popup.showPopUpWithReloadButton("Well done!", "scenes.scenetemplate", "scenes.game2")
+                    level = 1
 				end
 			else
 				storyboard.reloadScene()
@@ -215,8 +216,9 @@ function scene:enterScene(event)
 	taskLabel.xScale = 0.3
 	taskLabel.yScale = 0.3
 	taskLabel:setFillColor( 0,0,0 )
+
 	group:insert(taskLabel)
-	transition.to(taskLabel, {time = 500, xScale = 1, yScale = 1, onComplete = function() timer.performWithDelay(1000, hideLabel) end})
+    transition.to(taskLabel, {time = 500, xScale = 1, yScale = 1, onComplete = function() timer.performWithDelay(1000, hideLabel) end})
 
 	---stars
 	for i=1, 8 do
@@ -226,19 +228,19 @@ function scene:enterScene(event)
 	        star[i] = display.newImage("images/stars/star.png", 0, 0, constants.H/20, constants.H/12)
         end
 
-	star[i].width, star[i].height = constants.H/16, constants.H/16
-	star[i].x = constants.W - star[i].width/2
+                star[i].width, star[i].height = constants.H/16, constants.H/16
+        star[i].x = constants.W - star[i].width/2
 
-	if i == 1 then
-		star[i].y = constants.H - star[i].height/2
-	else
-		star[i].y = star[i-1].y - star[i].height
+        if i == 1 then
+            star[i].y = constants.H - star[i].height/2
+        else
+            star[i].y = star[i-1].y - star[i].height
+        end
+
+	    group:insert(star[i])
     end
-
-	group:insert(star[i])
-
-	end
 end
+
 
 function scene:exitScene(event)
 	if images ~= nil then
@@ -252,6 +254,14 @@ function scene:exitScene(event)
         end
     end
 
+    transition.cancel( )
+
+    local i = 1
+    for i = 1, #star do
+       display.remove(star[i])
+       star[i] = nil
+    end
+
     if starToScore ~= nil then
         display.remove( starToScore )
         starToScore = nil
@@ -261,8 +271,6 @@ function scene:exitScene(event)
 		display.remove( taskLabel )
 	    taskLabel = nil
     end
-
-    transition.cancel( )
 
     popup.hidePopUp()
 end
