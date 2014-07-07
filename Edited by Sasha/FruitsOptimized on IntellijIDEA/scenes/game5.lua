@@ -6,8 +6,6 @@ local explosion = require ("utils.explosion")
 
 local scene = storyboard.newScene()
 
-_GAME = 5
-
 explosion.createExplosion()
 
 local _MAXLEVEL = 6
@@ -127,15 +125,15 @@ function scene:enterScene (event)
 	totalCards = cardAmount[level]
 
 	if constants.H / rows[level]<constants.W/(cardAmount[level]/rows[level]) then
-		itemH = 0.9*constants.H / rows[level]
-		itemW = itemH
+		_ITEMH = 0.9*constants.H / rows[level]
+		_ITEMW = _ITEMH
 	else
-		itemW = 0.9*constants.W / (cardAmount[level]/rows[level]+1)
-		itemH = itemW
+		_ITEMW = 0.9*constants.W / (cardAmount[level]/rows[level]+1)
+		_ITEMH = _ITEMW
 	end
 
-	local spacingX = (constants.W - itemW * cardAmount[level]/rows[level]) / (cardAmount[level]/rows[level]+1) 
-	local spacingY = (constants.H - itemH * rows[level]) / (rows[level]+1) 
+	local spacingX = (constants.W - _ITEMW * cardAmount[level]/rows[level]) / (cardAmount[level]/rows[level]+1)
+	local spacingY = (constants.H - _ITEMH * rows[level]) / (rows[level]+1)
 
 	items = {}
 	local temp
@@ -168,11 +166,11 @@ function scene:enterScene (event)
 				indexes[animals[index]] = indexes[animals[index]] - 1
 			end
 
-			temp.width = itemW
-			temp.height = itemH
+			temp.width = _ITEMW
+			temp.height = _ITEMH
 
-			temp.x = (j-1) * itemW + itemW/2 + j*spacingX
-			temp.y = i * itemH - itemH / 2 + i * spacingY
+			temp.x = (j-1) * _ITEMW + _ITEMW/2 + j*spacingX
+			temp.y = i * _ITEMH - _ITEMH / 2 + i * spacingY
 
 			table.insert(items, temp)
 		end

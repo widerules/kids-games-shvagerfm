@@ -7,8 +7,6 @@ local explosion = require("utils.explosion")
 
 local scene = storyboard.newScene()
 
-_GAME = 4
-
 explosion.createExplosion()
 
 -------------------------------------constants
@@ -54,7 +52,7 @@ local function onHomeButtonClicked ()
     		effect = "slideRight",
     		time = 800
 		}
-		storyboard.gotoScene( "scenes.gametitle", options)
+		storyboard.gotoScene( "scenes.menu", options)
 		storyboard.removeScene( "scenes.game4" )
 end
 

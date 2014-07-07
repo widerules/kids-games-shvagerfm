@@ -5,8 +5,6 @@ local data = require( "data.studyData")
 
 local scene = storyboard.newScene()
 
-_GAME = 1
-
 local _BTNSIZE = 0.1*constants.W
 local _IMAGESIZE = 0.3*constants.W
 local _FONTSIZE = 0.07*constants.H
@@ -27,7 +25,7 @@ local function toTitle()
 		effect = "slideLeft",
 		time = 400
 	}
-	storyboard.gotoScene("scenes.gametitle", options)
+	storyboard.gotoScene("scenes.menu", options)
 	storyboard.removeScene( "scenes.game1" )
 end
 
