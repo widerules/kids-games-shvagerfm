@@ -17,7 +17,6 @@ local _WOODENHEIGHT = 0.9 * constants.H;
 local _RIGHTCENTERX = constants.CENTERX + 0.35 * constants.W;	--center for wooden board 
 local _LEFTCENTERX = constants.CENTERX - 0.15 * constants.W;	--center for image
 
-_GAME = 1
 
 local index = 1;	--index of current animal
 local needPlayAudio = true
@@ -70,9 +69,9 @@ local function onHomeButtonClicked( event )
 		{
     		effect = "slideRight",
     		time = 500,
-    		params = { ind = 1 }
+    		--params = { ind = 1 }
 		}
-	storyboard.gotoScene("scenes.gametitle", options)
+	storyboard.gotoScene("scenes.menu", options)
 	storyboard.removeScene("scenes.game1")
 
 end;

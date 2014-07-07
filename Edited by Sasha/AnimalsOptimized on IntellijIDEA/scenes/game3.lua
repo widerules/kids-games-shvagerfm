@@ -44,7 +44,7 @@ local function onHomeButtonClicked( event )
     		effect = "slideRight",
     		time = 500
 		}
-	storyboard.gotoScene("scenes.gametitle", options)
+	storyboard.gotoScene("scenes.menu", options)
 	storyboard.removeScene("scenes.game3")
 
 end;

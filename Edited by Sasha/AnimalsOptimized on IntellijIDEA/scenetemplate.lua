@@ -24,7 +24,7 @@ function scene:createScene(event)
 			defaultFile = "images/homeplay.png",
 			overFile = "images/homeplayover.png",
 			onRelease = function ()
-				storyboard.gotoScene( "scenes.gametitle" )
+				storyboard.gotoScene( "scenes.menu" )
 			end
 
 		}

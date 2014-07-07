@@ -11,9 +11,6 @@ local taskText = "Look for "
 local message = "Well done !"
 
 local _FONTSIZE = constants.H/7
-
-_GAME = 5
-
 explosion.createExplosion()
 
 local gamesWon = 0
@@ -42,7 +39,7 @@ local function backHome()
     		effect = "slideRight",
     		time = 400
 		}
-	storyboard.gotoScene("scenes.gametitle", options)
+	storyboard.gotoScene("scenes.menu", options)
 	storyboard.purgeScene("scenes.game5")
 end
 

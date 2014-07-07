@@ -15,8 +15,6 @@ local _FORMAT = ".png"
 
 local _IMAGESIZE = 0.2*constants.H
 
-_GAME = 4
-
 local iteration = 1
 local itemsFound = 0
 
@@ -53,7 +51,7 @@ local function onHomeButtonClicked( event )
     		effect = "slideRight",
     		time = 400
 		}
-	storyboard.gotoScene("scenes.gametitle", options)
+	storyboard.gotoScene("scenes.menu", options)
 	storyboard.removeScene("scenes.game4")
 
 end;

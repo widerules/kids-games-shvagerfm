@@ -12,8 +12,6 @@ memoryViewer.updateInfoInLoop(100)
 
 storyboard.purgeOnSceneChange = true
 
-_GAME = 1
-
 local function exit ()
 	rate.init()
 end
