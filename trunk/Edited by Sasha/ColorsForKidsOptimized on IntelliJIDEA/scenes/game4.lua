@@ -9,8 +9,6 @@ local scene = storyboard.newScene()
 
 explosion.createExplosion()
 
-_GAME = 4
-
 local _INFOSTARSIZE = constants.H/6
 local _FRICTION = 0.7
 local _FONTSIZE = constants.H / 15
@@ -52,9 +50,9 @@ local function onHomeButtonClicked ()
 		{
     		effect = "slideRight",
     		time = 800,
-    		params = { ind = _GAME }
+    		--params = { ind = _GAME }
 		}
-		storyboard.gotoScene( "scenes.gametitle", options)
+		storyboard.gotoScene( "scenes.menu", options)
 		storyboard.removeScene( "scenes.game4" )
 end
 

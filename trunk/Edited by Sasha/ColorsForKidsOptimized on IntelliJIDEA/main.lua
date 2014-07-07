@@ -10,8 +10,6 @@ memoryViewer.updateInfoInLoop(100)
 
 storyboard.purgeOnSceneChange = true
 
-_GAME = 1
-
 local function exit ()
    rate.init()
 end
@@ -27,7 +25,7 @@ local function onKeyEvent( event )
          if ( currentScene == "scenetemplate") then
             exit()
        
-         elseif (currentScene == "scenes.gametitle" or currentScene == "scenes.gametitle2") then
+         --[[elseif (currentScene == "scenes.gametitle" or currentScene == "scenes.gametitle2") then
            
                local options =
                   {
@@ -36,14 +34,14 @@ local function onKeyEvent( event )
                   }
                transition.cancel( )
                storyboard.gotoScene( "scenetemplate", options )
-               storyboard.removeAll( )
+               storyboard.removeAll( )]]
          else
             timer.performWithDelay(300, function()
                 local options =
                 {
                     effect = "slideRight",
                     time = 500,
-                    params = { ind = _GAME }
+                    --params = { ind = _GAME }
                 }
                 transition.cancel( )
                 storyboard.gotoScene( lastScene, options )

@@ -7,8 +7,6 @@ local gmanager = require("utils.gmanager")
 
 local scene = storyboard.newScene()
 
-_GAME = 3
-
 local _MAXLEVEL = 4
 
 local cardAmount = {6, 8, 12, 16}
@@ -32,9 +30,9 @@ local function backHome()
 		{
     		effect = "slideRight",
     		time = 800,
-    		params = { ind = _GAME }
+    		--params = { ind = _GAME }
 		}
-		storyboard.gotoScene( "scenes.gametitle", options)
+		storyboard.gotoScene( "scenes.menu", options)
 		storyboard.removeScene( "scenes.game3" )
 end
 

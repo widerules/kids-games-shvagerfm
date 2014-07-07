@@ -12,7 +12,6 @@ local message = "Well done !"
 
 explosion.createExplosion()
 
-_GAME = 2
 local _FONTSIZE = constants.H/7
 
 local gamesWon
@@ -56,9 +55,9 @@ local function backHome()
 		{
     		effect = "slideRight",
     		time = 800,
-    		params = { ind = _GAME }
+    		--params = { ind = _GAME }
 		}
-		storyboard.gotoScene( "scenes.gametitle", options)
+		storyboard.gotoScene( "scenes.menu", options)
 		storyboard.removeScene( "scenes.game2" )
 end
 local function playAgain()

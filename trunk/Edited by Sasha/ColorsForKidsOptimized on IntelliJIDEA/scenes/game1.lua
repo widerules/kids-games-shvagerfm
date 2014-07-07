@@ -6,8 +6,6 @@ local gmanager = require("utils.gmanager")
 
 local scene = storyboard.newScene()
 
-_GAME = 1
-
 local _CIRCLESSIZE = constants.H/6
 local _FONTSIZE = constants.H / 5;
 
@@ -26,9 +24,9 @@ local function backHome()
 		{
     		effect = "slideRight",
     		time = 400,
-    		params = { ind = _GAME }
+    		--params = { ind = _GAME }
 		}
-		storyboard.gotoScene( "scenes.gametitle", options)
+		storyboard.gotoScene( "scenes.menu", options)
 		storyboard.removeScene( "scenes.game1" )
 end
 
