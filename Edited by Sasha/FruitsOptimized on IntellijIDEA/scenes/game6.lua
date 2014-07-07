@@ -112,15 +112,15 @@ local function createBut(group)  --создаём точки
         if (i ~= t) then
             if (i == 1) then
                 repeat
-                    tmpIndex[i] = math.random(1, 13)
+                    tmpIndex[i] = math.random(1, 18)
                 until (tmpIndex[i] ~= index[1])
             elseif (i == 2) then
                 repeat
-                    tmpIndex[i] = math.random(1, 13)
+                    tmpIndex[i] = math.random(1, 18)
                 until (tmpIndex[i] ~= index[1] and tmpIndex[i] ~= tmpIndex[i-1])
             else
                 repeat
-                    tmpIndex[i] = math.random(1, 13)
+                    tmpIndex[i] = math.random(1, 18)
                 until (tmpIndex[i] ~= tmpIndex[i-1] and tmpIndex[i] ~= tmpIndex[i-2])
             end
         else
