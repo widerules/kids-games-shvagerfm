@@ -44,7 +44,7 @@ function scene:enterScene (event)
 			overFile = "images/playover.png",
 			onRelease = function ()
 				admob.showAd( "interstitial" )
-				storyboard.gotoScene("scenes.gametitle", {params = {ind = 1}})
+				storyboard.gotoScene("scenes.menu", {params = {ind = 1}})
 			end
 
 		}

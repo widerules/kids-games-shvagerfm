@@ -6,6 +6,8 @@ local constants = require( "constants" )
 local popup = require("utils.popup")
 storyboard.purgeOnSceneChange = true
 
+_GAME = 1
+
 shouldWork = true
 
 memoryViewer.create(constants.W/2, 20, shouldWork)
@@ -28,7 +30,7 @@ if ( ("back" == keyName or "deleteBack" == keyName) and phase == "up" ) then
          if ( currentScene == "scenetemplate") then
             exit()
        
-         --[[elseif (currentScene == "scenes.gametitle" or currentScene == "scenes.gametitle2") then
+         elseif (currentScene == "scenes.gametitle" or currentScene == "scenes.gametitle2") then
             timer.performWithDelay(500, function()
                local options =
                   {
@@ -40,7 +42,7 @@ if ( ("back" == keyName or "deleteBack" == keyName) and phase == "up" ) then
                storyboard.gotoScene( "scenetemplate", options )
                storyboard.removeAll( )
              end)
-         elseif (currentScene == "scenes.game3") then]]
+         elseif (currentScene == "scenes.game3") then
 
          else
              timer.performWithDelay(500, function()

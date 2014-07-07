@@ -6,8 +6,6 @@ local popup = require ("utils.popup")
 local explosion = require("utils.explosion")
 local scene = storyboard.newScene()
 
-_GAME = 3
-
 explosion.createExplosion()
 
 local _BTNSIZE = 0.1*constants.W
@@ -39,7 +37,7 @@ local function toTitle()
 		effect = "slideLeft",
 		time = 800
 	}
-	storyboard.gotoScene("scenes.gametitle", options)
+	storyboard.gotoScene("scenes.menu", options)
 	storyboard.removeScene( "scenes.game2" )
 end
 

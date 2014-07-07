@@ -5,8 +5,6 @@ local constants = require("constants")
 
 local scene = storyboard.newScene()
 
-_GAME = 2
-
 ---------------------------------------texts
 local findVegTask = "Look for Vegetables!"
 local findFrtTask = "Look for Fruits!"
@@ -36,7 +34,7 @@ local function toTitle()
 		effect = "slideLeft",
 		time = 800
 	}
-	storyboard.gotoScene("scenes.gametitle", options)
+	storyboard.gotoScene("scenes.menu", options)
 	storyboard.removeScene( "scenes.game2" )
 end
 
