@@ -22,7 +22,7 @@ function scene:createScene(event)
 			overFile = "images/playover.png",
 			onRelease = function ()
 			admob.showAd( "interstitial" )
-				storyboard.gotoScene("scenes.gametitle", {params = {ind = 1}})
+				storyboard.gotoScene("scenes.menu")
 			end
 		}
 		btnPlay.y = constants.CENTERY - 0.5*btnPlay.height
