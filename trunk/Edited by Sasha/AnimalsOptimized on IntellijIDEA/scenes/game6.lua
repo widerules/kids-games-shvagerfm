@@ -5,9 +5,6 @@ local popup = require ("utils.popup")
 local explosion = require( "utils.explosion" )
 
 local scene = storyboard.newScene()
-
-_GAME = 6
-
 explosion.createExplosion()
 
 local _FONTSIZE = constants.H / 13
