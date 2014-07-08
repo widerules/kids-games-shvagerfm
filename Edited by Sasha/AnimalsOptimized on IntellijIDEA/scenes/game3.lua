@@ -216,7 +216,7 @@ end
 function scene:createScene(event)
 	local group = self.view
 
-	level = 21
+	level = 1
 
 	background = display.newImage ("images/bg.png", constants.CENTERX, constants.CENTERY)
 	background.width = constants.W

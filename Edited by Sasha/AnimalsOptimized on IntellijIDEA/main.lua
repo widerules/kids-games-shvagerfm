@@ -1,7 +1,6 @@
 local storyboard = require "storyboard"
 local constants = require ( "constants" )
 local rate = require( "utils.rate" )
-local admob = require( "utils.admob" )
 local memoryViewer = require ("utils.memoryViewer")
 local popup = require("utils.popup")
 
@@ -75,5 +74,4 @@ end
 
 Runtime:addEventListener( "key", onKeyEvent )
 
-admob.init()
 storyboard.gotoScene( "scenetemplate" )

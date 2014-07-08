@@ -18,7 +18,7 @@ admob.init = function ()
 end
 
 admob.showAd = function( adType )
-	if admob.countBeforeShowAds == 6 then
+	if admob.countBeforeShowAds == 5 then
     	ads.show( adType, { x=0, y=0 } )
     	admob.countBeforeShowAds = 0
     else
