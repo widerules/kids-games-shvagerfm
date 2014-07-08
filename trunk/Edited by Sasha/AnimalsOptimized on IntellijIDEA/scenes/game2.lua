@@ -41,7 +41,7 @@ local function backHome( event )
             time = 500
         }
     storyboard.gotoScene("scenes.menu", options)
-    storyboard.removeScene("scenes.game2")
+    --storyboard.removeScene("scenes.game2")
 
 end;
 

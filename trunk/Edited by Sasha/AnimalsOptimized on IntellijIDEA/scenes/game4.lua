@@ -52,7 +52,7 @@ local function onHomeButtonClicked( event )
     		time = 400
 		}
 	storyboard.gotoScene("scenes.menu", options)
-	storyboard.removeScene("scenes.game4")
+	--storyboard.removeScene("scenes.game4")
 
 end;
 
