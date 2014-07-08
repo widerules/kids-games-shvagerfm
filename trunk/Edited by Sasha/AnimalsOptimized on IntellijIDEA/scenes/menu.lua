@@ -36,11 +36,12 @@ function scene:createScene(event)
 
 	background = display.newImage("images/background1.jpg", constants.CENTERX, constants.CENTERY)
 	group:insert(background)
-
+			admob.init()
 
 end
 
 function scene:enterScene (event)
+	admob.showAd( "interstitial" )
 	local group = self.view	
 
 		local inRow = math.floor(_GAMEAMOUNT/2)	
