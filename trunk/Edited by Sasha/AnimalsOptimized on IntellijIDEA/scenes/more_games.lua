@@ -56,7 +56,7 @@ function scene:createScene(event)
     group:insert(gameImages.fruits)
     local exitBtn = widget.newButton
         {   
-            width = constants.W/8,
+            width = constants.H/8,
             height = constants.H/8,
             top = 0,
             defaultFile = "images/exit.png",

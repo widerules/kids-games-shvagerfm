@@ -5,7 +5,7 @@ local admob = require( "utils.admob" )
 local memoryViewer = require ("utils.memoryViewer")
 local popup = require("utils.popup")
 
-shouldWork = true
+shouldWork = false
 
 memoryViewer.create(constants.W/2, 20, shouldWork)
 memoryViewer.updateInfoInLoop(100)
