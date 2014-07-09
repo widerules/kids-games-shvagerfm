@@ -27,7 +27,7 @@ local function onKeyEvent( event )
          if ( currentScene == "scenetemplate") then
             exit()
        
-         elseif (currentScene == "scenes.gametitle" or currentScene == "scenes.gametitle2") then
+         --[[elseif (currentScene == "scenes.gametitle" or currentScene == "scenes.gametitle2") then
             timer.performWithDelay(300, function()
                popup.hidePopup()
                local options =
@@ -37,7 +37,7 @@ local function onKeyEvent( event )
                   }
                storyboard.gotoScene( "scenetemplate", options )
                storyboard.removeAll( )
-            end)
+            end)]]
          else
             timer.performWithDelay(500, function()
                 popup.hidePopup()

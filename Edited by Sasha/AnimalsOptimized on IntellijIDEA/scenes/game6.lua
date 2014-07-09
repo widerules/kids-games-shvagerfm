@@ -69,7 +69,7 @@ local function onFoldClicked (event)
 				local function checkAmount()
 					totalCards = totalCards - 2
 					if totalCards == 0	then
-						popup.showPopupWithNextButton("Well done!", "scenes.gametitle", "scenes.game6")
+						popup.showPopupWithNextButton("Well done!", "scenes.menu", "scenes.game6")
 						gameWon = gameWon + 1
 						if gameWon>0 and level < _MAXLEVEL then
 							gameWon = 0

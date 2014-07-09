@@ -4,7 +4,7 @@ local constants = require("constants")
 
 local scene = storyboard.newScene()
 
-_GAME = 1
+local btnPlay, btnMore
 
 function scene:createScene(event)
 	local group = self.view
@@ -29,7 +29,7 @@ function scene:createScene(event)
 		}
 	group:insert(btnPlay)
 
-	local btnMore = widget.newButton
+    btnMore = widget.newButton
 		{
 			width = constants.W/4,
 			height = constants.W/10,
@@ -55,6 +55,10 @@ function scene:exitScene(event)
 end
 
 function scene:destroyScene(event)
+    local group = self.view
+
+    group:remove(btnPlay)
+    group:remove (btnMore)
 end
 
 scene:addEventListener( "createScene", scene )

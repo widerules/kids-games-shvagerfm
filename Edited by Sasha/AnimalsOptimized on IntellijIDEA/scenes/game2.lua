@@ -158,7 +158,7 @@ local function onFoodDrag (event)
 
                 if onPlaces == 3 then
                 		audio.play( soundHarp )
-                        timer.performWithDelay( 800, popup.showPopupWithNextButton("You won !", "scenes.gametitle", "scenes.game2"), 1)
+                        timer.performWithDelay( 800, popup.showPopupWithNextButton("You won !", "scenes.menu", "scenes.game2"), 1)
                 end
 
         end
