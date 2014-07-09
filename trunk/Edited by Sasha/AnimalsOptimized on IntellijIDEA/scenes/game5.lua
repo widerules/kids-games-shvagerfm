@@ -111,7 +111,7 @@ local function onItemTapped (event)
 					timer.performWithDelay( 700, reloadFunc )
                 else
                     level = 1
-                    popup.showPopupWithReloadButton("Well done !", "scenes.gametitle", "scenes.game5")
+                    popup.showPopupWithReloadButton("Well done !", "scenes.menu", "scenes.game5")
 				end
 				wellDone()
 				

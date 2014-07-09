@@ -185,7 +185,7 @@ function scene:exitScene(event)
 		display.remove(animalName)
 	end
 	
-	if animalsDescriptions ~= nil then
+	if animalDescription ~= nil then
 		display.remove(animalDescription);
 	end
 	
