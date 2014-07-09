@@ -6,7 +6,7 @@ local constants = require( "constants" )
 local popup = require("utils.popup")
 storyboard.purgeOnSceneChange = true
 
-shouldWork = true
+shouldWork = false
 
 memoryViewer.create(constants.W/2, 20, shouldWork)
 memoryViewer.updateInfoInLoop(100)

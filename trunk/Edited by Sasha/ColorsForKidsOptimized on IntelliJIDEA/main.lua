@@ -3,7 +3,7 @@ local rate = require( "utils.rate" )
 local memoryViewer = require ("utils.memoryViewer")
 local constants = require( "constants" )
 
-shouldWork = true
+shouldWork = false
 
 memoryViewer.create(constants.W/2, 20, shouldWork)
 memoryViewer.updateInfoInLoop(100)
@@ -20,7 +20,7 @@ local function onKeyEvent( event )
 
    if ( ("back" == keyName or "deleteBack" == keyName) and phase == "up" ) then
       local currentScene = storyboard.getCurrentSceneName()
-      local lastScene = storyboard.getPrevious()
+      --local lastScene = storyboard.getPrevious()
          
          if ( currentScene == "scenetemplate") then
             exit()
@@ -35,6 +35,18 @@ local function onKeyEvent( event )
                transition.cancel( )
                storyboard.gotoScene( "scenetemplate", options )
                storyboard.removeAll( )]]
+         elseif (currentScene == "scenes.menu") then
+             timer.performWithDelay(300, function()
+                 local options =
+                 {
+                     effect = "slideRight",
+                     time = 500,
+                     --params = { ind = _GAME }
+                 }
+                 transition.cancel( )
+                 storyboard.gotoScene( "scenetemplate", options )
+                 storyboard.removeAll( )
+             end)
          else
             timer.performWithDelay(300, function()
                 local options =
@@ -44,7 +56,7 @@ local function onKeyEvent( event )
                     --params = { ind = _GAME }
                 }
                 transition.cancel( )
-                storyboard.gotoScene( lastScene, options )
+                storyboard.gotoScene( "scenes.menu", options )
                 storyboard.removeAll( )
             end)
 

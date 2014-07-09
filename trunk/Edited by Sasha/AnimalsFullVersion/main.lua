@@ -22,7 +22,7 @@ local function onKeyEvent( event )
 
    if ( ("back" == keyName or "deleteBack" == keyName) and phase == "up" ) then
       local currentScene = storyboard.getCurrentSceneName()
-      local lastScene = storyboard.getPrevious()
+      --local lastScene = storyboard.getPrevious()
          
          if ( currentScene == "scenetemplate") then
             exit()
@@ -38,7 +38,7 @@ local function onKeyEvent( event )
                storyboard.gotoScene( "scenetemplate", options )
                storyboard.removeAll( )
             end)]]
-         else
+         elseif (currentScene == "scenes.menu") then
             timer.performWithDelay(500, function()
                 popup.hidePopup()
                 local options =
@@ -46,7 +46,18 @@ local function onKeyEvent( event )
                       effect = "slideRight",
                       time = 500
                    }
-                storyboard.gotoScene( lastScene, options )
+                storyboard.gotoScene( "scenetemplate", options )
+                storyboard.removeAll( )
+            end)
+		 else
+            timer.performWithDelay(500, function()
+                popup.hidePopup()
+                local options =
+                   {
+                      effect = "slideRight",
+                      time = 500
+                   }
+                storyboard.gotoScene( "scenes.menu", options )
                 storyboard.removeAll( )
             end)
 
