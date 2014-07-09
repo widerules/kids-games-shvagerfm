@@ -25,6 +25,20 @@ elseif (display.pixelHeight / display.pixelWidth > 1.6) then
          
       },
    }
+    elseif (display.pixelHeight / display.pixelWidth == 1.6 ) then
+   application =
+   {
+      content =
+      {
+         width = 1200,
+         height = 1920,
+         scale = "letterBox",
+         xAlign = "center",
+         yAlign = "center",
+         
+      },
+   }
+
   elseif (display.pixelHeight / display.pixelWidth < 1.4) then
    application =
    {
