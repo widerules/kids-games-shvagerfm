@@ -17,6 +17,7 @@ local _SCALEVAL			--коэфициент увеличения животного
 local _ITEMSIZE 		--размер животного
 local _SHADOWSIZE 		--размер тени
 local _SPACINGANIMALS 	--отступы между животными в нижнем баре
+local _SPACINGY
 local _SPACINGSHADOWS	--отступы по горизонтали между тенями
 local _PLATEXZERO 		--левый верхний угол деревянной панели
 local _PLATEYZERO
@@ -95,19 +96,21 @@ local function onAnimalDrag(event)
 	local name = tostring(t.type)
 	animalSound = audio.loadSound("sounds/"..name..".mp3")
 	local phase = event.phase
-	animScaleOnDrag(t)
-	if "began" == phase then 
-		startX = t.x
-		startY = t.y
+	if "began" == phase then
 
 		--bring the animal on top (just for being sure)
 		local parent = t.parent
 		parent:insert (t)
 		display.getCurrentStage():setFocus(t)
+        animScaleOnDrag(t)
+
+        t.startX = t.x
+        t.startY = t.y
+
+        t.x0 = event.x - t.x
+        t.y0 = event.y - t.y
 		
 		t.isFocus = true
-		t.x0 = event.x - t.x
-		t.y0 = event.y - t.y
 
 	elseif "moved" == phase and t.isFocus then
 		t.x = event.x-t.x0
@@ -130,8 +133,8 @@ local function onAnimalDrag(event)
 						shadowsImages[i][j].isUsed = true
 						t:removeEventListener( "touch", onAnimalDrag )
 					else 
-						t.x = startX
-						t.y = startY
+						t.x = t.startX
+						t.y = t.startY
 						animScaleBack(t)
 					end
 				end
@@ -140,8 +143,8 @@ local function onAnimalDrag(event)
 
 		display.getCurrentStage():setFocus(nil)
 		t.isFocus = false
-		startX = nil
-		startY = nil
+		t.startX = nil
+		t.startY = nil
 
 		if onPlaces < 1 then
 			if level == _MAXLEVEL then
@@ -216,7 +219,7 @@ end
 function scene:createScene(event)
 	local group = self.view
 
-	level = 1
+	level = 0
 
 	background = display.newImage ("images/bg.png", constants.CENTERX, constants.CENTERY)
 	background.width = constants.W
@@ -251,14 +254,14 @@ function scene:createScene(event)
     }
     group:insert(homeBtn)
 
-    soundStart = audio.loadSound( "sounds/place.mp3" )
+    local soundStart = audio.loadSound( "sounds/place.mp3" )
 	audio.play(soundStart)
 end
 
-function scene:willEnterScene(event)	
+function scene:willEnterScene(event)
 	if level < _MAXLEVEL then
 		level = level + 1
-	end
+    end
 
 	generateItems()
 	onPlaces = itemAmount[level]
