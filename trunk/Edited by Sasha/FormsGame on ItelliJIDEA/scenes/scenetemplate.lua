@@ -99,7 +99,9 @@ end
 function scene:createScene( event )
 	local group = self.view
 	
-	background = display.newImage( "images/background.jpg", centerX, centerY, _W, _H)
+	background = display.newImage( "images/background.jpg", centerX, centerY)
+	background.width = _W
+	background.height = _H
 	group:insert( background )
 	
 	
