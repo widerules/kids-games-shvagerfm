@@ -4,7 +4,7 @@ local constants = require("constants")
 local admob = require( "utils.admob" )
 local scene = storyboard.newScene()
 
-local _GAMEAMOUNT = 6
+local _GAMEAMOUNT = 7
 local _BTNSIZE = 0.07 * constants.W;
 
 local gamePath = "scenes.game"
