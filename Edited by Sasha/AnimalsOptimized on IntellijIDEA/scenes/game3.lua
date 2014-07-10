@@ -115,7 +115,7 @@ local function onAnimalDrag(event)
 	elseif "moved" == phase and t.isFocus then
 		t.x = event.x-t.x0
 		t.y = event.y-t.y0
-	elseif "ended" == phase or "cancel" == phase then 
+	elseif t.isFocus and "ended" == phase or "cancel" == phase then
 		local flag = false
 		local index = 0
 		
