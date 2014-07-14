@@ -3,6 +3,7 @@ local widget = require("widget")
 local constants = require ("constants")
 local data = require( "data.shapesData")
 local table = require("data.dots_coordinates")
+local sam = require("utils.sam")
 
 local scene = storyboard.newScene()
 
@@ -50,7 +51,7 @@ local function toNextFigure()  --функция для перехода на с�
     end
     if (image ~= nil) then
         transition.to(image, {time = 1500, rotation = 360, transition = easing.outBack,                                   --анимация для фигуры:
-                          x = constants.W+_IMAGESIZE/2, y = 0, xScale = image.width*0.1, yScale = image.height*0.1})  --вращение, выезд за пределы экрана, уменьшение
+            x = constants.W+_IMAGESIZE/2, y = 0, xScale = image.width*0.1, yScale = image.height*0.1})  --вращение, выезд за пределы экрана, уменьшение
     end
     timers[#timers+1] = timer.performWithDelay(500, sayGood)
     timers[#timers+1] = timer.performWithDelay(1600, storyboard.reloadScene)
@@ -89,6 +90,7 @@ local function buttonListener (event)   --обработчик сообщени�
         dots[i]:insert(line)
 
         dotName[table[shape].size]:toFront()
+        img[i]:toFront()
         dotName[1]:toFront()
 
         playStart()     --играет звук
@@ -102,6 +104,8 @@ local function buttonListener (event)   --обработчик сообщени�
             line:setStrokeColor(1, 1, 0)
             line.strokeWidth = _RADIUS
             dots[i]:insert(line)
+            img[i-1]:toFront()
+            img[i]:toFront()
             dotName[i-1]:toFront()
             dotName[i]:toFront()
 
@@ -135,12 +139,13 @@ local function createBut()  --создаём точки
 end
 
 completedShape =  function  ()       --функция вызывается при замыкании контура, рисует фигуру, говорит поздравления
-   if (dots ~= nil and dotName ~= nil) then
-       for j = 1, #dots do                 --удаляем точки и цифры
+    sam.swapSamActive()
+    if (dots ~= nil and dotName ~= nil) then
+        for j = 1, #dots do                 --удаляем точки и цифры
             display.remove(dots[j])
             display.remove(dotName[j])
-       end
-   end
+        end
+    end
 
     image = display.newImage(data.formPath..data.shapes[index]..data.format, constants.CENTERX, constants.CENTERY)  --рисует фигуру
     image.width = _IMAGESIZE*0.1
@@ -163,6 +168,8 @@ function scene:createScene(event)
     background.width = constants.W
     background.height = constants.H
     group:insert(background)
+
+    sam.show(constants.W * 0.15, 1)
 
     homeButton = widget.newButton
         {
@@ -229,12 +236,12 @@ function scene:exitScene(event)
     transition.cancel()
     audio.stop()
     if (soundStart ~= nil) then
-       audio.dispose(soundStart)
-       soundStart = nil
+        audio.dispose(soundStart)
+        soundStart = nil
     end
     if (dotSound ~= nil) then
-       audio.dispose(dotSound)
-       dotSound = nil
+        audio.dispose(dotSound)
+        dotSound = nil
     end
 
     if (dots ~= nil) then
@@ -263,6 +270,7 @@ function scene:exitScene(event)
     end
 
 
+
     if (soundName ~= nil) then
         audio.dispose( soundName )
         soundName = nil
@@ -270,6 +278,8 @@ function scene:exitScene(event)
 end
 
 function scene:destroyScene(event)
+    sam.hide()
+
     display.remove(homeButton)
     homeButton = nil
     display.remove(background)

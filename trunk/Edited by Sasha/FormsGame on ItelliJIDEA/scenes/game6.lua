@@ -90,6 +90,7 @@ local function buttonListener (event)   --обработчик сообщени�
         dots[i]:insert(line)
 
         dotName[table[shape].size]:toFront()
+        img[i]:toFront()
         dotName[1]:toFront()
 
         playStart()     --играет звук
@@ -103,6 +104,8 @@ local function buttonListener (event)   --обработчик сообщени�
             line:setStrokeColor(1, 1, 0)
             line.strokeWidth = _RADIUS
             dots[i]:insert(line)
+            img[i-1]:toFront()
+            img[i]:toFront()
             dotName[i-1]:toFront()
             dotName[i]:toFront()
 
