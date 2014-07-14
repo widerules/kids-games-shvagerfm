@@ -170,7 +170,7 @@ function scene:createScene(event)
 		    
 		}
 	backBtn.width, backBtn.height = 0.1*constants.W, 0.1*constants.W
-	backBtn.x, backBtn.y = backBtn.width/2, backBtn.height/2
+	backBtn.x, backBtn.y = backBtn.width*0.5, backBtn.height*0.5
 	group:insert( backBtn )
 
 	gamesWon = 0
