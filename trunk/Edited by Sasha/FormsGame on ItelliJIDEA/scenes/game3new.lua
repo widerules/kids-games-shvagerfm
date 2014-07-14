@@ -147,9 +147,10 @@ local function onAnimalDrag(event)
 
         if onPlaces < 1 then
             if level == _MAXLEVEL then
-                level = 0
-                popup.showPopupWithReloadButton("You won !", "scenes.menu", "scenes.game3")
+                level = 1
+                popup.showPopUpWithReloadButton("You won!", "scenes.scenetemplate", "scenes.game3new")
             else
+                level = level + 1
 
                 for i = 1, #shadowsImages do
                     for j = 1, #shadowsImages[i] do

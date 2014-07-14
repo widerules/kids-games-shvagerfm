@@ -9,6 +9,7 @@ local scene = storyboard.newScene()
 explosion.createExplosion()
 
 local background, shape
+local popupTimer
 local centerX = display.contentCenterX
 local centerY = display.contentCenterY
 local amount = 12
@@ -52,7 +53,7 @@ local function showPopUp()
 	popupBg.height = 0.7*constants.H;
 	popupBg.width = 0.7*constants.W;
 
-	popupText = display.newText("Well done !", popupBg.x, 0, native.systemFont, 2*_FONTSIZE);
+	popupText = display.newText("Well done!", popupBg.x, 0, native.systemFont, 2*_FONTSIZE);
 	popupText.y = popupBg.y-popupBg.height+2*popupText.width/3;
 
 	homeBtn = widget.newButton
@@ -129,8 +130,10 @@ local function onItemTap( event, self )
 			-- if all pairs is found 
 			if totalItems == 0 then
 
-				audio.play(magicSound)
-				showPopUp()
+				popupTimer = timer.performWithDelay(1400, function()
+                    audio.play(magicSound)
+                    showPopUp()
+                    end)
 			end
 		else
 			-- cancel transition
@@ -155,7 +158,9 @@ function scene:createScene( event )
 	local group = self.view
 	find = audio.loadSound("sounds/fpairs.mp3")
 	audio.play(find)
-	background = display.newImage( "images/background3.jpg", centerX, centerY, _W, _H)
+	background = display.newImage( "images/background3.jpg", centerX, centerY)
+    background.width = _W
+    background.height = _H
 	group:insert( background )
 end
 
@@ -265,14 +270,15 @@ function scene:enterScene( event )
 
 	backBtn = widget.newButton
 		{
-		    left = 0,
-		    top = 0,
+            width = 0.1*constants.W,
+            height = 0.1*constants.W,
 		    defaultFile = "images/home.png",
 		    overFile = "images/homehover.png",
 		    id = "home",
 		    onRelease = backHome
 		}
-
+    backBtn.x = backBtn.width/2
+    backBtn.y = backBtn.height/2
 	group:insert( backBtn )
 	for i=1, #items do
 		transition.to( items[i], {time = 500, xScale = 1, yScale=1, transition=easing.outBack} )
@@ -286,6 +292,14 @@ end
 -- Called when scene is about to move offscreen:
 function scene:exitScene( event )
 	local group = self.view
+
+    if popupTimer ~= nil then
+        timer.cancel(popupTimer)
+        popupTimer = nil
+    end
+
+    display.remove(backBtn)
+    backBtn = nil
 	transition.cancel( )
 	audio.stop()
 	storyboard.purgeAll()

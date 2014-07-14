@@ -42,8 +42,8 @@ end
 ----animation update score
 local function animScore()
 	local function listener()
-		starToScore:removeSelf( )
-        starToScore = nil
+		--starToScore:removeSelf( )
+        --starToScore = nil
         storyboard.reloadScene()
 	end
 	audio.play( starSound )
@@ -51,7 +51,7 @@ local function animScore()
 	starToScore.xScale, starToScore.yScale = 0.1, 0.1
 	
 	local function trans1()
-	 	transition.to(starToScore, {time = 200, xScale = 1, yScale = 1, x = star[level].x, y= star[level].y, onComplete = listener})
+	 	transition.to(starToScore, {time = 200, xScale = 1, yScale = 1, x = star[level-1].x, y= star[level-1].y, onComplete = listener})
 	end
 	explosion.spawnExplosion(constants.CENTERX, constants.CENTERY)
 	transition.to(starToScore, {time = 300, xScale = 2, yScale = 2, transition = easing.outBack, onComplete = trans1})
@@ -161,16 +161,16 @@ function scene:createScene(event)
 	
 	backBtn = widget.newButton
 		{
-		    --left = 0,
-		    --top = 0,
+            width = 0.1*constants.W,
+            height = 0.1*constants.W,
 		    defaultFile = "images/home.png",
 		    overFile = "images/homehover.png",
 		    id = "home",
 		    onRelease = backHome,
 		    
 		}
-	backBtn.width, backBtn.height = 0.1*constants.W, 0.1*constants.W
-	backBtn.x, backBtn.y = backBtn.width*0.5, backBtn.height*0.5
+	backBtn.x = backBtn.width*0.5
+    backBtn.y = backBtn.height*0.5
 	group:insert( backBtn )
 
 	gamesWon = 0
@@ -243,6 +243,11 @@ end
 
 
 function scene:exitScene(event)
+
+    if starToScore ~= nil then
+        display.remove(starToScore)
+        starToScore = nil
+    end
 	if images ~= nil then
         for i = 1, #images do
             for j = 1, #images[i] do
@@ -276,7 +281,10 @@ function scene:exitScene(event)
 end
 
 function scene:destroyScene(event)
+    local group = self.view
    explosion.destroyExplosion()
+    group:remove(backBtn)
+    backBtn = nil
 end
 
 scene:addEventListener( "createScene", scene )
