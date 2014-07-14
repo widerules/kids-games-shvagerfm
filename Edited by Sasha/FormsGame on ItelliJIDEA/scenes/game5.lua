@@ -18,6 +18,7 @@ local rows = {2, 2, 3, 4, 4}
 local level = 1
 local gameWon = 0
 
+local finishTimer
 local background, backBtn
 local animals = {}
 local folds = {}
@@ -47,6 +48,12 @@ end
 ----animation update score
 local function animScore()
 	local function listener()
+        display.remove(star[level-1])
+        star[level-1] = display.newImage("images/starfull.png")
+        star[level-1].width = constants.H/16
+        star[level-1].height = constants.H/16
+        star[level-1].x = constants.W - star[level-1].width/2
+        star[level-1].y = level - 1 > 1 and star[level-2].y - star[level-1].height or constants.H - star[level-1].height/2
 		starToScore:removeSelf( )
         starToScore = nil
 	end
@@ -55,7 +62,7 @@ local function animScore()
 	starToScore.xScale, starToScore.yScale = 0.1, 0.1
 	
 	local function trans1()
-	 	transition.to(starToScore, {time = 200, xScale = 1, yScale = 1, x = star[level].x, y= star[level].y, onComplete = listener})
+	 	transition.to(starToScore, {time = 200, xScale = 1, yScale = 1, x = star[level-1].x, y= star[level-1].y, onComplete = listener})
 	end
 	explosion.spawnExplosion(constants.CENTERX, constants.CENTERY)
 	transition.to(starToScore, {time = 300, xScale = 2, yScale = 2, transition = easing.outBack, onComplete = trans1})
@@ -75,7 +82,10 @@ local function onFoldClicked (event)
 				local function checkAmount()
 					totalCards = totalCards - 2
 					if totalCards == 0	then
-						popup.showPopUpWithNextButton("Well done!", "scenes.scenetemplate", "scenes.game5")
+                        animScore()
+                        finishTimer = timer.performWithDelay(600, function()
+						    popup.showPopUpWithNextButton("Well done!", "scenes.scenetemplate", "scenes.game5")
+                        end)
 						gameWon = gameWon + 1
 						if gameWon>0 and level < _MAXLEVEL then
 							gameWon = 0
@@ -120,9 +130,9 @@ end
 
 function scene:enterScene (event)
 	local group = self.view
-	if level > 1 then
-	animScore()
-	end
+	--if level > 1 then
+	--animScore()
+	--end
 
 	previous = nil
 	animals = table.copy(data.animals)
