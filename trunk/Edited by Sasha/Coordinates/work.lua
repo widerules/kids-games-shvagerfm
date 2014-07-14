@@ -40,7 +40,10 @@ function scene:addImageControls()
             if (currentPart ~= nil) then
                 currentPart.image.x = currentPart.image.x - dx
 
-                local info = "x: " .. currentPart.image.x - leftCornerX .. "; y: "..currentPart.image.y - leftCornerY
+                local px = (currentPart.image.x - leftCornerX) / example.width
+                local py = (currentPart.image.y - leftCornerY) / example.height
+
+                local info = "x: " .. px .. "; y: ".. py
 
                 infoTextBox.text = info
             end
@@ -57,7 +60,10 @@ function scene:addImageControls()
             if (currentPart ~= nil) then
                 currentPart.image.y = currentPart.image.y - dy
 
-                local info = "x: " .. currentPart.image.x - leftCornerX .. "; y: "..currentPart.image.y - leftCornerY
+                local px = (currentPart.image.x - leftCornerX) / example.width
+                local py = (currentPart.image.y - leftCornerY) / example.height
+
+                local info = "x: " .. px .. "; y: ".. py
 
                 infoTextBox.text = info
             end
@@ -74,7 +80,10 @@ function scene:addImageControls()
             if (currentPart ~= nil) then
                 currentPart.image.y = currentPart.image.y + dy
 
-                local info = "x: " .. currentPart.image.x - leftCornerX .. "; y: "..currentPart.image.y - leftCornerY
+                local px = (currentPart.image.x - leftCornerX) / example.width
+                local py = (currentPart.image.y - leftCornerY) / example.height
+
+                local info = "x: " .. px .. "; y: ".. py
 
                 infoTextBox.text = info
             end
@@ -91,7 +100,10 @@ function scene:addImageControls()
             if (currentPart ~= nil) then
                 currentPart.image.x = currentPart.image.x + dx
 
-                local info = "x: " .. currentPart.image.x - leftCornerX .. "; y: "..currentPart.image.y - leftCornerY
+                local px = (currentPart.image.x - leftCornerX) / example.width
+                local py = (currentPart.image.y - leftCornerY) / example.height
+
+                local info = "x: " .. px .. "; y: ".. py
 
                 infoTextBox.text = info
             end
@@ -123,7 +135,9 @@ function scene:addSaveButton()
             label = "Save coordinates",
             onRelease = function()
                 if (currentPart ~= nil) then
-                    local info = "["..currentPart.name.."] x: " .. currentPart.image.x - leftCornerX .. "; y: "..currentPart.image.y - leftCornerY
+                    local px = (currentPart.image.x - leftCornerX) / example.width
+                    local py = (currentPart.image.y - leftCornerY) / example.height
+                    local info = "["..currentPart.name.."] x: " .. px .. "; y: ".. py
 
                     infoTextBox.text = info
                     print(info)
@@ -180,7 +194,10 @@ function scene:loadAllParts()
 
                         self.image.x, self.image.y = x, y
 
-                        local info = "x: " .. x - leftCornerX .. "; y: "..y - leftCornerY
+                        local px = (self.image.x - leftCornerX) / example.width
+                        local py = (self.image.y - leftCornerY) / example.height
+
+                        local info = "x: " .. px .. "; y: ".. py
                         infoTextBox.text = info
 
                     elseif event.phase == "ended" or event.phase == "cancelled" then
