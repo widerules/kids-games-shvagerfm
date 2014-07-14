@@ -3,6 +3,7 @@ local widget = require("widget")
 local constants = require ("constants")
 local data = require( "data.shapesData")
 local table = require("data.dots_coordinates")
+local sam = require("utils.sam")
 
 local scene = storyboard.newScene()
 
@@ -135,6 +136,7 @@ local function createBut()  --создаём точки
 end
 
 completedShape =  function  ()       --функция вызывается при замыкании контура, рисует фигуру, говорит поздравления
+   sam.swapSamActive()
    if (dots ~= nil and dotName ~= nil) then
        for j = 1, #dots do                 --удаляем точки и цифры
             display.remove(dots[j])
@@ -163,6 +165,8 @@ function scene:createScene(event)
     background.width = constants.W
     background.height = constants.H
     group:insert(background)
+
+    sam.show(constants.W * 0.15, 1)
 
     homeButton = widget.newButton
         {
@@ -263,6 +267,7 @@ function scene:exitScene(event)
     end
 
 
+
     if (soundName ~= nil) then
         audio.dispose( soundName )
         soundName = nil
@@ -270,6 +275,8 @@ function scene:exitScene(event)
 end
 
 function scene:destroyScene(event)
+    sam.hide()
+
     display.remove(homeButton)
     homeButton = nil
     display.remove(background)
