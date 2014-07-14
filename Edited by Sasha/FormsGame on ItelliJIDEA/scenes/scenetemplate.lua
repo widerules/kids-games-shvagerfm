@@ -10,7 +10,7 @@ local centerY = display.contentCenterY
 local _W = display.contentWidth
 local _H = display.contentHeight
 local bWidth = 0.33*_W
-local bHeight = 0.24*bWidth
+local bHeight = _H/7
 local sizeFont = 0.07*_H
 local sizeBtn
 
@@ -21,10 +21,13 @@ local bgsound
 local function soundOffOn()
 	if _SOUNDON == true then
 	_SOUNDON = false
-	audio.pause( bgsound )
+    audio.setVolume(0)
+	--audio.pause( bgsound )
 else
 	_SOUNDON = true
-	audio.resume( bgsound )
+    audio.setVolume(1.0)
+
+	--audio.resume( bgsound )
 	end
 end
 -------------------------------
@@ -82,15 +85,16 @@ end
 end
 local function sunMoving(self, event)
 	if event.phase == "ended" or event.phase == "cancelled" then
-		
 		if _SOUNDON == true then
 			_SOUNDON = false
-			audio.stop()
+            audio.setVolume(0)
+			--audio.stop()
 			sun:pause()
 		else
 			_SOUNDON = true
-			audio.play( bgsound )
-			sun:play()
+            audio.setVolume(1)
+			--audio.play( bgsound )
+			--sun:play()
 		end
 		return true	-- indicates successful touch
 	end
@@ -98,7 +102,11 @@ end
 -- Called when the scene's view does not exist:
 function scene:createScene( event )
 	local group = self.view
-	
+
+    --[[if (_SOUNDON == false) then
+        audio.setVolume(0)
+    end--]]
+
 	background = display.newImage( "images/background.jpg", centerX, centerY)
 	background.width = _W
 	background.height = _H
@@ -247,9 +255,9 @@ function scene:enterScene( event )
 	local group = self.view
 	bgsound = audio.loadSound( "sounds/bgsound.mp3" )
 	admob.showAd( "interstitial" )
-	if _SOUNDON == true then
+	--if _SOUNDON == true then
 	audio.play( bgsound )
-	end
+	--end
 
 	mikki = display.newImage("images/miki.png", _W/6, 1.5*centerY, 0.1*_W, 0.1*_H)
 	mikki.width = 0.16*_W
@@ -293,9 +301,9 @@ function scene:enterScene( event )
 	sun.x = 0.5*sun.width
 	sun.y = 0.5*sun.height
 	sun:setSequence("sunny")
-	if _SOUNDON == true then
+	--if _SOUNDON == true then
 	sun:play()
-	end
+	--end
 	group:insert(sun)
 	moveForward()
 	sun.touch = sunMoving
@@ -334,7 +342,6 @@ end
 
 function scene:destroyScene( event )
 	local group = self.view
-	
 end
 
 scene:addEventListener( "createScene", scene )

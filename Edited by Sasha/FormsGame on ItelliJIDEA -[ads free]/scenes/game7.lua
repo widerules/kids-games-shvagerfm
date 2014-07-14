@@ -1,11 +1,3 @@
---
--- Created by IntelliJ IDEA.
--- User: Svyat
--- Date: 21/06/2014
--- Time: 07:44 PM
--- To change this template use File | Settings | File Templates.
---
-
 local storyboard = require ("storyboard")
 local widget = require("widget")
 local constants = require ("constants")
@@ -76,10 +68,10 @@ local function transitionFigure()
     transition.to(images[#images], {time = 300, alpha = 0})
 
     transition.to(button, {time = 500,
-                           x = images[#images].x,
-                           y = images[#images].y,
-                           xScale = _IMAGESIZE/_BUTTONSIZE,
-                           yScale = _IMAGESIZE/_BUTTONSIZE})
+        x = images[#images].x,
+        y = images[#images].y,
+        xScale = _IMAGESIZE/_BUTTONSIZE,
+        yScale = _IMAGESIZE/_BUTTONSIZE})
 end
 
 local function toNextFigure()  --функция для перехода на следующую фигуру
@@ -150,6 +142,7 @@ end
 
 function scene:createScene(event)
     local group = self.view
+
     background = display.newImage("images/background2.jpg", constants.CENTERX, constants.CENTERY)
     background.width = constants.W
     background.height = constants.H
@@ -157,15 +150,14 @@ function scene:createScene(event)
 
     backBtn = widget.newButton
         {
-            --left = 0,
-            --top = 0,
+            width = 0.1*constants.W,
+            height = 0.1*constants.W,
             defaultFile = "images/home.png",
             overFile = "images/homehover.png",
             id = "home",
             onRelease = backHome,
 
         }
-    backBtn.width, backBtn.height = 0.1*constants.W, 0.1*constants.W
     backBtn.x, backBtn.y = backBtn.width/2, backBtn.height/2
     group:insert( backBtn )
 
@@ -210,7 +202,7 @@ function scene:enterScene(event)
         group:insert(images[#images])
     end
 
-    images[#images+1] = display.newImage("images/ask.png")
+    images[#images+1] = display.newImage("images/question.png")
     images[#images].width = _IMAGESIZE
     images[#images].height = _IMAGESIZE
     images[#images].x = images[#images].width*0.8 + images[#images].width*1.3*(#images-1)
@@ -252,6 +244,7 @@ function scene:exitScene(event)
 end
 
 function scene:destroyScene(event)
+
     display.remove(backBtn)
     backBtn = nil
     display.remove(background)

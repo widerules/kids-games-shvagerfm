@@ -156,6 +156,7 @@ end
 -- Called when the scene's view does not exist:
 function scene:createScene( event )
 	local group = self.view
+
 	find = audio.loadSound("sounds/fpairs.mp3")
 	audio.play(find)
 	background = display.newImage( "images/background3.jpg", centerX, centerY)
@@ -328,7 +329,6 @@ end
 -- Called prior to the removal of scene's "view" (display group)
 function scene:destroyScene( event )
 	explosion.destroyExplosion()
-	
 end
 
 function scene:willEnterScene( event )

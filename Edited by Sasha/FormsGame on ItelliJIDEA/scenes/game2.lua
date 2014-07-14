@@ -210,7 +210,7 @@ function scene:enterScene(event)
         end
 	end
 
-	taskLabel = display.newEmbossedText( taskText..itemType, constants.CENTERX, constants.CENTERY, native.systemFont, _FONTSIZE )	
+	taskLabel = display.newEmbossedText( taskText..itemType, constants.CENTERX, constants.CENTERY, native.systemFont, _FONTSIZE )
     soundTitle = audio.loadSound( "sounds/f"..itemType..".mp3" )
 	audio.play( soundTitle )
 	taskLabel.xScale = 0.3
@@ -282,7 +282,8 @@ end
 
 function scene:destroyScene(event)
     local group = self.view
-   explosion.destroyExplosion()
+
+    explosion.destroyExplosion()
     group:remove(backBtn)
     backBtn = nil
 end

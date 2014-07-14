@@ -150,6 +150,7 @@ end
 
 function scene:createScene(event)
     local group = self.view
+
     background = display.newImage("images/background2.jpg", constants.CENTERX, constants.CENTERY)
     background.width = constants.W
     background.height = constants.H
@@ -157,15 +158,14 @@ function scene:createScene(event)
 
     backBtn = widget.newButton
         {
-            --left = 0,
-            --top = 0,
+            width = 0.1*constants.W,
+            height = 0.1*constants.W,
             defaultFile = "images/home.png",
             overFile = "images/homehover.png",
             id = "home",
             onRelease = backHome,
 
         }
-    backBtn.width, backBtn.height = 0.1*constants.W, 0.1*constants.W
     backBtn.x, backBtn.y = backBtn.width/2, backBtn.height/2
     group:insert( backBtn )
 
@@ -252,6 +252,7 @@ function scene:exitScene(event)
 end
 
 function scene:destroyScene(event)
+
     display.remove(backBtn)
     backBtn = nil
     display.remove(background)
