@@ -42,8 +42,8 @@ end
 ----animation update score
 local function animScore()
 	local function listener()
-		--starToScore:removeSelf( )
-        --starToScore = nil
+		starToScore:removeSelf( )
+        starToScore = nil
         storyboard.reloadScene()
 	end
 	audio.play( starSound )
