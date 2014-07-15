@@ -2,6 +2,7 @@ local storyboard = require("storyboard")
 local widget = require("widget")
 local data = require ("data.findData")
 local constants = require("constants")
+local popup = require("utils.popup")
 
 local scene = storyboard.newScene()
 
@@ -22,24 +23,58 @@ local images = {}
 local imageSize, spacing
 local itemType, searchAmount
 local taskLabel, homeButton
+local background
+
+local timerPtr
 
 local soundName
 local soundItIs
 local soundTitle
 local star = {}
-
-local function toTitle()
-	local options = 
-	{
-		effect = "slideLeft",
-		time = 800
-	}
-	storyboard.gotoScene("scenes.menu", options)
-	storyboard.removeScene( "scenes.game2" )
-end
+local starToScore
+local starSound = audio.loadSound( "sounds/start.mp3" )
 
 local function onHomeButtonTapped (event)
-	toTitle()
+    local options =
+    {
+        effect = "slideLeft",
+        time = 800
+    }
+    storyboard.gotoScene("scenes.menu", options)
+    storyboard.removeScene( "scenes.game2" )
+end
+
+local function animScore()
+    local function listener()
+        display.remove(star[level-1])
+        star[level-1] = display.newImage("images/starfull.png")
+        star[level-1].width = constants.H/8
+        star[level-1].height = constants.H/8
+        star[level-1].x = constants.W - star[level-1].width/2
+        star[level-1].y = rows[level-1] == 1 and constants.H - star[level-1].height/2 or star[level-2].y - star[level-1].height
+        starToScore:removeSelf( )
+        starToScore = nil
+    end
+    audio.play( starSound )
+    starToScore = display.newImage( "images/starfull.png", constants.CENTERX, constants.CENTERY)
+    starToScore.width = constants.H/8
+    starToScore.height = constants.H/8
+    starToScore.xScale, starToScore.yScale = 0.1, 0.1
+
+    local function trans1()
+        transition.to(starToScore, {time = 200, xScale = 1, yScale = 1, x = star[level-1].x, y= star[level-1].y, onComplete = listener})
+    end
+    --explosion.spawnExplosion(constants.CENTERX, constants.CENTERY)
+    transition.to(starToScore, {time = 300, xScale = 2, yScale = 2, transition = easing.outBack, onComplete = trans1})
+end
+
+local function toTitle()
+    level = level + 1
+    animScore()
+    timerPtr = timer.performWithDelay (600, function()
+        level = 1
+        popup.showPopupWithReloadButton("You won!", "scenes.menu", "scenes.game3new")
+    end)
 end
 
 --makes a set of names of fruits and vegetables
@@ -83,7 +118,9 @@ local function onItemTapped (event)
 				gamesWon = 0
 				if level<8 then
 					level = level + 1
-					storyboard.reloadScene()					
+                    animScore()
+                    timerPtr = timer.performWithDelay (600, storyboard.reloadScene)
+					--storyboard.reloadScene()
 				else
 					toTitle()
 				end
@@ -115,6 +152,8 @@ end
 
 function scene:createScene(event)		
 	local group = self.view
+
+    math.randomseed(os.time())
 
 	background = display.newImage("images/background2.jpg", constants.CENTERX, constants.CENTERY)
 	background.width = constants.W
@@ -207,6 +246,11 @@ function scene:enterScene(event)
 end
 
 function scene:exitScene(event)
+
+    if timerPtr ~= nil then
+        timer.cancel (timerPtr)
+        timerPtr = nil
+    end
 	
 	for i = 1, #images do
 		for j = 1, #images[i] do
@@ -216,7 +260,13 @@ function scene:exitScene(event)
 			
 			end
 		end
-	end	
+	end
+
+    for i = 1, #star do
+        display.remove(star[i])
+        star[i] = nil
+    end
+
 	display.remove( taskLabel )
 
 end

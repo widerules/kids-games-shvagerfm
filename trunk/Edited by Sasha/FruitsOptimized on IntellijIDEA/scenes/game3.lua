@@ -91,26 +91,32 @@ local function onElementTouched (event)
 	local t = event.target
 	local phase = event.phase
 
-	transition.cancel(t.transition) --stops moving of the object
-	scaleOnDrag(t)		 --makes object bigger
-
 	if phase == "began" then
 		local parent = t.parent
 		parent:insert(t)
 		display.getCurrentStage():setFocus(t)
 
+        transition.cancel(t.transition) --stops moving of the object
+        scaleOnDrag(t)		 --makes object bigger
+
+        t:toFront()
+
 		t.isFocus = true
 		t.x0 = event.x - t.x
 		t.y0 = event.y - t.y
 
-	elseif phase == "moved" and t.isFocus then
+	elseif t.isFocus and phase == "moved" then
 		t.x = event.x - t.x0
 		t.y = event.y - t.y0
 
-	elseif phase == "ended" or phase == "cancel" then
+        t:toFront()
+
+	elseif t.isFocus and phase == "ended" or phase == "cancel" then
 		t:removeEventListener( "touch", onElementTouched )
 		display.getCurrentStage():setFocus(nil)
 		t.isFocus = false
+
+        t:toFront()
 
 		local flag = false
 
