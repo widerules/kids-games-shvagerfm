@@ -10,6 +10,8 @@ shouldWork = false
 memoryViewer.create(constants.W/2, 20, shouldWork)
 memoryViewer.updateInfoInLoop(100)
 
+math.randomseed(os.time())
+
 local function exit ()
    rate.init()
 end
@@ -40,7 +42,19 @@ if ( ("back" == keyName or "deleteBack" == keyName) and phase == "up" ) then
                storyboard.removeAll( )
              end)
          elseif (currentScene == "scenes.game3") then]]
-
+         elseif (currentScene == "scenes.menu") then
+             timer.performWithDelay(500, function()
+                 local options =
+                 {
+                     effect = "slideRight",
+                     time = 600
+                 }
+                 transition.cancel( )
+                 audio.stop()
+                 popup.hidePopup()
+                 storyboard.gotoScene( "scenetemplate", options )
+                 storyboard.removeAll( )
+             end)
          else
              timer.performWithDelay(500, function()
                 local options =
@@ -51,7 +65,7 @@ if ( ("back" == keyName or "deleteBack" == keyName) and phase == "up" ) then
                 transition.cancel( )
                 audio.stop()
                 popup.hidePopup()
-                storyboard.gotoScene( lastScene, options )
+                storyboard.gotoScene( "scenes.menu", options )
                 storyboard.removeAll( )
              end)
          end

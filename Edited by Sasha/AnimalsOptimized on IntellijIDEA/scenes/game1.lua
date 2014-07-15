@@ -150,7 +150,7 @@ function scene:enterScene(event)
 	group:insert(animalName);
 
 	if data.animalsDescriptions[index] ~= nil then
-		animalDescription = display.newEmbossedText(data.animalsDescriptions[index], woodenLayer.x, 0, 0.85 * _WOODENWIDTH, 0.5 * _WOODENHEIGHT, "Arial", constants.H/24);	
+		animalDescription = display.newEmbossedText(data.animalsDescriptions[index], woodenLayer.x, 0, 0.85 * _WOODENWIDTH, 0.7 * _WOODENHEIGHT, "Arial", constants.H/24);
 		animalDescription.y = animalName.y + 3*animalDescription.height/4;
 		animalDescription:setFillColor(0,0,0);
 		group:insert(animalDescription);	

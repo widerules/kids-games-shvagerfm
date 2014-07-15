@@ -27,6 +27,8 @@ local star = {}
 local starToScore
 local items = {}
 
+local timers = {}
+
 
 local function findIndex(object)
 	local index = 1
@@ -41,18 +43,26 @@ end
 
 ----animation update score
 local function animScore()
-	local function listener()
-		display.remove( starToScore )
+    local function listener()
+        display.remove(star[level-1])
+        star[level-1] = display.newImage("images/starfull.png")
+        star[level-1].width = constants.H/16
+        star[level-1].height = constants.H/16
+        star[level-1].x = constants.W - star[level-1].width/2
+        star[level-1].y = level - 1 > 1 and star[level-2].y - star[level-1].height or constants.H - star[level-1].height/2
+        starToScore:removeSelf( )
         starToScore = nil
-	end
-	starToScore = display.newImage( "images/starfull.png", constants.CENTERX, constants.CENTERY, constants.H/8, constants.H/8)
-	starToScore.xScale, starToScore.yScale = 0.1, 0.1
-	
-	local function trans1()
-	 	transition.to(starToScore, {time = 200, xScale = 1, yScale = 1, x = star[level].x, y= star[level].y, onComplete = listener})
-	end
-	explosion.spawnExplosion(constants.CENTERX, constants.CENTERY)
-	transition.to(starToScore, {time = 300, xScale = 2, yScale = 2, transition = easing.outBack, onComplete = trans1})
+    end
+    audio.play( starSound )
+    starToScore = display.newImage( "images/starfull.png", constants.CENTERX, constants.CENTERY)
+    starToScore.width, starToScore.height =  constants.H/16, constants.H/16
+    starToScore.xScale, starToScore.yScale = 0.1, 0.1
+
+    local function trans1()
+        transition.to(starToScore, {time = 200, xScale = 1, yScale = 1, x = star[level-1].x, y= star[level-1].y, onComplete = listener})
+    end
+    explosion.spawnExplosion(constants.CENTERX, constants.CENTERY)
+    transition.to(starToScore, {time = 300, xScale = 2, yScale = 2, transition = easing.outBack, onComplete = trans1})
 end
 
 local function onFoldClicked (event)
@@ -69,14 +79,22 @@ local function onFoldClicked (event)
 				local function checkAmount()
 					totalCards = totalCards - 2
 					if totalCards == 0	then
-						popup.showPopupWithNextButton("Well done!", "scenes.menu", "scenes.game6")
 						gameWon = gameWon + 1
 						if gameWon>0 and level < _MAXLEVEL then
 							gameWon = 0
 							level = level + 1
+                            animScore()
                         else
-							level = 1
-						end
+                            level = level + 1
+                            animScore()
+                            timers[#timers+1] = timer.performWithDelay(600, function()
+                                level = 1
+                                --popup.showPopupWithReloadButton("Well done !", "scenes.menu", "scenes.game5")
+                            end)
+                        end
+                        timers[#timers+1] = timer.performWithDelay(600, function()
+                            popup.showPopupWithNextButton("Well done!", "scenes.menu", "scenes.game6")
+                        end)
 					end				
 				end
 
@@ -114,9 +132,6 @@ end
 
 function scene:enterScene (event)
 	local group = self.view
-	if level > 1 then
-	animScore()
-	end
 
 	previous = nil
 	animals = table.copy(data.animals)
@@ -204,6 +219,10 @@ function scene:enterScene (event)
 end
 
 function scene:exitScene(event)
+    for i = 1, #timers do
+        timer.cancel(timers[i])
+        timers[i] = nil
+    end
 	for i=1, #items do
 		if items[i] then
 			display.remove( items[i] )

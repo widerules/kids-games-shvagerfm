@@ -1,19 +1,3 @@
---
--- Created by IntelliJ IDEA.
--- User: Svyat
--- Date: 07/07/2014
--- Time: 11:07 AM
--- To change this template use File | Settings | File Templates.
---
-
---
--- Created by IntelliJ IDEA.
--- User: Svyat
--- Date: 21/06/2014
--- Time: 07:44 PM
--- To change this template use File | Settings | File Templates.
---
-
 local storyboard = require ("storyboard")
 local widget = require("widget")
 local constants = require ("constants")
@@ -22,11 +6,24 @@ local data = require( "data.findData")
 
 local table = {
     {1, 1},
+    {1, 1},
+    {1, 1},
+    {1, 1, 1},
     {1, 1, 1},
     {2, 1, 2},
+    {2, 1, 2},
+    {2, 1, 2},
+    {2, 3, 1, 2, 3},
+    {2, 3, 1, 2, 3},
     {2, 3, 1, 2, 3},
     {2, 2, 1, 2, 2},
+    {2, 2, 1, 2, 2},
+    {2, 2, 1, 2, 2},
     {2, 1, 1, 2, 1},
+    {2, 1, 1, 2, 1},
+    {2, 1, 1, 2, 1},
+    {1, 2, 1, 1, 2},
+    {1, 2, 1, 1, 2},
     {1, 2, 1, 1, 2}
 }
 
@@ -175,15 +172,14 @@ function scene:createScene(event)
 
     backBtn = widget.newButton
         {
-            --left = 0,
-            --top = 0,
+            width = 0.1*constants.W,
+            height =0.1*constants.W,
             defaultFile = "images/home.png",
             overFile = "images/homehover.png",
             id = "home",
             onRelease = backHome,
 
         }
-    backBtn.width, backBtn.height = 0.1*constants.W, 0.1*constants.W
     backBtn.x, backBtn.y = backBtn.width/2, backBtn.height/2
     group:insert( backBtn )
 

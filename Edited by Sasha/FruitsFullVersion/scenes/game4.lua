@@ -15,7 +15,7 @@ local _FRICTION = 0.7
 local _FONTSIZE = constants.H / 15
 local _STARSPEED = 9
 local _TOTALITEMS = 50 				--total amount of stars, wich will be created
-local _GENERATIONDELAY = 200		--pause between star generation
+local _GENERATIONDELAY = 500		--pause between star generation
 local _ITEMSIZE
 local _BTNSIZE
 
@@ -207,6 +207,8 @@ end
 function scene:createScene(event)
 	local group = self.view
 
+    math.randomseed(os.time())
+
 	starGroup = display.newGroup( )
 	group:insert(starGroup)
 
@@ -242,13 +244,13 @@ function scene:enterScene (event)
 		local function listener()
 		timerID = timer.performWithDelay( _GENERATIONDELAY, 
 			function()
-				for i = 1, 5 do
+				for i = 1, 3 do
 					index = math.random (1, #colors)
-					local star = display.newImage(data.itemPath[1]..data.colors[colors[index]]..data.format, 0, 0)					
-					star.x = constants.W * math.random()
-					star.y = -_ITEMSIZE
+					local star = display.newImage(data.itemPath[1]..data.colors[colors[index]]..data.format)
 					star.width = _ITEMSIZE
 					star.height = _ITEMSIZE
+                    star.x = math.random(star.width, constants.W - star.width)
+                    star.y = -_ITEMSIZE
 					star.starType = data.colors[colors[index]]
 					star:addEventListener( "touch", onStarTouched )
 					starGroup:insert(star)
@@ -261,7 +263,7 @@ function scene:enterScene (event)
 				loopNumber = loopNumber + 1
 				if loopNumber == _TOTALITEMS then
 					--otherwise - popup shown without delay
-					timer.performWithDelay( 4000, 
+					timer.performWithDelay( 4500,
 						function () 
 							showPopUp("Well done!")							
 						end) --lets all stars fall down and shows pop-up

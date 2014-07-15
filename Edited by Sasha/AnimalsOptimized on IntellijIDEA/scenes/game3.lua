@@ -8,6 +8,7 @@ local scene = storyboard.newScene()
 
 local _WELLDONETEXT = "Well done !"
 
+local _STARSIZE
 local _BARHEIGHT = 0.2*constants.H
 local _DELTA = 0.1*constants.W
 local _FONTSIZE = constants.H / 14
@@ -37,6 +38,7 @@ local starToScore
 
 local level, onPlaces
 local background, barBackground, plate, wellDoneLabel, homeBtn
+local timerPtr
 
 local function onHomeButtonClicked( event )
     popup.hidePopup()
@@ -76,32 +78,41 @@ end
 
 ----animation update score
 local function animScore()
-	local function listener()
-		display.remove( starToScore )
+    local function listener()
+        display.remove(stars[itemAmount[level-1]])
+        stars[itemAmount[level-1]] = display.newImage("images/starfull.png")
+        stars[itemAmount[level-1]].width = constants.H/16
+        stars[itemAmount[level-1]].height = constants.H/16
+        stars[itemAmount[level-1]].x = _PLATEXZERO/2
+        stars[itemAmount[level-1]].y = constants.H - _BARHEIGHT - (itemAmount[level-1]-0.5)*_STARSIZE
+        starToScore:removeSelf( )
         starToScore = nil
-	end
-	starToScore = display.newImage( "images/starfull.png", constants.CENTERX, constants.CENTERY, constants.H/8, constants.H/8)
-	starToScore.xScale, starToScore.yScale = 0.1, 0.1
-	
-	local function trans1()
-	 	transition.to(starToScore, {time = 200, xScale = 1, yScale = 1, x = star[level].x, y= star[level].y, onComplete = listener})
-	end
-	spawnExplosionToTable(constants.CENTERX, constants.CENTERY)
-	transition.to(starToScore, {time = 300, xScale = 2, yScale = 2, transition = easing.outBack, onComplete = trans1})
+    end
+    --audio.play( starSound )
+    starToScore = display.newImage( "images/starfull.png", constants.CENTERX, constants.CENTERY)
+    starToScore.width = constants.H/8
+    starToScore.height = constants.H/8
+    starToScore.xScale, starToScore.yScale = 0.1, 0.1
+
+    local function trans1()
+        transition.to(starToScore, {time = 200, xScale = 1, yScale = 1, x = stars[itemAmount[level-1]].x, y= stars[itemAmount[level-1]].y, onComplete = listener})
+    end
+    --explosion.spawnExplosion(constants.CENTERX, constants.CENTERY)
+    transition.to(starToScore, {time = 300, xScale = 2, yScale = 2, transition = easing.outBack, onComplete = trans1})
 end
 
 
 local function onAnimalDrag(event)
-	local t = event.target
-	local name = tostring(t.type)
-	animalSound = audio.loadSound("sounds/"..name..".mp3")
-	local phase = event.phase
-	if "began" == phase then
+    local t = event.target
+    local name = tostring(t.type)
+    animalSound = audio.loadSound("sounds/"..name..".mp3")
+    local phase = event.phase
+    if "began" == phase then
 
-		--bring the animal on top (just for being sure)
-		local parent = t.parent
-		parent:insert (t)
-		display.getCurrentStage():setFocus(t)
+        --bring the animal on top (just for being sure)
+        local parent = t.parent
+        parent:insert (t)
+        display.getCurrentStage():setFocus(t)
         animScaleOnDrag(t)
 
         t.startX = t.x
@@ -109,83 +120,97 @@ local function onAnimalDrag(event)
 
         t.x0 = event.x - t.x
         t.y0 = event.y - t.y
-		
-		t.isFocus = true
 
-	elseif "moved" == phase and t.isFocus then
-		t.x = event.x-t.x0
-		t.y = event.y-t.y0
-	elseif t.isFocus and "ended" == phase or "cancel" == phase then
-		local flag = false
-		local index = 0
-		
-		--find which animal dragged
-		for i = 1, #shadowsImages do
-			for j = 1, #shadowsImages[i] do
-				if shadowsImages[i][j].type == t.type then
-					if math.abs(t.x - shadowsImages[i][j].x)<_DELTA and math.abs (t.y-shadowsImages[i][j].y)<_DELTA then
-						t.x = shadowsImages[i][j].x
-						t.y = shadowsImages[i][j].y
-						onPlaces = onPlaces - 1
-						animOnPutOn(t)
-						animOnPutOnShape(shadowsImages[i][j])
-						audio.play( animalSound )
-						shadowsImages[i][j].isUsed = true
-						t:removeEventListener( "touch", onAnimalDrag )
-					else 
-						t.x = t.startX
-						t.y = t.startY
-						animScaleBack(t)
-					end
-				end
-			end
-		end			
+        t.isFocus = true
 
-		display.getCurrentStage():setFocus(nil)
-		t.isFocus = false
-		t.startX = nil
-		t.startY = nil
+    elseif t.isFocus and "moved" == phase then
+        t.x = event.x-t.x0
+        t.y = event.y-t.y0
+    elseif t.isFocus and ("ended" == phase or "cancel" == phase) then
+        local flag = false
+        local index = 0
 
-		if onPlaces < 1 then
-			if level == _MAXLEVEL then
-				level = 0
-				popup.showPopupWithReloadButton("You won !", "scenes.menu", "scenes.game3")
-			else
-			
-				for i = 1, #shadowsImages do
-					for j = 1, #shadowsImages[i] do
-						if shadowsImages[i][j].isUsed == false then
-							transition.to( shadowsImages[i][j], {time = 500, xScale = 0.1, yScale = 0.1, alpha = 0} )
-						end
-					end
-				end
+        --find which animal dragged
+        for i = 1, #shadowsImages do
+            for j = 1, #shadowsImages[i] do
+                if shadowsImages[i][j].type == t.type then
+                    if math.abs(t.x - shadowsImages[i][j].x)<_DELTA and math.abs (t.y-shadowsImages[i][j].y)<_DELTA then
+                        t.x = shadowsImages[i][j].x
+                        t.y = shadowsImages[i][j].y
+                        onPlaces = onPlaces - 1
+                        animOnPutOn(t)
+                        animOnPutOnShape(shadowsImages[i][j])
+                        audio.play( animalSound )
+                        shadowsImages[i][j].isUsed = true
+                        t:removeEventListener( "touch", onAnimalDrag )
+                    else
+                        t.x = t.startX
+                        t.y = t.startY
+                        animScaleBack(t)
+                    end
+                end
+            end
+        end
 
-				wellDoneLabel = display.newEmbossedText( _WELLDONETEXT, constants.CENTERX, constants.CENTERY, native.systemFont, 2*_FONTSIZE )
-				transition.to (wellDoneLabel, 
-					{
-						time = 300,
-						y = 0,
-						alpha = 0,
-						xScale = 0.1,
-						yScale = 0.1,
-						onComplete = function ()
-							display.remove (wellDoneLabel)
-							wellDoneLabel = nil	
-							timer.performWithDelay( 300, function () storyboard.reloadScene() end)						
-						end
-					})
-			end
-		end
+        display.getCurrentStage():setFocus(nil)
+        t.isFocus = false
+        t.startX = nil
+        t.startY = nil
 
-	end
+        if onPlaces < 1 then
+            if level == _MAXLEVEL then
+                level = level + 1
+                animScore()
+                timerPtr = timer.performWithDelay (600, function()
+                    level = 1
+                    popup.showPopUpWithReloadButton("You won!", "scenes.scenetemplate", "scenes.game3new")
+                end)
+            else
+                level = level + 1
+
+                local delay = 0
+
+                if itemAmount[level] ~= itemAmount[level-1] then
+                    animScore()
+                    delay = 600
+                end
+
+                timerPtr = timer.performWithDelay(delay, function()
+                    for i = 1, #shadowsImages do
+                        for j = 1, #shadowsImages[i] do
+                            if shadowsImages[i][j].isUsed == false then
+                                transition.to( shadowsImages[i][j], {time = 500, xScale = 0.1, yScale = 0.1, alpha = 0} )
+                            end
+                        end
+                    end
+
+                    wellDoneLabel = display.newEmbossedText( _WELLDONETEXT, constants.CENTERX, constants.CENTERY, native.systemFont, 2*_FONTSIZE )
+                    transition.to (wellDoneLabel,
+                        {
+                            time = 300,
+                            y = 0,
+                            alpha = 0,
+                            xScale = 0.1,
+                            yScale = 0.1,
+                            onComplete = function ()
+                                display.remove (wellDoneLabel)
+                                wellDoneLabel = nil
+                                timerPtr = timer.performWithDelay( 300, function () storyboard.reloadScene() end)
+                            end
+                        })
+                end)
+            end
+        end
+
+    end
 end
 
 local function drawStars (group)
-	local _STARSIZE = (constants.H - _BARHEIGHT - _BUTTONSIZE) / 8
+	_STARSIZE = (constants.H - _BARHEIGHT - _BUTTONSIZE) / 8
 	local _STARPATH
 
 	for i = 1, 8 do
-		if i <= itemAmount[level] then
+		if i < itemAmount[level] then
 			_STARPATH = "images/starfull.png"
 		else
 			_STARPATH = "images/star.png"
@@ -320,6 +345,12 @@ function scene:enterScene (event)
 end
 
 function scene:exitScene(event)
+
+    if timerPtr ~= nil then
+        timer.cancel (timerPtr)
+        timerPtr = nil
+    end
+
 	while #animals > 0 do
 		table.remove(animals)
     end

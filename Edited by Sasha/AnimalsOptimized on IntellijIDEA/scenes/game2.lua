@@ -45,24 +45,6 @@ local function backHome( event )
 
 end;
 
-----animation update score
-local function animScore()
-    local function listener()
-        display.remove( starToScore )
-        starToScore = nil
-    end
-    starToScore = display.newImage( "images/starfull.png", constants.CENTERX, constants.CENTERY, constants.H/8, constants.H/8)
-    starToScore.xScale, starToScore.yScale = 0.1, 0.1
-    
-    local function trans1()
-        transition.to(starToScore, {time = 200, xScale = 1, yScale = 1, x = star[level].x, y= star[level].y, onComplete = listener})
-    end
-    explosion.spawnExplosion(constants.CENTERX, constants.CENTERY)
-    --spawnExplosionToTable(constants.CENTERX, constants.CENTERY)
-    transition.to(starToScore, {time = 300, xScale = 2, yScale = 2, transition = easing.outBack, onComplete = trans1})
-end
-
-
 local soundHarp = audio.loadSound( "sounds/harp.ogg")
 
 local onPlaces
@@ -105,9 +87,9 @@ end
 local function onFoodDrag (event)
     local t = event.target
         local phase = event.phase
-        animScaleOnDrag(t)
 
-        if "began" == phase then 
+        if "began" == phase then
+                animScaleOnDrag(t)
                 startX = t.x
                 startY = t.y
                 
@@ -119,10 +101,10 @@ local function onFoodDrag (event)
                 t.x0 = event.x - t.x
                 t.y0 = event.y - t.y
 
-        elseif "moved" == phase and t.isFocus then
+        elseif t.isFocus and "moved" == phase  then
                 t.x = event.x-t.x0
                 t.y = event.y-t.y0
-        elseif "ended" == phase or "cancel" == phase then 
+        elseif t.isFocus and ("ended" == phase or "cancel" == phase) then
                 
                 local flag = false
                 local index = 0
