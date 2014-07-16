@@ -38,11 +38,11 @@ sam.show = function(x, scale)
     samWidth = samImg.width * scale
     samHeight = samImg.height * scale
 
-    samX = x
-    samY = constants.H - samImg.height * 0.5
-
     samImg.width = samWidth
     samImg.height = samHeight
+
+    samX = x
+    samY = constants.H - samImg.height * 0.5
 
     samImg.x = samX
     samImg.y = samY

@@ -6,6 +6,7 @@ local popup = require ("utils.popup")
 local explosion = require( "utils.explosion" )
 
 explosion.createExplosion()
+print("game5")
 
 local scene = storyboard.newScene()
 
