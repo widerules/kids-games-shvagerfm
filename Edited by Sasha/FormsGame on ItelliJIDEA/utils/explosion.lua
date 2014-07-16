@@ -19,7 +19,7 @@ local animationSequenceData = {
 }
 
 local createExplosionFunction = function()
-    explosionSheet  = graphics.newImageSheet( explosionImageFolder.."/".."Explosion.png", explosionSheetInfo:getSheet() )
+    explosionSheet = graphics.newImageSheet( explosionImageFolder.."/".."Explosion.png", explosionSheetInfo:getSheet() )
 end
 
 explosion.createExplosion = function()

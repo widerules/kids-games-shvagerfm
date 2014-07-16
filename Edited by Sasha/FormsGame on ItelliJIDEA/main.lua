@@ -1,16 +1,19 @@
-local storyboard = require "storyboard"
+local composer = require "composer"
 local rate = require( "utils.rate" )
 local memoryViewer = require( "utils.memoryViewer" )
 local constants = require( "constants" )
+local settingsPopup = require "utils.settingsPopup"
+local exitPopup = require "utils.exitPopup"
 
-_SOUNDON = true
+_PLAY_SOUND = true
 
-storyboard.purgeOnSceneChange = true
+composer.recycleOnSceneChange = true
 
-shouldWork = false
-
+local shouldWork = true
 memoryViewer.create(constants.W/2, 20, shouldWork)
 memoryViewer.updateInfoInLoop(100)
+
+math.randomseed(os.time())
 
 local function exit ()
   rate.init()
@@ -19,19 +22,30 @@ local function onKeyEvent( event )
 
    local phase = event.phase
    local keyName = event.keyName
-  
 
    if ( ("back" == keyName or "deleteBack" == keyName) and phase == "up" ) then
-    local currentScene = storyboard.getCurrentSceneName()
+    local currentScene = composer.getSceneName("current")
+
+            if (currentScene == "scenes.start_page") then
+                if (settingsPopup.isOnScreen() == true) then
+                    settingsPopup.hide()
+                    return true
+                elseif (exitPopup.isOnScreen() == true) then
+                    exit()
+                    return true
+                elseif (exitPopup.isOnScreen() == false) then
+                    exitPopup.show(composer.getVariable("btns"))
+                    return true
+                end
+
+            end
 
             if ( currentScene == "scenes.scenetemplate") then
-               exit()
-          
+                composer.gotoScene("scenes.start_page")
             else
                 timer.performWithDelay(500, function()
                     transition.cancel( )
-                    storyboard.gotoScene( "scenes.scenetemplate" )
-                    storyboard.removeAll()
+                    composer.gotoScene( "scenes.scenetemplate")
                 end)
             end
    
@@ -51,10 +65,10 @@ local function onKeyEvent( event )
       end
       return false
    end
-   return true  --SEE NOTE BELOW
-end
-Runtime:addEventListener( "key", onKeyEvent )
--- load scenetemplate.lua
-storyboard.gotoScene( "scenes.scenetemplate" )
 
--- Add any objects that should appear on all scenes below (e.g. tab bar, hud, etc.):
+   return true
+end
+
+Runtime:addEventListener( "key", onKeyEvent )
+
+composer.gotoScene( "scenes.start_page" )
