@@ -1,4 +1,4 @@
-local storyboard = require("storyboard")
+local composer = require("composer")
 local widget = require("widget")
 local constants = require("constants")
 
@@ -38,8 +38,7 @@ local function createPopupWithHomeButton (message, homeSceneToGo, sceneToClose)
 
     local function onHomeButtonClicked ()
         destroyPopup()
-        storyboard.gotoScene(homeSceneToGo, "slideRight", 500)
-        storyboard.removeScene(sceneToClose)
+        composer.gotoScene(homeSceneToGo, "slideRight", 500)
     end
 
     homeBtn = widget.newButton
@@ -61,7 +60,8 @@ popup.showPopUpWithNextButton = function (message, homeSceneToGo, sceneToClose)
 
         local function onNextButtonClicked()
             destroyPopup()
-            storyboard.reloadScene( )
+            local currentScene = composer.getSceneName("current")
+            composer.gotoScene(currentScene)
         end
 
         nextBtn = widget.newButton
@@ -88,7 +88,8 @@ popup.showPopUpWithReloadButton = function (message, homeSceneToGo, sceneToClose
 
         local function onReloadButtonClicked()
             destroyPopup()
-            storyboard.reloadScene( )
+            local currentScene = composer.getSceneName("current")
+            composer.gotoScene(currentScene)
         end
 
         reloadBtn = widget.newButton
