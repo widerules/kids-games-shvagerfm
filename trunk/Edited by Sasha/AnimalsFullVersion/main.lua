@@ -6,6 +6,8 @@ local popup = require("utils.popup")
 
 shouldWork = false
 
+math.randomseed(os.time())
+
 memoryViewer.create(constants.W/2, 20, shouldWork)
 memoryViewer.updateInfoInLoop(100)
 
@@ -22,7 +24,6 @@ local function onKeyEvent( event )
 
    if ( ("back" == keyName or "deleteBack" == keyName) and phase == "up" ) then
       local currentScene = storyboard.getCurrentSceneName()
-      --local lastScene = storyboard.getPrevious()
          
          if ( currentScene == "scenetemplate") then
             exit()
@@ -39,17 +40,17 @@ local function onKeyEvent( event )
                storyboard.removeAll( )
             end)]]
          elseif (currentScene == "scenes.menu") then
-            timer.performWithDelay(500, function()
-                popup.hidePopup()
-                local options =
-                   {
-                      effect = "slideRight",
-                      time = 500
-                   }
-                storyboard.gotoScene( "scenetemplate", options )
-                storyboard.removeAll( )
-            end)
-		 else
+             timer.performWithDelay(500, function()
+                 popup.hidePopup()
+                 local options =
+                 {
+                     effect = "slideRight",
+                     time = 500
+                 }
+                 storyboard.gotoScene("scenetemplate", options )
+                 storyboard.removeAll( )
+             end)
+         else
             timer.performWithDelay(500, function()
                 popup.hidePopup()
                 local options =

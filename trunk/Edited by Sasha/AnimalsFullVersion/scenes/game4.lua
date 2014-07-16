@@ -18,6 +18,8 @@ local _IMAGESIZE = 0.2*constants.H
 local iteration = 1
 local itemsFound = 0
 
+local canPlay = false
+
 local score
 local sun
 local cloud
@@ -57,6 +59,7 @@ local function onHomeButtonClicked( event )
 end;
 
 local function onItemClicked(event)
+    if (canPlay == false ) then return end
 	local t = event.target
 
 	local function updateScore ()
@@ -74,8 +77,9 @@ local function onItemClicked(event)
 	
 	if (itemsFound == 7) then
 		soundHarp = audio.loadSound( "sounds/harp.ogg")
+        canPlay = false
 		audio.play( soundHarp )
-		timers[#timers+1] = timer.performWithDelay( 800, popup.showPopupWithNextButton("Well done !", "scenes.menu", "scenes.game4"), 1)
+		timers[#timers+1] = timer.performWithDelay( 800, function () popup.showPopupWithNextButton("Well done !", "scenes.menu", "scenes.game4") end)
 	end
 end
 
@@ -99,6 +103,7 @@ local function fillWithHogs(group)
 	local function sayFind()
 		findSound = audio.loadSound( "sounds/findhedgehogs.mp3" )
 		audio.play( findSound )
+        timer.performWithDelay (1000, function() canPlay = true end)
 	end
 	timer.performWithDelay( 2100, sayFind )   
 end
@@ -120,6 +125,7 @@ local function fillWithMushrooms(group)
 	local function sayFind()
 		findSound = audio.loadSound( "sounds/findmushrums.mp3" )
 		audio.play( findSound )
+        timer.performWithDelay (1000, function() canPlay = true end)
 	end
 	timer.performWithDelay( 2100, sayFind ) 
 end
@@ -140,6 +146,7 @@ local function fillWithBerries(group)
 	local function sayFind()
 		findSound = audio.loadSound( "sounds/findberryes.mp3" )
 		audio.play( findSound )
+        timer.performWithDelay (1000, function() canPlay = true end)
 	end
 	timer.performWithDelay( 2100, sayFind ) 
 end

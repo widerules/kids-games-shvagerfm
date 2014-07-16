@@ -8,6 +8,8 @@ shouldWork = false
 memoryViewer.create(constants.W/2, 20, shouldWork)
 memoryViewer.updateInfoInLoop(100)
 
+math.randomseed(os.time())
+
 storyboard.purgeOnSceneChange = true
 
 local function exit ()
@@ -35,7 +37,7 @@ local function onKeyEvent( event )
                transition.cancel( )
                storyboard.gotoScene( "scenetemplate", options )
                storyboard.removeAll( )]]
-         elseif (currentScene == "scenes.menu") then
+         elseif (currentScene == "scenes.menu" or currentScene == "scenes.more_games") then
              timer.performWithDelay(300, function()
                  local options =
                  {

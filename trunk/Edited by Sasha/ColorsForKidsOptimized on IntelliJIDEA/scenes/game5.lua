@@ -14,11 +14,24 @@ local data = require( "data.studyData")
 
 local table = {
     {1, 1},
+    {1, 1},
+    {1, 1},
+    {1, 1, 1},
     {1, 1, 1},
     {2, 1, 2},
+    {2, 1, 2},
+    {2, 1, 2},
+    {2, 3, 1, 2, 3},
+    {2, 3, 1, 2, 3},
     {2, 3, 1, 2, 3},
     {2, 2, 1, 2, 2},
+    {2, 2, 1, 2, 2},
+    {2, 2, 1, 2, 2},
     {2, 1, 1, 2, 1},
+    {2, 1, 1, 2, 1},
+    {2, 1, 1, 2, 1},
+    {1, 2, 1, 1, 2},
+    {1, 2, 1, 1, 2},
     {1, 2, 1, 1, 2}
 }
 
@@ -153,15 +166,14 @@ function scene:createScene(event)
 
     backBtn = widget.newButton
         {
-            --left = 0,
-            --top = 0,
+            width = 0.1*constants.W,
+            height = 0.1*constants.W,
             defaultFile = "images/home.png",
             overFile = "images/homehover.png",
             id = "home",
             onRelease = backHome,
 
         }
-    backBtn.width, backBtn.height = 0.1*constants.W, 0.1*constants.W
     backBtn.x, backBtn.y = backBtn.width/2, backBtn.height/2
     group:insert( backBtn )
 

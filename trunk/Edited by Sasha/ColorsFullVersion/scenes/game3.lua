@@ -3,7 +3,7 @@ local widget = require ("widget")
 local constants = require ("constants")
 local data = require ("data.pairData")
 local popup = require ("utils.popup")
-local gmanager = require("utils.gmanager")
+--local gmanager = require("utils.gmanager")
 
 local scene = storyboard.newScene()
 
@@ -24,6 +24,29 @@ local totalCards
 local star = {}
 local starToScore
 local items = {}
+local timerPtr
+
+local function animScore()
+    local function listener()
+        display.remove(star[level-1])
+        star[level-1] = display.newImage("images/starfull.png")
+        star[level-1].width = constants.H/16
+        star[level-1].height = constants.H/16
+        star[level-1].x = constants.W - star[level-1].width/2
+        star[level-1].y = level - 1 > 1 and star[level-2].y - star[level-1].height or constants.H - star[level-1].height/2
+        starToScore:removeSelf( )
+        starToScore = nil
+    end
+    audio.play( starSound )
+    starToScore = display.newImage( "images/starfull.png", constants.CENTERX, constants.CENTERY)
+    starToScore.width, starToScore.height =  constants.H/16, constants.H/16
+    starToScore.xScale, starToScore.yScale = 0.1, 0.1
+
+    local function trans1()
+        transition.to(starToScore, {time = 200, xScale = 1, yScale = 1, x = star[level-1].x, y= star[level-1].y, onComplete = listener})
+    end
+    transition.to(starToScore, {time = 300, xScale = 2, yScale = 2, transition = easing.outBack, onComplete = trans1})
+end
 
 local function backHome()
 		local options =
@@ -61,15 +84,22 @@ local function onFoldClicked (event)
 				local function checkAmount()
 					totalCards = totalCards - 2
 					if totalCards == 0	then
-						popup.showPopUp("Well done!", "scenetemplate", "scenes.game3")
 						gameWon = gameWon + 1
 						if gameWon>0 and level < _MAXLEVEL then
 							gameWon = 0
+                            animScore()
 							level = level + 1
+                            timerPtr = timer.performWithDelay(700, function()
+                                popup.showPopupWithNextButton("Well done!", "scenes.menu", "scenes.game3")
+                            end)
                         else
-                            gmanager.nextGame()
-							level = 1
-						end
+                            level = level + 1
+                            animScore()
+                            timerPtr = timer.performWithDelay(700, function()
+                                level = 1
+                                popup.showPopupWithReloadButton("Well done!", "scenes.menu", "scenes.game3")
+                            end)
+                        end
 					end				
 				end
 
@@ -121,7 +151,7 @@ function scene:createScene(event)
 	local soundStart = audio.loadSound( "sounds/fpairs.mp3")
 	audio.play(soundStart)
 
-	gmanager.initGame()
+	--gmanager.initGame()
 end
 
 function scene:willEnterScene(event)
@@ -272,6 +302,17 @@ function scene:enterScene (event)
 end
 
 function scene:exitScene(event)
+
+    if timerPtr ~= nil then
+        timer.cancel(timerPtr)
+        timerPtr = nil
+    end
+
+    for i = 1, #star do
+        display.remove(star[i])
+        star[i] = nil
+    end
+
 	for i=1, #items do
 		if items[i] then
 			items[i]:removeSelf()
@@ -288,7 +329,7 @@ if folds ~= nil then
 		
 	end
 end
-	popup.hidePopUp()
+	popup.hidePopup()
 end
 
 function scene:destroyScene(event)
