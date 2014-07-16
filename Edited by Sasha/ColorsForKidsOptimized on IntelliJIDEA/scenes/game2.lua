@@ -3,7 +3,6 @@ local constants = require("constants")
 local data = require("data.searchData")
 local explosion = require( "utils.explosion" )
 local widget = require("widget")
-local gmanager = require("utils.gmanager")
 
 local scene = storyboard.newScene()
 
@@ -20,6 +19,7 @@ local itemsCount = {2, 3, 4, 6, 9, 12, 16, 20}
 local rows =       {1, 1, 2, 2, 3, 3, 4, 4}
 local items = {}
 local images = {}
+local timerPtr
 
 local imageSize, spacingX, spacingY
 local itemType, searchAmount
@@ -35,18 +35,25 @@ local starToScore
 
 ----animation update score
 local function animScore()
-	local function listener()
-		starToScore:removeSelf( )
+    local function listener()
+        display.remove(star[level-1])
+        star[level-1] = display.newImage("images/starfull.png")
+        star[level-1].width = constants.H/16
+        star[level-1].height = constants.H/16
+        star[level-1].x = constants.W - star[level-1].width/2
+        star[level-1].y = level - 1 > 1 and star[level-2].y - star[level-1].height or constants.H - star[level-1].height/2
+        starToScore:removeSelf( )
         starToScore = nil
-	end
-	starToScore = display.newImage( "images/starfull.png", constants.CENTERX, constants.CENTERY, constants.H/8, constants.H/8)
-	starToScore.xScale, starToScore.yScale = 0.1, 0.1
-	
-	local function trans1()
-	 	transition.to(starToScore, {time = 200, xScale = 1, yScale = 1, x = star[level].x, y= star[level].y, onComplete = listener})
-	end
-	explosion.spawnExplosion(constants.CENTERX, constants.CENTERY)
-	transition.to(starToScore, {time = 300, xScale = 2, yScale = 2, transition = easing.outBack, onComplete = trans1})
+    end
+    audio.play( starSound )
+    starToScore = display.newImage( "images/starfull.png", constants.CENTERX, constants.CENTERY)
+    starToScore.width, starToScore.height =  constants.H/16, constants.H/16
+    starToScore.xScale, starToScore.yScale = 0.1, 0.1
+
+    local function trans1()
+        transition.to(starToScore, {time = 200, xScale = 1, yScale = 1, x = star[level-1].x, y= star[level-1].y, onComplete = listener})
+    end
+    transition.to(starToScore, {time = 300, xScale = 2, yScale = 2, transition = easing.outBack, onComplete = trans1})
 end
 
 local function backHome()
@@ -151,13 +158,13 @@ local function onItemTapped (event)
             gamesWon = gamesWon + 1
             if gamesWon>2 then
                 gamesWon = 0
-                if level<8 then
-                    level = level + 1
-                    animScore()
-                    wellDone()
-					timer.performWithDelay( 700, reloadFunc )
+                level = level + 1
+                animScore()
+                wellDone()
+                if level<=8 then
+					timerPtr = timer.performWithDelay( 700, reloadFunc )
                 else
-                    gmanager.nextGame()
+                    timerPtr = timer.performWithDelay(700, showPopUp)
                 end
             else
                 reloadFunc()
@@ -171,7 +178,7 @@ local function onItemTapped (event)
 		wellDone()
 		event.target:removeEventListener( "tap", onItemTapped )
 		local function animDisapp(self)
-			transition.to(self, {time = 700, xScale = 0.1, yScale = 0.1 , alpha = 0.1, transition = easing.inBack, onComplete = encreaseScore})
+			transition.to(self, {time = 700, xScale = 0.1, yScale = 0.1 , alpha = 0, transition = easing.inBack, onComplete = encreaseScore})
 		end
 		event.target:toFront()
 		transition.to( event.target, {time = 700, rotation = 360, xScale = 1.5, yScale = 1.5, x = constants.CENTERX, y = constants.CENTERY, transition = easing.outBack, onComplete = animDisapp} )	
@@ -226,8 +233,7 @@ function scene:createScene(event)
 
 	gamesWon = 0
 	level = 1
-	
-    gmanager.initGame()
+
 end
 
 function scene:willEnterScene(event)
@@ -289,6 +295,17 @@ function scene:enterScene(event)
 end
 
 function scene:exitScene(event)
+
+    if timerPtr ~= nil then
+        timer.cancel(timerPtr)
+        timerPtr = nil
+    end
+
+    for i = 1, #star do
+        display.remove(star[i])
+        star[i] = nil
+    end
+
 	for i = 1, #images do
 		for j = 1, #images[i] do
 			if images[i][j] ~= nil then

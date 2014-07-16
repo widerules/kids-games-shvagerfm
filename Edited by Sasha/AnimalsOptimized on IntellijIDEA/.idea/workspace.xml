@@ -26,7 +26,7 @@
       <file leaf-file-name="game2.lua" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/scenes/game2.lua">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-4.464286" vertical-offset="2289" max-vertical-offset="4896">
+            <state vertical-scroll-proportion="0.0" vertical-offset="2289" max-vertical-offset="4896">
               <caret line="142" column="29" selection-start-line="142" selection-start-column="24" selection-end-line="142" selection-end-column="29" />
               <folding />
             </state>
@@ -36,7 +36,7 @@
       <file leaf-file-name="game3.lua" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/scenes/game3.lua">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-3.2857144" vertical-offset="5790" max-vertical-offset="6868">
+            <state vertical-scroll-proportion="0.0" vertical-offset="5882" max-vertical-offset="6868">
               <caret line="346" column="31" selection-start-line="346" selection-start-column="31" selection-end-line="346" selection-end-column="31" />
               <folding />
             </state>
@@ -46,7 +46,7 @@
       <file leaf-file-name="game4.lua" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/scenes/game4.lua">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6239">
+            <state vertical-scroll-proportion="0.0" vertical-offset="5355" max-vertical-offset="6239">
               <caret line="315" column="8" selection-start-line="315" selection-start-column="8" selection-end-line="315" selection-end-column="8" />
               <folding />
             </state>
@@ -66,8 +66,8 @@
       <file leaf-file-name="game6.lua" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/scenes/game6.lua">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.55172414" vertical-offset="1203" max-vertical-offset="4556">
-              <caret line="83" column="39" selection-start-line="83" selection-start-column="39" selection-end-line="83" selection-end-column="39" />
+            <state vertical-scroll-proportion="0.72168285" vertical-offset="1203" max-vertical-offset="4556">
+              <caret line="97" column="36" selection-start-line="97" selection-start-column="36" selection-end-line="97" selection-end-column="36" />
               <folding />
             </state>
           </provider>
@@ -86,7 +86,7 @@
       <file leaf-file-name="menu.lua" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/scenes/menu.lua">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2091">
+            <state vertical-scroll-proportion="0.0" vertical-offset="204" max-vertical-offset="2091">
               <caret line="12" column="25" selection-start-line="12" selection-start-column="25" selection-end-line="12" selection-end-column="25" />
               <folding />
             </state>
@@ -96,7 +96,7 @@
       <file leaf-file-name="main.lua" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.lua">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1598">
+            <state vertical-scroll-proportion="0.0" vertical-offset="102" max-vertical-offset="1598">
               <caret line="6" column="18" selection-start-line="6" selection-start-column="18" selection-end-line="6" selection-end-column="18" />
               <folding />
             </state>
@@ -106,7 +106,7 @@
       <file leaf-file-name="game1.lua" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/scenes/game1.lua">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-4.321429" vertical-offset="2871" max-vertical-offset="3757">
+            <state vertical-scroll-proportion="0.0" vertical-offset="2871" max-vertical-offset="3757">
               <caret line="176" column="13" selection-start-line="176" selection-start-column="8" selection-end-line="176" selection-end-column="13" />
               <folding />
             </state>
@@ -328,6 +328,19 @@
       <option name="PORT" value="5005" />
       <method />
     </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <method />
+    </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
       <module name="" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
@@ -353,19 +366,6 @@
       <envs />
       <properties />
       <listeners />
-      <method />
-    </configuration>
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
       <method />
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -484,8 +484,8 @@
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="6" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -851,7 +851,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/scenes/game1.lua">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-4.321429" vertical-offset="2871" max-vertical-offset="3757">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2871" max-vertical-offset="3757">
           <caret line="176" column="13" selection-start-line="176" selection-start-column="8" selection-end-line="176" selection-end-column="13" />
           <folding />
         </state>
@@ -859,7 +859,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/scenes/game2.lua">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-4.464286" vertical-offset="2289" max-vertical-offset="4896">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2289" max-vertical-offset="4896">
           <caret line="142" column="29" selection-start-line="142" selection-start-column="24" selection-end-line="142" selection-end-column="29" />
           <folding />
         </state>
@@ -867,7 +867,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/scenes/game3.lua">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-3.2857144" vertical-offset="5790" max-vertical-offset="6868">
+        <state vertical-scroll-proportion="0.0" vertical-offset="5882" max-vertical-offset="6868">
           <caret line="346" column="31" selection-start-line="346" selection-start-column="31" selection-end-line="346" selection-end-column="31" />
           <folding />
         </state>
@@ -907,8 +907,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/scenes/game6.lua">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.55172414" vertical-offset="1203" max-vertical-offset="4556">
-          <caret line="83" column="39" selection-start-line="83" selection-start-column="39" selection-end-line="83" selection-end-column="39" />
+        <state vertical-scroll-proportion="0.72168285" vertical-offset="1203" max-vertical-offset="4556">
+          <caret line="97" column="36" selection-start-line="97" selection-start-column="36" selection-end-line="97" selection-end-column="36" />
           <folding />
         </state>
       </provider>

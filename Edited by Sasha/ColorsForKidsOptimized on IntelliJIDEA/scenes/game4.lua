@@ -4,6 +4,7 @@ local physics = require( "physics")
 local constants = require ("constants")
 local data = require ("data.starFallData")
 local explosion = require("utils.explosion")
+local popup = require("utils.popup")
 
 local scene = storyboard.newScene()
 
@@ -14,7 +15,7 @@ local _FRICTION = 0.7
 local _FONTSIZE = constants.H / 15
 local _STARSPEED = 9
 local _TOTALSTARS = 50 				--total amount of stars, wich will be created
-local _GENERATIONDELAY = 200		--pause between star generation
+local _GENERATIONDELAY = 500		--pause between star generation
 local _STARSIZE
 local _BTNSIZE
 
@@ -25,6 +26,7 @@ local timerID, index, loopNumber 	--index for randomly choosing one type of star
 local starType, starTypeImage 		--storing type of the star, showing this type 
 local score, record, generated					--score variables
 local starTimerID = {}
+local timerPtr
 
 local rateStars = {}
 local starGroup, informationGroup 	--group for falling stars and for information such as type of the star and score
@@ -242,13 +244,13 @@ function scene:enterScene (event)
 		local function listener()
 		timerID = timer.performWithDelay( _GENERATIONDELAY, 
 			function()
-				for i = 1, 5 do
+				for i = 1, 3 do
 					index = math.random (1, #colors)
-					local star = display.newImage(data.itemPath[1]..data.colors[colors[index]]..data.format, 0, 0)					
-					star.x = constants.W * math.random()
-					star.y = -_STARSIZE
+					local star = display.newImage(data.itemPath[1]..data.colors[colors[index]]..data.format, 0, 0)
 					star.width = _STARSIZE
 					star.height = _STARSIZE
+                    star.x = math.random(star.width, constants.W - star.width)
+                    star.y = -_STARSIZE
 					star.starType = data.colors[colors[index]]
 					star:addEventListener( "touch", onStarTouched )
 					starGroup:insert(star)
@@ -261,9 +263,15 @@ function scene:enterScene (event)
 				loopNumber = loopNumber + 1
 				if loopNumber == _TOTALSTARS then
 					--otherwise - popup shown without delay
-					timer.performWithDelay( 4000, 
-						function () 
-							showPopUp("Well done!")							
+					timerPtr = timer.performWithDelay( 4500,
+						function ()
+                            if (score <= generated*0.15) then
+                                popup.showPopupWithReloadButton("You lose!", "scenes.menu", "scenes.game4")
+                            else
+                                level = level < 7 and level + 1 or 1
+                                popup.showPopupWithNextButton("You win!", "scenes.menu", "scenes.game4")
+                            end
+							--showPopUp("Well done!")
 						end) --lets all stars fall down and shows pop-up
 				end
 			end, _TOTALSTARS )
@@ -300,6 +308,11 @@ function scene:enterScene (event)
 end
 
 function scene:exitScene(event)
+    if timerPtr ~= nil then
+        timer.cancel(timerPtr)
+        timerPtr = nil
+    end
+
 	if timerID ~= nil then 
 		timer.cancel(timerID)
 	end

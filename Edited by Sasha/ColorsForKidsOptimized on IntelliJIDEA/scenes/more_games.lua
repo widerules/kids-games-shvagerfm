@@ -57,7 +57,7 @@ function scene:createScene(event)
     local exitBtn = widget.newButton
         {
             width = constants.W/8,
-            height = constants.H/8,
+            height = constants.W/8,
             top = 0,
             defaultFile = "images/exit.png",
             overFile = "images/exit.png",

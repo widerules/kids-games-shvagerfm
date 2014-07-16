@@ -19,6 +19,7 @@ local itemsCount = {2, 3, 4, 6, 9, 12, 16, 20}
 local rows =       {1, 1, 2, 2, 3, 3, 4, 4}
 local items = {}
 local images = {}
+local timers = {}
 
 local imageSize, spacingX, spacingY
 local itemType, searchAmount
@@ -44,18 +45,26 @@ local function backHome()
 end
 
 local function animScore()
-	local function listener()
-		display.remove( starToScore )
+    local function listener()
+        display.remove(star[level-1])
+        star[level-1] = display.newImage("images/starfull.png")
+        star[level-1].width = constants.H/16
+        star[level-1].height = constants.H/16
+        star[level-1].x = constants.W - star[level-1].width/2
+        star[level-1].y = level - 1 > 1 and star[level-2].y - star[level-1].height or constants.H - star[level-1].height/2
+        starToScore:removeSelf( )
         starToScore = nil
-	end
-	starToScore = display.newImage( "images/starfull.png", constants.CENTERX, constants.CENTERY, constants.H/8, constants.H/8)
-	starToScore.xScale, starToScore.yScale = 0.1, 0.1
-	
-	local function trans1()
-	 	transition.to(starToScore, {time = 200, xScale = 1, yScale = 1, x = star[level].x, y= star[level].y, onComplete = listener})
-	end
-	explosion.spawnExplosion(constants.CENTERX, constants.CENTERY)
-	transition.to(starToScore, {time = 300, xScale = 2, yScale = 2, transition = easing.outBack, onComplete = trans1})
+    end
+    audio.play( starSound )
+    starToScore = display.newImage( "images/starfull.png", constants.CENTERX, constants.CENTERY)
+    starToScore.width, starToScore.height =  constants.H/16, constants.H/16
+    starToScore.xScale, starToScore.yScale = 0.1, 0.1
+
+    local function trans1()
+        transition.to(starToScore, {time = 200, xScale = 1, yScale = 1, x = star[level-1].x, y= star[level-1].y, onComplete = listener})
+    end
+    explosion.spawnExplosion(constants.CENTERX, constants.CENTERY)
+    transition.to(starToScore, {time = 300, xScale = 2, yScale = 2, transition = easing.outBack, onComplete = trans1})
 end
 
 local function generateItems()
@@ -105,13 +114,18 @@ local function onItemTapped (event)
 			gamesWon = gamesWon + 1
 			if gamesWon>2 then
 				gamesWon = 0
-				animScore()
 				if level < 8 then
 					level = level + 1
-					timer.performWithDelay( 700, reloadFunc )
+                    animScore()
+                    timers[#timers+1] = timer.performWithDelay( 700, reloadFunc )
                 else
-                    level = 1
-                    popup.showPopupWithReloadButton("Well done !", "scenes.menu", "scenes.game5")
+                    level = level + 1
+                    animScore()
+                    timers[#timers+1] = timer.performWithDelay(600, function()
+                        level = 1
+                        popup.showPopupWithReloadButton("Well done !", "scenes.menu", "scenes.game5")
+                    end)
+
 				end
 				wellDone()
 				
@@ -257,6 +271,16 @@ function scene:enterScene(event)
 end
 
 function scene:exitScene(event)
+
+    for i = 1, #timers do
+        timer.cancel(timers[i])
+        timers[i] = nil
+    end
+
+    for i = 1, #star do
+        display.remove(star[i])
+        star[i] = nil
+    end
 
     for i = 1, #images do
         for j = 1, #images[i] do
