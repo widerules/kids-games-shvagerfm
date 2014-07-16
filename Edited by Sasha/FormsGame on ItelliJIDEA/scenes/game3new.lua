@@ -5,16 +5,18 @@ local data = require("data.shapesData")
 local popup = require("utils.popup")
 --local explosion = require( "utils.explosion" )
 local scene = storyboard.newScene()
+local sam = require "utils.sam"
 
 --explosion.createExplosion()
 
+print("game3new")
 local _WELLDONETEXT = "Well done !"
 
 local _STARSIZE
 local _BARHEIGHT = 0.2*constants.H
 local _DELTA = 0.1*constants.W
 local _FONTSIZE = constants.H / 14
-local _MAXLEVEL = 21
+local _MAXLEVEL = 18
 local _BUTTONSIZE
 local _SCALEVAL			--коэфициент увеличения животного до размеров его тени
 local _ITEMSIZE 		--размер животного
@@ -25,11 +27,19 @@ local _SPACINGSHADOWS	--отступы по горизонтали между т
 local _PLATEXZERO 		--левый верхний угол деревянной панели
 local _PLATEYZERO
 
+
+local SAM_SIZE = 0.6
+local SAM_POS_X = constants.W * 0.07
+
 local timerPtr
 
 local itemAmount = 		{1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 8} --items
 local shadowAmount = 	{1, 2, 3, 2, 3, 4, 3, 4, 5, 4, 5, 6, 5, 6, 7, 6, 7, 8, 7, 8, 8}	--shadows
 local rows = 			{1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2}	--rows
+
+local itemAmount = 		{1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6} --items
+local shadowAmount = 	{1, 2, 3, 2, 3, 4, 3, 4, 5, 4, 5, 6, 5, 5, 5, 6, 6, 6}	--shadows
+local rows = 			{1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2}	--rows
 
 local shapes = {}
 local animalsImages = {}
@@ -168,6 +178,8 @@ local function onAnimalDrag(event)
                 end)
 
             else
+                sam.swapSamActive()
+
                 level = level + 1
 
                 local delay = 0
@@ -211,7 +223,7 @@ local function drawStars (group)
 	_STARSIZE = (constants.H - _BARHEIGHT - _BUTTONSIZE) / 8
 	local _STARPATH
 
-	for i = 1, 8 do
+	for i = 1, 6 do
 		if i < itemAmount[level] then
 			_STARPATH = "images/starfull.png"
 		else
@@ -280,6 +292,7 @@ function scene:createScene(event)
         onRelease = onHomeButtonClicked
     }
     group:insert(homeBtn)
+
     soundStart = audio.loadSound( "sounds/place.mp3" )
 		audio.play(soundStart)
 end
@@ -294,9 +307,10 @@ end
 function scene:enterScene (event)
 	local group = self.view
 
+    sam.show(SAM_POS_X, SAM_SIZE)
 
-	_ITEMSIZE = barBackground.height*0.95	
-	_SPACINGANIMALS = (constants.W-_ITEMSIZE*itemAmount[level])/(itemAmount[level]+1)
+	_ITEMSIZE = barBackground.height*0.95
+    _SPACINGANIMALS = (constants.W * 0.7 / itemAmount[level])
 
 	if plate.height / rows[level] < plate.width / (shadowAmount[level]/rows[level]) then
 		_SHADOWSIZE = plate.height / (rows[level]+1)
@@ -307,13 +321,17 @@ function scene:enterScene (event)
 	end
 	_SCALEVAL = _SHADOWSIZE/_ITEMSIZE
 
+    local currentShapeX = constants.W * 0.25
+
 	for i = 1, #shapes do
-		animalsImages[i] = display.newImage( data.formPath..shapes[i]..data.format, i * _SPACINGANIMALS + (i-0.5)*_ITEMSIZE, barBackground.y)
+		animalsImages[i] = display.newImage( data.formPath..shapes[i]..data.format, currentShapeX, barBackground.y)
 		animalsImages[i].width = _ITEMSIZE
 		animalsImages[i].height = _ITEMSIZE
 		animalsImages[i].type = shapes[i]
 		animalsImages[i]:addEventListener( "touch", onAnimalDrag )
 		group:insert(animalsImages[i])
+
+        currentShapeX = currentShapeX + _SPACINGANIMALS
 	end
 
 	local tmpShadowAmount = shadowAmount[level]
@@ -381,6 +399,8 @@ function scene:exitScene(event)
 		wellDoneLabel = nil
 	end
 	popup.hidePopUp()
+
+    sam.hide()
 end
 
 function scene:destroyScene(event)

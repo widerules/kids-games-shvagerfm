@@ -3,8 +3,12 @@ local widget = require( "widget" )
 local native = require( "native" )
 local constants = require("constants")
 local explosion = require( "utils.explosion" )
+local sam = require "utils.sam"
 
 local scene = storyboard.newScene()
+
+
+print("gamelast")
 
 explosion.createExplosion()
 
@@ -119,6 +123,8 @@ local function onItemTap( event, self )
 			shapeSound = audio.loadSound( "sounds/"..selected.shapeType..".mp3")
 			audio.play( shapeSound )
 
+            sam.swapSamActive()
+
 			-- hide pair
 			cancelAll(selected)
 			enLarge(selected)
@@ -168,6 +174,8 @@ end
 
 function scene:enterScene( event )
 	local group = self.view
+
+    sam.show(_W * 0.06, 0.6)
 
 	local sheetData = {
 		width = 330,
@@ -323,6 +331,7 @@ function scene:exitScene( event )
 		homeBtn = nil
 	end
 
+    sam.hide()
 end
 
 
