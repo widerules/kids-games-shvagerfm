@@ -12,6 +12,8 @@ local _IMAGESIZE = 0.4*constants.W
 local _FONTSIZE = constants.H / 14
 local _RADIUS = 0.025*constants.W
 
+print("game6")
+
 local index = 1
 
 local background, image

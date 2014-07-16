@@ -11,6 +11,8 @@ local _FONTSIZE = 0.07*constants.H
 
 local index = 1
 
+print("game1")
+
 local background, image, itemName
 local nextButton, previousButton, homeButton
 

@@ -1,16 +1,13 @@
---
--- Created by IntelliJ IDEA.
--- User: Svyat
--- Date: 21/06/2014
--- Time: 07:44 PM
--- To change this template use File | Settings | File Templates.
---
+print("game7")
 
 local storyboard = require ("storyboard")
 local widget = require("widget")
 local constants = require ("constants")
 local data = require( "data.shapesData")
+local sam = require "utils.sam"
 
+local SAM_POS_X = constants.W * 0.065
+local SAM_SIZE = 0.6
 
 local table = {
     {1, 1},
@@ -94,6 +91,7 @@ end
 
 local function buttonListener (event)   --обработчик сообщений от кнопки
     transitionFigure(event.target)
+    sam.swapSamActive()
     sayName()
     timers[#timers+1] = timer.performWithDelay(1000, toNextFigure)
 end
@@ -174,6 +172,8 @@ function scene:createScene(event)
     _BUTTONSIZE = constants.W*0.2
 
     --gamesWon = 0
+
+
     level = 1
 end
 
@@ -219,6 +219,8 @@ function scene:enterScene(event)
     group:insert(images[#images])
 
     createBut(group)
+    sam.show(SAM_POS_X, SAM_SIZE)
+
 
 end
 
@@ -248,6 +250,8 @@ function scene:exitScene(event)
     end
     group:remove(button)
     button = nil
+
+    sam.hide()
 
 end
 
