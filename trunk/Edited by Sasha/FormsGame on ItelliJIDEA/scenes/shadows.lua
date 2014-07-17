@@ -278,14 +278,13 @@ function scene:create(event)
 
     homeBtn = widget.newButton
         {
-            width = _BUTTONSIZE,
-            height = _BUTTONSIZE,
-            x = _BUTTONSIZE/2,
-            y = _BUTTONSIZE/2,
-            defaultFile = "images/home.png",
-            overFile = "images/homehover.png",
+            width = 0.15*constants.W,
+            height = 0.1*constants.W,
+            defaultFile = "images/back_a.png",
+            overFile = "images/back_n.png",
             onRelease = onHomeButtonClicked
         }
+    homeBtn.x, homeBtn.y = homeBtn.width/2, homeBtn.height/2
     group:insert(homeBtn)
 
     soundStart = audio.loadSound( "sounds/place.mp3" )

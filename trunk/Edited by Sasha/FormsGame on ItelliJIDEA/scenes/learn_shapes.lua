@@ -55,14 +55,13 @@ function scene:create(event)
 
 	homeButton = widget.newButton
 	{
-		x = _BTNSIZE/2,
-		y = _BTNSIZE/2,
-		defaultFile = "images/home.png",
-		overFile = "images/homehover.png",
-		width = _BTNSIZE,
-		height = _BTNSIZE,
+        width = 0.15*constants.W,
+        height = 0.1*constants.W,
+        defaultFile = "images/back_a.png",
+        overFile = "images/back_n.png",
 		onRelease = onHomeButtonTapped
-	}
+    }
+    homeButton.x, homeButton.y = homeButton.width/2, homeButton.height/2
 	group:insert(homeButton)
 
 	previousButton = widget.newButton

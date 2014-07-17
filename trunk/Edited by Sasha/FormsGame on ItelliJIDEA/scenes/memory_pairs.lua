@@ -4,6 +4,7 @@ local constants = require("constants")
 local data = require ("data.pairData")
 local popup = require ("utils.popup")
 local explosion = require( "utils.explosion" )
+local sam = require "utils.sam"
 
 explosion.createExplosion()
 
@@ -77,6 +78,7 @@ local function onFoldClicked (event)
 
                 --previous:removeEventListener( "tap", onFoldClicked )
                 local wellDone = audio.loadSound( "sounds/welldone.mp3" )
+                sam.swapSamActive()
                 audio.play(wellDone)
                 local function checkAmount()
                     totalCards = totalCards - 2
@@ -123,6 +125,8 @@ function scene:create(event)
     background.width = constants.W
     background.height = constants.H
     group:insert(background)
+
+    sam.show(constants.W * 0.09, 0.6)
 end
 
 function scene:show (event)
@@ -146,8 +150,8 @@ function scene:show (event)
             itemH = itemW
         end
 
-        local spacingX = (constants.W - itemW * cardAmount[level]/rows[level]) / (cardAmount[level]/rows[level]+1)
-        local spacingY = (constants.H - itemH * rows[level]) / (rows[level]+1)
+        local spacingX = constants.W * 0.8 / cardAmount[level] - itemW
+        local spacingY = constants.H * 0.8 / rows[level] - itemH
 
         items = {}
         local temp
@@ -165,6 +169,8 @@ function scene:show (event)
 
         local animal, index
 
+        local startX = constants.W * 0.2
+        local startY = constants.H * 0.2
 
         for i=1, rows[level] do
             for j= 1, (cardAmount[level]/rows[level]) do
@@ -182,10 +188,8 @@ function scene:show (event)
                 temp.width = itemW
                 temp.height = itemH
 
-                temp.x = (j-1) * itemW + itemW/2 + j*spacingX
-                temp.y = i * itemH - itemH / 2 + i * spacingY
-
-                --temp:addEventListener( "tap", onItemTap )
+                temp.x = startX + j * (itemW + itemW * 0.13)   +  spacingX
+                temp.y = startY + (i-1) * (itemH + itemH * 0.1)  +  spacingY
 
                 table.insert(items, temp)
             end
@@ -252,6 +256,8 @@ end
 
 function scene:destroy(event)
     explosion.destroyExplosion()
+
+    sam.hide()
 end
 
 scene:addEventListener( "create", scene )
