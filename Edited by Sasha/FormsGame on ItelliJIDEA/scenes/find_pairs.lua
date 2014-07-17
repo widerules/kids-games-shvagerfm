@@ -4,6 +4,7 @@ local native = require( "native" )
 local constants = require("constants")
 local explosion = require( "utils.explosion" )
 local sam = require "utils.sam"
+local popup = require "utils.popup"
 
 local scene = composer.newScene()
 
@@ -135,7 +136,7 @@ local function onItemTap( event, self )
 
                 popupTimer = timer.performWithDelay(1400, function()
                     audio.play(magicSound)
-                    showPopUp()
+                    popup.show()
                 end)
             end
         else
@@ -335,6 +336,7 @@ function scene:hide( event )
         backBtn = nil
 
         sam.hide()
+        popup.hide()
     end
 end
 

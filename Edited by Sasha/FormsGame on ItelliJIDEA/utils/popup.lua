@@ -26,15 +26,11 @@ local function destroyPopup ()
 
 end
 
-local function createPopupWithHomeButton (message, homeSceneToGo, sceneToClose)
+local function createPopupWithHomeButton ( homeSceneToGo )
 
-    popupBg = display.newImage( "images/popupbg.png", constants.CENTERX, constants.CENTERY );
+    popupBg = display.newImage( "images/popup/popup_bg.png", constants.CENTERX, constants.CENTERY );
     popupBg.height = 0.7*constants.H;
     popupBg.width = 0.7*constants.W;
-
-    popupText = display.newText(message, popupBg.x, 0, native.systemFont, 2*_FONTSIZE);
-    popupText.y = popupBg.y-popupBg.height/2+2*popupText.height/3;
-
 
     local function onHomeButtonClicked ()
         destroyPopup()
@@ -47,14 +43,14 @@ local function createPopupWithHomeButton (message, homeSceneToGo, sceneToClose)
             height = 0.4*popupBg.height,
             x = popupBg.x - 0.4*popupBg.width/2,
             y = popupBg.y + 0.4*popupBg.height/2,
-            defaultFile = "images/home.png",
-            overFile = "images/homehover.png",
+            defaultFile = "images/popup/home_a.png",
+            overFile = "images/popup/home_n.png",
             onRelease = onHomeButtonClicked
         }
 
 end
 
-popup.showPopUpWithNextButton = function (message, homeSceneToGo, sceneToClose)
+popup.showPopUpWithNextButton = function (homeSceneToGo)
 
     local function addNextButtonToPopup ()
 
@@ -70,19 +66,19 @@ popup.showPopUpWithNextButton = function (message, homeSceneToGo, sceneToClose)
                 height = 0.4*popupBg.height,
                 x = popupBg.x + 0.4*popupBg.width/2,
                 y = popupBg.y + 0.4*popupBg.height/2,
-                defaultFile = "images/next.png",
-                overFile = "images/next.png",
+                defaultFile = "images/popup/next_a.png",
+                overFile = "images/popup/next_n.png",
                 onRelease = onNextButtonClicked
             }
 
     end
 
-    createPopupWithHomeButton (message, homeSceneToGo, sceneToClose)
+    createPopupWithHomeButton (homeSceneToGo)
     addNextButtonToPopup()
 
 end
 
-popup.showPopUpWithReloadButton = function (message, homeSceneToGo, sceneToClose)
+popup.showPopUpWithReloadButton = function (homeSceneToGo)
 
     local function addReloadButtonToPopup ()
 
@@ -98,19 +94,50 @@ popup.showPopUpWithReloadButton = function (message, homeSceneToGo, sceneToClose
                 height = 0.4*popupBg.height,
                 x = popupBg.x + 0.4*popupBg.width/2,
                 y = popupBg.y + 0.4*popupBg.height/2,
-                defaultFile = "images/reload.png",
-                overFile = "images/reloadhover.png",
+                defaultFile = "images/popup/next_a.png",
+                overFile = "images/popup/next_n.png",
                 onRelease = onReloadButtonClicked
             }
 
     end
 
-    createPopupWithHomeButton (message, homeSceneToGo, sceneToClose)
+    createPopupWithHomeButton (homeSceneToGo)
     addReloadButtonToPopup()
 
 end
 
-popup.hidePopUp = function()
+popup.show = function(sceneToGo)
+
+    local function addNextButtonToPopup ()
+
+        local function onNextButtonClicked()
+            destroyPopup()
+            local currentScene = composer.getSceneName("current")
+            composer.gotoScene(currentScene)
+        end
+
+        nextBtn = widget.newButton
+            {
+                width = 0.4*popupBg.height,
+                height = 0.4*popupBg.height,
+                x = popupBg.x + 0.4*popupBg.width/2,
+                y = popupBg.y + 0.4*popupBg.height/2,
+                defaultFile = "images/popup/next_a.png",
+                overFile = "images/popup/next_n.png",
+                onRelease = onNextButtonClicked
+            }
+
+    end
+
+    if (sceneToGo == nil) then
+        sceneToGo = "scenes.scenetemplate"
+    end
+
+    createPopupWithHomeButton (sceneToGo)
+    addNextButtonToPopup()
+end
+
+popup.hide = function()
     destroyPopup()
 end
 

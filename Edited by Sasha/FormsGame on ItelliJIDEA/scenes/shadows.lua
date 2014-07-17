@@ -169,7 +169,7 @@ local function onAnimalDrag(event)
                 animScore()
                 timerPtr = timer.performWithDelay (600, function()
                     level = 1
-                    popup.showPopUpWithReloadButton("You won!", "scenes.scenetemplate", "scenes.game3new")
+                    popup.show()
                 end)
 
             else
@@ -399,7 +399,7 @@ function scene:hide(event)
             display.remove(wellDoneLabel)
             wellDoneLabel = nil
         end
-        popup.hidePopUp()
+        popup.hide()
 
         sam.hide()
     end

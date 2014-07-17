@@ -4,8 +4,7 @@ local data = require("data.searchData")
 local widget = require("widget")
 local explosion = require( "utils.explosion" )
 local popup = require( "utils.popup" )
-
-print("game2")
+local sam = require "utils.sam"
 
 local scene = composer.newScene()
 
@@ -16,7 +15,7 @@ local _FONTSIZE = constants.H/7
 
 local gamesWon = 0
 local level = 1
-local itemsCount = {2, 3, 4, 6, 9, 12, 16, 20}
+local itemsCount = {2, 3, 4, 6, 9, 12, 16, 16}
 local rows =       {1, 1, 2, 2, 3, 3, 4, 4}
 local items = {}
 local images = {}
@@ -43,7 +42,8 @@ local function animScore()
     local function listener()
         starToScore:removeSelf( )
         starToScore = nil
-        composer.reloadScene()
+        local currentScene = composer.getSceneName("current")
+        composer.gotoScene(currentScene)
     end
     audio.play( starSound )
     starToScore = display.newImage( "images/starfull.png", constants.CENTERX, constants.CENTERY, constants.H/8, constants.H/8)
@@ -105,7 +105,7 @@ local function onItemTapped (event)
                     animScore()
 
                 else
-                    popup.showPopUpWithReloadButton("Well done!", "scenes.scenetemplate", "scenes.find_shapes")
+                    popup.show()
                     level = 1
                 end
             else
@@ -119,6 +119,7 @@ local function onItemTapped (event)
     if event.target.type == itemType then
         wellDone()
         event.target:removeEventListener( "tap", onItemTapped )
+        sam.swapSamActive()
         local function animDisapp(self)
             transition.to(self, {time = 700, xScale = 0.1, yScale = 0.1 , alpha = 0.1, transition = easing.inBack, onComplete = encreaseScore})
         end
@@ -175,6 +176,8 @@ function scene:create(event)
 
     gamesWon = 0
     level = 1
+
+    sam.show(constants.W * 0.05, 0.5)
 end
 
 function scene:show(event)
@@ -281,7 +284,7 @@ function scene:hide(event)
             taskLabel = nil
         end
 
-        popup.hidePopUp()
+        popup.hide()
         explosion.destroyExplosion()
 
         print("hide")
@@ -297,6 +300,8 @@ function scene:destroy(event)
 
     group:remove(backBtn)
     backBtn = nil
+
+    sam.hide()
 end
 
 scene:addEventListener( "create", scene )
