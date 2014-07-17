@@ -2,6 +2,7 @@ local composer = require("composer")
 local widget = require("widget")
 local constants = require ("constants")
 local data = require( "data.shapesData")
+local sam = require "utils.sam"
 
 local scene = composer.newScene()
 
@@ -87,6 +88,8 @@ function scene:create(event)
 		onRelease = onNextButtonTapped
 	}
 	group:insert(nextButton)
+
+
 end
 
 function scene:show(event)
@@ -94,6 +97,7 @@ function scene:show(event)
     local phase = event.phase
 
     if ( phase == "will" ) then
+        sam.show(constants.W * 0.15, 1)
     elseif ( phase == "did" ) then
         sayName()
         image = display.newImage ("images/"..data.shapes[index]..".png", constants.CENTERX, constants.CENTERY)
@@ -107,6 +111,8 @@ function scene:show(event)
         itemName = display.newText (data.shapes[index], constants.CENTERX, constants.CENTERY + _IMAGESIZE/2 + _FONTSIZE, native.systemFont, _FONTSIZE)
         itemName:setFillColor( 0, 0, 0 )
         group:insert(itemName)
+
+
     end
 end
 
@@ -125,6 +131,8 @@ function scene:hide(event)
         soundName = nil
         image = nil
         itemName = nil
+
+
     end
 end
 
@@ -136,6 +144,8 @@ function scene:destroy(event)
     homeButton = nil
     previousButton = nil
 	nextButton = nil
+
+    sam.hide()
 end
 
 scene:addEventListener( "create", scene )

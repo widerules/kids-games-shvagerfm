@@ -9,7 +9,6 @@ explosion.createExplosion()
 
 local scene = composer.newScene()
 
-local _FONTSIZE = constants.H / 13
 local _MAXLEVEL = 5
 local _ITEMH, _ITEMW
 
@@ -84,7 +83,7 @@ local function onFoldClicked (event)
                     if totalCards == 0	then
                         animScore()
                         finishTimer = timer.performWithDelay(600, function()
-                            popup.showPopUpWithNextButton("Well done!", "scenes.scenetemplate", "scenes.game5")
+                            popup.show()
                         end)
                         gameWon = gameWon + 1
                         if gameWon>0 and level < _MAXLEVEL then
@@ -140,10 +139,10 @@ function scene:show (event)
         totalCards = cardAmount[level]
 
         if constants.H / rows[level]<constants.W/(cardAmount[level]/rows[level]) then
-            itemH = 0.9*constants.H / rows[level]
+            itemH = 0.8*constants.H / rows[level]
             itemW = itemH
         else
-            itemW = 0.9*constants.W / (cardAmount[level]/rows[level]+1)
+            itemW = 0.8*constants.W / (cardAmount[level]/rows[level]+1)
             itemH = itemW
         end
 
@@ -243,7 +242,7 @@ function scene:hide(event)
 
             end
         end
-        popup.hidePopUp()
+        popup.hide()
         for i = 1, #star do
             display.remove (star[i])
             star[i] = nil
