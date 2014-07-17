@@ -283,10 +283,10 @@ function scene:show( event )
 
         backBtn = widget.newButton
             {
-                width = 0.1*constants.W,
+                width = 0.15*constants.W,
                 height = 0.1*constants.W,
-                defaultFile = "images/home.png",
-                overFile = "images/homehover.png",
+                defaultFile = "images/back_a.png",
+                overFile = "images/back_n.png",
                 id = "home",
                 onRelease = backHome
             }
